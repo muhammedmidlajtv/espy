@@ -1,6 +1,8 @@
+import 'package:espy/screen/Login.dart';
+import 'package:espy/screen/SignUp.dart';
 import 'package:flutter/material.dart';
 
-import 'home_screen.dart';
+// import 'home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -19,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   _navigatetohome() async {
     await Future.delayed(Duration(milliseconds: 1500), () {});
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => ScreenHome()));
+        context, MaterialPageRoute(builder: (context) => Login()));
   }
 
   @override
