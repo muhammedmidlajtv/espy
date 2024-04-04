@@ -1,3 +1,4 @@
+import 'package:espy/screen/Login.dart';
 import 'package:espy/screen/splash.dart';
 import 'package:flutter/material.dart';
 
@@ -56,7 +57,6 @@ class MyCustomFormState extends State<MyCustomForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              
               children: [
                 // SizedBox(
                 //   height: 20,
@@ -65,7 +65,6 @@ class MyCustomFormState extends State<MyCustomForm> {
                   style: const TextStyle(color: Colors.white),
 
                   decoration: InputDecoration(
-                    
                     fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15.0),
@@ -73,7 +72,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                     // filled: true,
                     hintStyle:
                         TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
-                    hintText: "Type in your text",
+                    hintText: "Enter your name",
                     // fillColor: Colors.white70,
                   ),
 
@@ -92,7 +91,6 @@ class MyCustomFormState extends State<MyCustomForm> {
                   style: const TextStyle(color: Colors.white),
 
                   decoration: InputDecoration(
-                    
                     fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15.0),
@@ -100,7 +98,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                     // filled: true,
                     hintStyle:
                         TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
-                    hintText: "Type in your text",
+                    hintText: "Enter your Email",
                     // fillColor: Colors.white70,
                   ),
 
@@ -116,6 +114,8 @@ class MyCustomFormState extends State<MyCustomForm> {
                   height: 20,
                 ),
                 TextFormField(
+                  style: const TextStyle(color: Colors.white),
+
                   decoration: InputDecoration(
                     fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
                     border: OutlineInputBorder(
@@ -124,7 +124,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                     // filled: true,
                     hintStyle:
                         TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
-                    hintText: "Type in your text",
+                    hintText: "Enter your password",
                     // fillColor: Colors.white70,
                   ),
 
@@ -140,6 +140,8 @@ class MyCustomFormState extends State<MyCustomForm> {
                   height: 20,
                 ),
                 TextFormField(
+                  style: const TextStyle(color: Colors.white),
+
                   decoration: InputDecoration(
                     fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
                     border: OutlineInputBorder(
@@ -148,7 +150,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                     // filled: true,
                     hintStyle:
                         TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
-                    hintText: "Type in your text",
+                    hintText: "confirm  your password",
                     // fillColor: Colors.white70,
                   ),
 
@@ -160,16 +162,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                     return null;
                   },
                 ),
-                // DropdownButton<String>(
-                // items: <String>['A', 'B', 'C', 'D'].map((String value) {
-                //   return DropdownMenuItem<String>(
-                //     value: value,
-                //     child: Text(value),
-                //   );
-                // }).toList(),
-                // onChanged: (_) {},
-                // ),
-
+             
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: ElevatedButton(
@@ -178,6 +171,8 @@ class MyCustomFormState extends State<MyCustomForm> {
                       if (_formKey.currentState!.validate()) {
                         // If the form is valid, display a snackbar. In the real world,
                         // you'd often call a server or save the information in a database.
+                        _navigateToLoginScreen(context);
+
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Processing Data')),
                         );
@@ -196,7 +191,9 @@ class MyCustomFormState extends State<MyCustomForm> {
   }
 }
 
-
+void _navigateToLoginScreen(BuildContext context) {
+  Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login()));
+}
 
 
 // class DropdownMenuExample extends StatefulWidget {

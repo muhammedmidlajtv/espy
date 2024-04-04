@@ -1,8 +1,12 @@
+import 'package:espy/screen/SignUp.dart';
 import 'package:espy/screen/splash.dart';
+import 'package:espy/screen/user_homeScreen.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatelessWidget {
-  const Login({super.key});
+   Login({super.key});
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +26,6 @@ class Login extends StatelessWidget {
               child: Center(child: Text("")),
             ),
           ),
-          
           Form(
             // key: _formKey,
             child: Container(
@@ -44,7 +47,7 @@ class Login extends StatelessWidget {
                       // filled: true,
                       hintStyle:
                           TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
-                      hintText: "Type in your text",
+                      hintText: "Enter your  Email",
                       // fillColor: Colors.white70,
                     ),
 
@@ -70,7 +73,7 @@ class Login extends StatelessWidget {
                       // filled: true,
                       hintStyle:
                           TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
-                      hintText: "Type in your text",
+                      hintText: "Enter your password",
                       // fillColor: Colors.white70,
                     ),
 
@@ -82,6 +85,28 @@ class Login extends StatelessWidget {
                       return null;
                     },
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // if (_formKey.currentState!.validate()) {
+                        // If the form is valid, display a snackbar. In the real world,
+                        // you'd often call a server or save the information in a database.
+                        _navigateToHomeUpScreen(context);
+
+                        // ScaffoldMessenger.of(context).showSnackBar(
+                        //   const SnackBar(content: Text('Processing Data')),
+                        // );
+                      // }
+
+                      // Validate returns true if the form is valid, or false otherwise.
+                    },
+                    child: const Text('Submit'),
+                  ),
+                )
                   // DropdownButton<String>(
                   // items: <String>['A', 'B', 'C', 'D'].map((String value) {
                   //   return DropdownMenuItem<String>(
@@ -112,56 +137,72 @@ class Login extends StatelessWidget {
               ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 390,
-                height: 320,
-                // padding: new EdgeInsets.all(0.0),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0,50,0,0),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(40),topRight: Radius.circular(40)),
-                    ),
-                    color: Color.fromARGB(255, 0, 0, 0),
-                    elevation: 10,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0,0,0,0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 390,
+                  height: 290,
+                  // padding: new EdgeInsets.all(0.0),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(40),
+                            topRight: Radius.circular(40)),
+                      ),
+                      color: Color.fromARGB(255, 0, 0, 0),
+                      elevation: 10,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
-                      // mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        // ButtonBar(
-                        // children: <Widget>[
-                        IconButton(
-                            onPressed: () {},
-                            iconSize: 50,
-                            icon: Image.asset("assets/images/gmail_logo.png")),
-                        // RaisedButton(
-                        //   child: const Text('Pause'),
-                        //   onPressed: () {/* ... */},
+                        // mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+                          // ButtonBar(
+                          // children: <Widget>[
+                          IconButton(
+                              onPressed: () {
+                                _navigateToSignUpScreen(context);
+                              },
+                              iconSize: 50,
+                              icon: Image.asset("assets/images/gmail_logo.png")),
+                          // RaisedButton(
+                          //   child: const Text('Pause'),
+                          //   onPressed: () {/* ... */},
+                          // ),
+                          IconButton(
+                              onPressed: () {},
+                              iconSize: 40,
+                              icon: Image.asset("assets/images/google_logo.png")),
+                        ],
                         // ),
-                        IconButton(
-                            onPressed: () {},
-                            iconSize: 40,
-                            icon: Image.asset("assets/images/google_logo.png")),
-                      ],
-                      // ),
-                      // ],
+                        // ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           )
         ],
       ),
     );
   }
 }
+
+
+ void _navigateToSignUpScreen(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignUp()));
+  }
+  void _navigateToHomeUpScreen(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => user_homeLogin()));
+  }
+
 
 //   @override
 //   Widget build(BuildContext context) {
