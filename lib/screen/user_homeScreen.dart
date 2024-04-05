@@ -1,54 +1,140 @@
+// import 'dart:html';
+
 import 'package:flutter/material.dart';
 
 List<String> image = [
-  'https://cdn.pixabay.com/photo/2021/06/01/07/03/sparrow-6300790_960_720.jpg',
   'https://cdn.pixabay.com/photo/2017/10/20/10/58/elephant-2870777_960_720.jpg',
   'https://cdn.pixabay.com/photo/2014/09/08/17/32/humming-bird-439364_960_720.jpg',
   'https://cdn.pixabay.com/photo/2018/05/03/22/34/lion-3372720_960_720.jpg'
 ];
 List<String> title = ['Sparrow', 'Elephant', 'Humming Bird', 'Lion'];
 
+class NavDrawer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          DrawerHeader(
+            child: Text(
+              'Side menu',
+              style: TextStyle(color: Color.fromRGBO(200, 53, 53, 1), fontSize: 25),
+            ),
+            decoration: BoxDecoration(
+              color: Colors.green,
+              image: DecorationImage(
+                fit: BoxFit.fill,
+                image: AssetImage('assets/images/cover.jpg'),
+              ),
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.input),
+            title: Text('Welcome'),
+            onTap: () => {},
+          ),
+          ListTile(
+            leading: Icon(Icons.verified_user),
+            title: Text('Profile'),
+            onTap: () => {Navigator.of(context).pop()},
+          ),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('Settings'),
+            onTap: () => {Navigator.of(context).pop()},
+          ),
+          ListTile(
+            leading: Icon(Icons.border_color),
+            title: Text('Feedback'),
+            onTap: () => {Navigator.of(context).pop()},
+          ),
+          ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text('Logout'),
+            onTap: () => {Navigator.of(context).pop()},
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class user_homeLogin extends StatelessWidget {
-  const user_homeLogin({Key? key});
+    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+   user_homeLogin({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+
       backgroundColor: Colors.grey[850],
+      drawer: NavDrawer(), // Integrate NavDrawer here
+
+      // appBar: AppBar(
+      //   title: Text('Your App Title'),
+      // ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                fillColor: Colors.white,
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(
-                    color: Color.fromARGB(255, 29, 116, 183),
-                    width: 0.0,
+          // Padding(
+            // padding: const EdgeInsets.fromLTRB(50, 20, 50, 0),
+            // child:
+             SizedBox(
+              width:10 ,
+               child: TextField(
+                
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(
+                      color: Color.fromARGB(255, 29, 116, 183),
+                      width: 0.0,
+                    ),
                   ),
+                  hintText: 'Search',
+                  hintStyle: TextStyle(color: Colors.grey, fontSize: 18),
                 ),
-                hintText: 'Search',
-                hintStyle: TextStyle(color: Colors.grey, fontSize: 18),
-              ),
             ),
+             ),
+          // ),
+          IconButton(
+                    onPressed: () {
+                      // Validate returns true if the form is valid, or false otherwise.
+                      _scaffoldKey.currentState!.openDrawer();
+                    },
+                    icon: Image.asset("assets/images/drawer_icon.png")
+                    ),
+                    Expanded(
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.7, // Adjust as needed
+                        ),
+                        itemCount: image.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return CardItem(image: image[index], title: title[index]);
+                        },
+                      ),
           ),
-          Expanded(
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.7, // Adjust as needed
-              ),
-              itemCount: image.length,
-              itemBuilder: (BuildContext context, int index) {
-                return CardItem(image: image[index], title: title[index]);
-              },
-            ),
-          ),
+
+                  
+              
+          
         ],
+        
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     _scaffoldKey.currentState!.openDrawer(); // Open the NavDrawer
+      //   },
+      //   child: Icon(Icons.menu),
+      // ),
     );
   }
 }
@@ -92,8 +178,4 @@ class CardItem extends StatelessWidget {
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(home: user_homeLogin()));
 }
