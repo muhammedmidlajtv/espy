@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "798612753910",
+    "project_id": "espy-53470",
+    "storage_bucket": "espy-53470.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:798612753910:android:b923edcdbc9f396c72cbd7",
+        "android_client_info": {
+          "package_name": "com.example.espy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRCQshTwdz2l0rn3MtvTLFyjNXMABHDr0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
