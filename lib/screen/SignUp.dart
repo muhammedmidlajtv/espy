@@ -39,149 +39,166 @@ class MyCustomFormState extends State<MyCustomForm> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Container(
-          height: 300,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              // color: Colors.black,
-              image: DecorationImage(
-                  image: AssetImage("assets/images/epsy_logo.png"),
-                  fit: BoxFit.cover),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0,0,0,45),
+          child: Container(
+            height: 300,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                // color: Colors.black,
+                image: DecorationImage(
+                    image: AssetImage("assets/images/epsy_logo.png"),
+                    fit: BoxFit.cover),
+              ),
+              child: Center(child: Text("")),
             ),
-            child: Center(child: Text("")),
           ),
         ),
         Form(
           key: _formKey,
           child: Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // SizedBox(
-                //   height: 20,
-                // ),
-                TextFormField(
-                  style: const TextStyle(color: Colors.white),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20,0,20,0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // SizedBox(
+                  //   height: 20,
+                  // ),
+                  TextFormField(
+                    style: const TextStyle(color: Colors.white),
 
-                  decoration: InputDecoration(
-                    fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                    decoration: InputDecoration(
+                      fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      // filled: true,
+                      hintStyle:
+                          TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
+                      hintText: "Enter your name",
+                      // fillColor: Colors.white70,
                     ),
-                    // filled: true,
-                    hintStyle:
-                        TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
-                    hintText: "Enter your name",
-                    // fillColor: Colors.white70,
-                  ),
 
-                  // The validator receives the text that the user has entered.
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  style: const TextStyle(color: Colors.white),
-
-                  decoration: InputDecoration(
-                    fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    // filled: true,
-                    hintStyle:
-                        TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
-                    hintText: "Enter your Email",
-                    // fillColor: Colors.white70,
-                  ),
-
-                  // The validator receives the text that the user has entered.
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  style: const TextStyle(color: Colors.white),
-
-                  decoration: InputDecoration(
-                    fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    // filled: true,
-                    hintStyle:
-                        TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
-                    hintText: "Enter your password",
-                    // fillColor: Colors.white70,
-                  ),
-
-                  // The validator receives the text that the user has entered.
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  style: const TextStyle(color: Colors.white),
-
-                  decoration: InputDecoration(
-                    fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    // filled: true,
-                    hintStyle:
-                        TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
-                    hintText: "confirm  your password",
-                    // fillColor: Colors.white70,
-                  ),
-
-                  // The validator receives the text that the user has entered.
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                ),
-             
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Validate returns true if the form is valid, or false otherwise.
-                      if (_formKey.currentState!.validate()) {
-                        // If the form is valid, display a snackbar. In the real world,
-                        // you'd often call a server or save the information in a database.
-                        _navigateToLoginScreen(context);
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Processing Data')),
-                        );
+                    // The validator receives the text that the user has entered.
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
                       }
+                      return null;
                     },
-                    child: const Text('Submit'),
                   ),
-                ),
-              ],
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    style: const TextStyle(color: Colors.white),
+
+                    decoration: InputDecoration(
+                      fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      // filled: true,
+                      hintStyle:
+                          TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
+                      hintText: "Enter your Email",
+                      // fillColor: Colors.white70,
+                    ),
+
+                    // The validator receives the text that the user has entered.
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    style: const TextStyle(color: Colors.white),
+
+                    decoration: InputDecoration(
+                      fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      // filled: true,
+                      hintStyle:
+                          TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
+                      hintText: "Enter your password",
+                      // fillColor: Colors.white70,
+                    ),
+
+                    // The validator receives the text that the user has entered.
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    style: const TextStyle(color: Colors.white),
+
+                    decoration: InputDecoration(
+                      fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      // filled: true,
+                      hintStyle:
+                          TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
+                      hintText: "confirm  your password",
+                      // fillColor: Colors.white70,
+                    ),
+
+                    // The validator receives the text that the user has entered.
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                  ),
+               
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(15,0,15,0),
+                      child: Container(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Color.fromARGB(255, 106, 96, 93),
+                            shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(13.0)),
+                            minimumSize: Size(400, 46),
+                          ),
+                          onPressed: () {
+                            // Validate returns true if the form is valid, or false otherwise.
+                            if (_formKey.currentState!.validate()) {
+                              // If the form is valid, display a snackbar. In the real world,
+                              // you'd often call a server or save the information in a database.
+                              _navigateToLoginScreen(context);
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Processing Data')),
+                              );
+                            }
+                          },
+                          child: const Text('Submit'),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
