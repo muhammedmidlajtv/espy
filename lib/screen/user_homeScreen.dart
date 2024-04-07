@@ -80,11 +80,11 @@ class user_homeLogin extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          // Padding(
-            // padding: const EdgeInsets.fromLTRB(50, 20, 50, 0),
-            // child:
+          Padding(
+            padding: const EdgeInsets.fromLTRB(50, 20, 50, 0),
+            child:
              SizedBox(
-              width:10 ,
+              // width:10 ,
                child: TextField(
                 
                 decoration: InputDecoration(
@@ -102,14 +102,15 @@ class user_homeLogin extends StatelessWidget {
                 ),
             ),
              ),
+             ),
           // ),
-          IconButton(
-                    onPressed: () {
-                      // Validate returns true if the form is valid, or false otherwise.
-                      _scaffoldKey.currentState!.openDrawer();
-                    },
-                    icon: Image.asset("assets/images/drawer_icon.png")
-                    ),
+          // FloatingActionButton(
+          //           onPressed: () {
+          //             // Validate returns true if the form is valid, or false otherwise.
+          //             _scaffoldKey.currentState!.openDrawer();
+          //           },
+          //           child: Icon(Icons.add)
+          //           ),
                     Expanded(
                       child: GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -129,13 +130,14 @@ class user_homeLogin extends StatelessWidget {
         ],
         
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     _scaffoldKey.currentState!.openDrawer(); // Open the NavDrawer
-      //   },
-      //   child: Icon(Icons.menu),
-      // ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _scaffoldKey.currentState!.openDrawer(); // Open the NavDrawer
+        },
+        child: Icon(Icons.menu),
+      ),
     );
+    
   }
 }
 
