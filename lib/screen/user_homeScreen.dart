@@ -1,6 +1,10 @@
 // import 'dart:html';
-
+//import "dart:developer";
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:espy/screen/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:espy/screen/Login.dart';
+
 
 List<String> image = [
   'https://cdn.pixabay.com/photo/2017/10/20/10/58/elephant-2870777_960_720.jpg',
@@ -12,6 +16,7 @@ List<String> title = ['Sparrow', 'Elephant', 'Humming Bird', 'Lion'];
 class NavDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final auth = AuthService();
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -52,7 +57,11 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Logout'),
-            onTap: () => {Navigator.of(context).pop()},
+            // onTap: () => {Navigator.of(context).pop()},
+            onTap: () async {
+            await auth.signout();
+            goToLogin(context);
+  },
           ),
         ],
       ),
@@ -67,6 +76,7 @@ class user_homeLogin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthService _auth = AuthService();
     return Scaffold(
       key: _scaffoldKey,
 
@@ -181,3 +191,8 @@ class CardItem extends StatelessWidget {
     );
   }
 }
+
+goToLogin(BuildContext context) => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+      );

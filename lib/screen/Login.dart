@@ -1,12 +1,34 @@
+import "dart:developer";
+import "package:espy/screen/auth_service.dart";
 import 'package:espy/screen/SignUp.dart';
 import 'package:espy/screen/splash.dart';
 import 'package:espy/screen/user_homeScreen.dart';
 import 'package:flutter/material.dart';
 
-class Login extends StatelessWidget {
-   Login({super.key});
+class Login extends StatefulWidget {
+    Login({super.key});
 
+    @override
+    State<Login> createState() => _LoginScreenState();
+}
+
+  
+
+  // class _LoginScreenState extends State<Login>{
+  //   final _email = TextEditingController();
+  //   final _password = TextEditingController();
+  class _LoginScreenState extends State<Login> {
+  final _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
+  final _email = TextEditingController();
+  final _password = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _email.dispose();
+    _password.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +51,7 @@ class Login extends StatelessWidget {
             ),
           ),
           Form(
-            // key: _formKey,
+            key: _formKey,
             child: Container(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20,0,20,0),
@@ -52,9 +74,12 @@ class Login extends StatelessWidget {
                         hintStyle:
                             TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
                         hintText: "Enter your  Email",
+                        labelText: "Email",
+                        
+
                         // fillColor: Colors.white70,
                       ),
-
+                      controller: _email,
                       // The validator receives the text that the user has entered.
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -78,9 +103,10 @@ class Login extends StatelessWidget {
                         hintStyle:
                             TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
                         hintText: "Enter your password",
+                        labelText: "Password",
                         // fillColor: Colors.white70,
                       ),
-
+                      controller: _password,
                       // The validator receives the text that the user has entered.
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -96,11 +122,12 @@ class Login extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: ElevatedButton(
                       onPressed: () {
-                        // if (_formKey.currentState!.validate()) {
+                         if (_formKey.currentState!.validate()) {
                           // If the form is valid, display a snackbar. In the real world,
                           // you'd often call a server or save the information in a database.
-                          _navigateToHomeUpScreen(context);
-
+                          _login(context, _email.text, _password.text);
+                          // _navigateToHomeUpScreen(context);
+                         }
                           // ScaffoldMessenger.of(context).showSnackBar(
                           //   const SnackBar(content: Text('Processing Data')),
                           // );
@@ -198,15 +225,59 @@ class Login extends StatelessWidget {
       ),
     );
   }
-}
 
 
- void _navigateToSignUpScreen(BuildContext context) {
+  void _navigateToSignUpScreen(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignUp()));
   }
   void _navigateToHomeUpScreen(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => user_homeLogin()));
   }
+  
+  
+  void _navigateToLoginScreen(BuildContext context) {
+  Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login()));
+  }
+  //  _login(String email, String password) async {
+  //   final _auth = AuthService();
+  //   final user = await _auth.loginUserWithEmailAndPassword(email, password);
+
+  //   if (user != null) {
+  //     log("User Logged In");
+  //     user_homeLogin();
+  //   }
+  // }
+  void _login(BuildContext context, String email, String password) async {
+  if (_formKey.currentState!.validate()) {
+    try {
+      final user = await _auth.loginUserWithEmailAndPassword(email, password);
+      if (user != null) {
+        log("User Logged In");
+        _navigateToHomeUpScreen(context);
+      } else {
+        _navigateToLoginScreen(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Invalid email or password'))
+          ,
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.toString()),
+        ),
+      );
+    }
+  }
+}
+
+
+
+
+
+  }
+
+
 
 
 //   @override

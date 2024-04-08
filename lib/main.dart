@@ -1,8 +1,12 @@
+import "dart:async";
 //import 'package:espy/screen/home_screen.dart';
 import 'package:espy/screen/splash.dart';
 import 'package:flutter/material.dart';
+import "package:firebase_core/firebase_core.dart";
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
