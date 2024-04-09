@@ -174,16 +174,16 @@ class Login extends StatelessWidget {
                               onPressed: () {
                                 _navigateToSignUpScreen(context);
                               },
-                              iconSize: 50,
+                              iconSize: 10,
                               icon: Image.asset("assets/images/gmail_logo.png")),
                           // RaisedButton(
                           //   child: const Text('Pause'),
                           //   onPressed: () {/* ... */},
                           // ),
-                          IconButton(
-                              onPressed: () {},
-                              iconSize: 40,
-                              icon: Image.asset("assets/images/google_logo.png")),
+                          // IconButton(
+                          //     onPressed: () {},
+                          //     iconSize: 10,
+                          //     icon: Image.asset("assets/images/google_logo.png")),
                         ],
                         // ),
                         // ],

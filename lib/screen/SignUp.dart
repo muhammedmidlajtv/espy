@@ -175,11 +175,11 @@ class MyCustomFormState extends State<MyCustomForm> {
                       child: Container(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            primary: Color.fromARGB(255, 106, 96, 93),
+                            backgroundColor: Color.fromARGB(255, 106, 96, 93),
                             shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(13.0)),
                             minimumSize: Size(400, 46),
-                          ),
+                          ),  
                           onPressed: () {
                             // Validate returns true if the form is valid, or false otherwise.
                             if (_formKey.currentState!.validate()) {
