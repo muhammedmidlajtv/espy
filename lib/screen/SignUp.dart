@@ -12,10 +12,17 @@ class SignUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+
+      
+
       child: Scaffold(
+
         backgroundColor: Colors.grey[850],
-        body: const MyCustomForm(),
+        body: Center(child: SingleChildScrollView(
+          child:const MyCustomForm(),
+        )) 
       ),
+      
     );
   }
 
@@ -118,7 +125,7 @@ class MyCustomForm extends StatefulWidget {
                       hintStyle:
                           TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
                       hintText: "Enter your name",
-                      labelText: "Name",
+                      labelText: "Names",
                       // fillColor: Colors.white70,
                     ),
 
@@ -360,7 +367,7 @@ class MyCustomForm extends StatefulWidget {
                               );
                             }
                           },
-                          child: const Text('Submit'),
+                          child: const Text('Submit',style: TextStyle(color: Colors.white),),
                         ),
                       ),
                     ),
