@@ -1,5 +1,7 @@
 import 'package:espy/screen/Login.dart';
+import 'package:espy/screen/introductionScreen.dart';
 import 'package:espy/screen/SignUp.dart';
+import 'package:espy/screen/introductionScreen.dart';
 import 'package:espy/screen/profile.dart';
 import 'package:espy/screen/user_homeScreen.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
   _navigatetohome() async {
     await Future.delayed(Duration(milliseconds: 1500), () {});
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Login()));
+        context, MaterialPageRoute(builder: (context) => IntroductionScreen()));
           // context, MaterialPageRoute(builder: (context) => ProfilePage()));
 
   }
