@@ -4,6 +4,7 @@ import 'package:espy/screen/introscreens/intropage2.dart';
 import 'package:espy/screen/introscreens/intropage3.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class IntroductionScreen extends StatefulWidget {
@@ -19,6 +20,7 @@ bool onLastPage = false;
 class _IntroductionScreenState extends State<IntroductionScreen> {
   //page controller
   PageController _controller = PageController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,8 +65,10 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
 
                 onLastPage
                     ? GestureDetector(
-                        onTap: ()  {
-                          
+                        onTap: () async {
+                          final onboardcount =
+                              await SharedPreferences.getInstance();
+                          await onboardcount.setInt('onBoardCount', 0);
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return Login();
