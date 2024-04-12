@@ -1,10 +1,17 @@
+import "dart:async";
+// import 'dart:ffi';
 //import 'package:espy/screen/home_screen.dart';
 import 'package:espy/screen/splash.dart';
+import 'package:espy/screen/user_homeScreen.dart';
 import 'package:flutter/material.dart';
+import "package:firebase_core/firebase_core.dart";
+import 'package:shared_preferences/shared_preferences.dart';
 
-//merge request on 07-04-2024
+const SAVE_KEY_NAME = 'UserLoggedIn ';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -15,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-          debugShowCheckedModeBanner: false,  // Add this line
+      debugShowCheckedModeBanner: false, // Add this line
 
       title: 'Flutter Demo',
       theme: ThemeData(

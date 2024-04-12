@@ -1,9 +1,13 @@
+import "dart:developer";
+import "package:espy/screen/auth_service.dart";
 import 'package:espy/screen/Login.dart';
 import 'package:espy/screen/splash.dart';
+import 'package:espy/screen/user_homeScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUp extends StatelessWidget {
-  const SignUp({super.key});
+   const SignUp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +18,25 @@ class SignUp extends StatelessWidget {
       ),
     );
   }
+
+  // @override
+  //   State<SignUp> createState() => MyCustomForm();
 }
+
+// class SignUp  extends StatefulWidget {
+//     SignUp({super.key});
+//     @override
+//     Widget build(BuildContext context) {
+//     return SafeArea(
+//       child: Scaffold(
+//         backgroundColor: Colors.grey[850],
+//         body: SignUp(),
+//       ),
+//     );
+//   }
+//     @override
+//     State<SignUp> createState() => _SignUpScreenState();
+// }
 
 class MyCustomForm extends StatefulWidget {
   const MyCustomForm({super.key});
@@ -24,14 +46,36 @@ class MyCustomForm extends StatefulWidget {
     return MyCustomFormState();
   }
 }
+//////// filter
 
-class MyCustomFormState extends State<MyCustomForm> {
+
+
+
+
+//////////
+
+
+  //  class _SignUpScreenState extends State<SignUp> {
+  class MyCustomFormState extends State<MyCustomForm> {
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
-  //
+
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
+
+  final _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
+  final _name = TextEditingController();
+  final _email = TextEditingController();
+  final _password = TextEditingController();
+  final _confirm = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _email.dispose();
+    _password.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,10 +122,12 @@ class MyCustomFormState extends State<MyCustomForm> {
                       hintStyle:
                           TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
                       hintText: "Enter your name",
+                      labelText: "Name",
                       // fillColor: Colors.white70,
                     ),
 
                     // The validator receives the text that the user has entered.
+                    controller: _name,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter some text';
@@ -104,10 +150,12 @@ class MyCustomFormState extends State<MyCustomForm> {
                       hintStyle:
                           TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
                       hintText: "Enter your Email",
+                      labelText: "Email",
                       // fillColor: Colors.white70,
                     ),
 
                     // The validator receives the text that the user has entered.
+                    controller: _email,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter some text';
@@ -130,10 +178,12 @@ class MyCustomFormState extends State<MyCustomForm> {
                       hintStyle:
                           TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
                       hintText: "Enter your password",
+                      labelText: "Password",
                       // fillColor: Colors.white70,
                     ),
 
                     // The validator receives the text that the user has entered.
+                    controller: _password,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter some text';
@@ -156,10 +206,12 @@ class MyCustomFormState extends State<MyCustomForm> {
                       hintStyle:
                           TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
                       hintText: "confirm  your password",
+                      labelText: "confirm password",
                       // fillColor: Colors.white70,
                     ),
 
                     // The validator receives the text that the user has entered.
+                    controller: _confirm,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter some text';
@@ -179,9 +231,10 @@ class MyCustomFormState extends State<MyCustomForm> {
                             shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(13.0)),
                             minimumSize: Size(400, 46),
-                          ),  
-                          onPressed: () {
+                          ),
+                          onPressed: () async{
                             // Validate returns true if the form is valid, or false otherwise.
+                            await _signup(context);
                             if (_formKey.currentState!.validate()) {
                               // If the form is valid, display a snackbar. In the real world,
                               // you'd often call a server or save the information in a database.
@@ -202,17 +255,34 @@ class MyCustomFormState extends State<MyCustomForm> {
             ),
           ),
         ),
+        
         // DropdownMenuExample()
       ],
     );
   }
-}
+
 
 void _navigateToLoginScreen(BuildContext context) {
   Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login()));
 }
+// _signup() async {
+//     final user =
+//         await _auth.createUserWithEmailAndPassword(_email.text, _password.text);
+//     if (user != null) {
+//       log("User Created Succesfully");
+//       user_homeLogin(context);//goTohome changed to userlogin
+//     }
+//   }
+_signup(BuildContext context) async {
+  final user = await _auth.createUserWithEmailAndPassword(_email.text, _password.text);
+  if (user != null) {
+    log("User Created Successfully");
+    // Navigate to the login page after successful signup
+    _navigateToLoginScreen(context);
+  }
+}
 
-
+}
 // class DropdownMenuExample extends StatefulWidget {
 //   const DropdownMenuExample({super.key});
 

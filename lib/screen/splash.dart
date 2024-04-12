@@ -1,8 +1,10 @@
+import 'package:espy/main.dart';
 import 'package:espy/screen/Login.dart';
 import 'package:espy/screen/SignUp.dart';
 import 'package:espy/screen/profile.dart';
 import 'package:espy/screen/user_homeScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // import 'home_screen.dart';
 
@@ -17,15 +19,16 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _navigatetohome();
+    checkUserLoggedIn();
   }
 
-  _navigatetohome() async {
+  Future<void> gotoLogin() async {
     await Future.delayed(Duration(milliseconds: 1500), () {});
     Navigator.pushReplacement(
-        // context, MaterialPageRoute(builder: (context) => Login()));
-          context, MaterialPageRoute(builder: (context) => Login()));
 
+        // context, MaterialPageRoute(builder: (context) => Login()));
+        context,
+        MaterialPageRoute(builder: (context) => Login()));
   }
 
   @override
@@ -46,4 +49,15 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void initstate() {}
+
+  Future<void> checkUserLoggedIn() async {
+    final _SharedPrefs = await SharedPreferences.getInstance();
+    final _userLoggedIn = _SharedPrefs.getBool(SAVE_KEY_NAME);
+    if (_userLoggedIn == null || _userLoggedIn == false) {
+      gotoLogin();
+    } else {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: ((context) => user_homeLogin())));
+    }
+  }
 }
