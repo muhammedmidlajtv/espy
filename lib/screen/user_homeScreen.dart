@@ -1,6 +1,7 @@
 // import 'dart:html';
 //import "dart:developer";
 import 'package:espy/main.dart';
+import 'package:espy/screen/organizerscreens/organizer.dart';
 import 'package:espy/screen/userEventRegistration.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:espy/screen/auth_service.dart';
@@ -42,7 +43,7 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.input),
             title: Text('Welcome'),
-            onTap: () => {},
+            onTap: () => {}
           ),
           ListTile(
             leading: Icon(Icons.verified_user),
