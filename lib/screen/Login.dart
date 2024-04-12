@@ -38,7 +38,8 @@ class _LoginScreenState extends State<Login> {
       backgroundColor: Colors.grey[850],
       // resizeToAvoidBottomInset: false, // Disable resizing to avoid bottom overflow
 
-      body: Column(
+      body: SingleChildScrollView(
+        child: Column(
         children: [
           Container(
             height: 300,
@@ -225,6 +226,7 @@ class _LoginScreenState extends State<Login> {
             ),
           )
         ],
+      )
       ),
     );
   }

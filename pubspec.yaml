@@ -42,6 +42,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core: ^2.26.0
   firebase_auth: ^4.17.7
+  smooth_page_indicator: ^1.1.0
+  # shared_preferences: ^2.2.2
   
 
 dev_dependencies:
@@ -75,6 +77,8 @@ flutter:
     - assets/images/filter_logo.png
     - assets/images/drawer_icon.png
     - assets/images/avatar.png
+    - assets/images/image.png
+
     - assets/images/location_img.png
     - assets/images/calender_icon.png
     - assets/images/Hackathon_Team.png

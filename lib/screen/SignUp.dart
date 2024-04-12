@@ -12,10 +12,17 @@ class SignUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+
+      
+
       child: Scaffold(
+
         backgroundColor: Colors.grey[850],
-        body: const MyCustomForm(),
+        body: Center(child: SingleChildScrollView(
+          child:const MyCustomForm(),
+        )) 
       ),
+      
     );
   }
 
@@ -69,6 +76,9 @@ class MyCustomForm extends StatefulWidget {
   final _email = TextEditingController();
   final _password = TextEditingController();
   final _confirm = TextEditingController();
+  String? _selectedRole;
+  Color _selectedTextColor = Colors.white;
+  // final _who = TextEditingController();
 
   @override
   void dispose() {
@@ -122,7 +132,7 @@ class MyCustomForm extends StatefulWidget {
                       hintStyle:
                           TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
                       hintText: "Enter your name",
-                      labelText: "Name",
+                      labelText: "Names",
                       // fillColor: Colors.white70,
                     ),
 
@@ -206,7 +216,7 @@ class MyCustomForm extends StatefulWidget {
                       hintStyle:
                           TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
                       hintText: "confirm  your password",
-                      labelText: "confirm password",
+                      labelText: "Confirm password",
                       // fillColor: Colors.white70,
                     ),
 
@@ -219,6 +229,125 @@ class MyCustomForm extends StatefulWidget {
                       return null;
                     },
                   ),
+                   SizedBox(height: 20),
+                  // Replace TextFormField with DropdownButtonFormField
+                  // DropdownButtonFormField<String>(
+                  //   value: _selectedRole,
+                  //   decoration: InputDecoration(
+                  //     fillColor: Color.fromARGB(255, 0, 0, 0),
+                  //     filled: true,
+                  //     border: OutlineInputBorder(
+                  //       borderRadius: BorderRadius.circular(15.0),
+                  //     ),
+                  //     hintStyle: TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
+                  //     hintText: "Who are you?",
+                  //     labelText: "Who are you",
+                  //   ),
+                  //   onChanged: (String? newValue) {
+                  //     setState(() {
+                  //       _selectedRole = newValue;
+                  //       _selectedTextColor = Colors.white;
+                  //     });
+                  //   },
+                  //   items: <String>['Organiser', 'User']
+                  //       .map<DropdownMenuItem<String>>((String value) {
+                  //     return DropdownMenuItem<String>(
+                  //       value: value,
+                  //       child: Text(
+                  //         value,
+                  //         style: TextStyle(color: _selectedRole == value ? Colors.white : Colors.black),
+                  //         ),
+                  //     );
+                  //   }).toList(),
+                  //   selectedItemBuilder: (BuildContext context) {
+                  //    return <String>['Organiser', 'User'].map<Widget>((String value) {
+                  //     return Text(
+                  //      value,
+                  //      style: TextStyle(color: Colors.white), // Set the selected item text color to white
+                  //   );
+                  //   }).toList(),
+                  //   validator: (value) {
+                  //     if (value == null || value.isEmpty) {
+                  //       return 'Please select an option';
+                  //     }
+                  //     return null;
+                  //   },
+                  // ),
+           DropdownButtonFormField<String>(
+  value: _selectedRole,
+  decoration: InputDecoration(
+    filled: true,
+    fillColor: Color.fromARGB(255, 0, 0, 0), // Set the initial background color of the field to black
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(15.0),
+    ),
+    hintStyle: TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
+    hintText: "Who are you?",
+    labelText: "Who are you",
+  ),
+  dropdownColor: Colors.black, // Set the dropdown option background color to black
+  onChanged: (String? newValue) {
+    setState(() {
+      _selectedRole = newValue;
+      _selectedTextColor = Colors.white;
+    });
+  },
+  items: <String>['Organiser', 'User']
+      .map<DropdownMenuItem<String>>((String value) {
+    return DropdownMenuItem<String>(
+      value: value,
+    
+      child: Text(
+        value,
+        style: TextStyle(color: _selectedTextColor),
+      ),
+    );
+  }).toList(),
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Please select an option';
+    }
+    return null;
+  },
+),
+
+
+
+                  // }).toList(),
+                      //   selectedItemBuilder: (BuildContext context) {
+                      //   return <String>['Organiser', 'User'].map<Widget>((String value) {
+                      //  return Text(
+                      //   value,
+                      //   style: TextStyle(color: Colors.white), // Set the selected item text color to white
+                      //   );
+                  // SizedBox(
+                  //   height: 20,
+                  // ),
+                  // TextFormField(
+                  //   style: const TextStyle(color: Colors.white),
+
+                  //   decoration: InputDecoration(
+                  //     fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
+                  //     border: OutlineInputBorder(
+                  //       borderRadius: BorderRadius.circular(15.0),
+                  //     ),
+                  //     // filled: true,
+                  //     hintStyle:
+                  //         TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
+                  //     hintText: "Who are you?",
+                  //     labelText: "Who are you",
+                  //     // fillColor: Colors.white70,
+                  //   ),
+
+                  //   // The validator receives the text that the user has entered.
+                  //   controller: _who,
+                  //   validator: (value) {
+                  //     if (value == null || value.isEmpty) {
+                  //       return 'Please enter some text';
+                  //     }
+                  //     return null;
+                  //   },
+                  // ),
                
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -245,7 +374,7 @@ class MyCustomForm extends StatefulWidget {
                               );
                             }
                           },
-                          child: const Text('Submit'),
+                          child: const Text('Submit',style: TextStyle(color: Colors.white),),
                         ),
                       ),
                     ),

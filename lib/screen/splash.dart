@@ -1,6 +1,8 @@
 import 'package:espy/main.dart';
 import 'package:espy/screen/Login.dart';
+import 'package:espy/screen/introductionScreen.dart';
 import 'package:espy/screen/SignUp.dart';
+import 'package:espy/screen/introductionScreen.dart';
 import 'package:espy/screen/profile.dart';
 import 'package:espy/screen/user_homeScreen.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,27 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     checkUserLoggedIn();
+    _navigatetohome();
+
+    
+  }
+
+  _onboardcheck() async {
+    final onboardcount = await SharedPreferences.getInstance();
+    final int? onBoardCount = onboardcount.getInt('onBoardCount');
+    
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                onBoardCount != 0 ? IntroductionScreen() : Login()));
+  }
+
+   _navigatetohome() async {
+    await Future.delayed(Duration(milliseconds: 1500), () {});
+
+    _onboardcheck();
+    // context, MaterialPageRoute(builder: (context) => ProfilePage()));
   }
 
   Future<void> gotoLogin() async {
