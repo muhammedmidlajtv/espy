@@ -35,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
       context,
       MaterialPageRoute(
         builder: (context) =>
-            onBoardCount != 0 ? IntroductionScreen() : Login(),
+            onBoardCount != 0 ? IntroductionScreen() : IntroductionScreen(),
       ),
     );
   }
@@ -50,11 +50,15 @@ class _SplashScreenState extends State<SplashScreen> {
 }
   Future<void> gotoLogin() async {
     await Future.delayed(Duration(milliseconds: 1500), () {});
-    Navigator.pushReplacement(
+    if(mounted)
+    {
+      Navigator.pushReplacement(
 
         // context, MaterialPageRoute(builder: (context) => Login()));
         context,
-        MaterialPageRoute(builder: (context) => Login()));
+        MaterialPageRoute(builder: (context) => IntroductionScreen()));
+    }
+    
   }
 
   @override
