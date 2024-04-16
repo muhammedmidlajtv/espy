@@ -45,9 +45,9 @@ class NavDrawer extends StatelessWidget {
             leading: Icon(Icons.input),
             title: Text('Welcome'),
             onTap: () => {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
+              /* Navigator.push(context, MaterialPageRoute(builder: (context) {
         return EventOrganizerApp();
-      }))
+      })) */
          
             }
           ),
@@ -384,7 +384,8 @@ class CardItem extends StatelessWidget {
   }
 }
 
-goToLogin(BuildContext context) => Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Login()),
+goToLogin(BuildContext context) => Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(builder: (context) => Login()),
+
     );

@@ -28,10 +28,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (mounted) {
       // Check if the widget is still mounted
+      Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(builder: (context) => onBoardCount != 0 ? IntroductionScreen() : Login()),
+);
 
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
+      /* Navigator.push(context, MaterialPageRoute(builder: (context) {
         return onBoardCount != 0 ? IntroductionScreen() : Login();
-      }));
+      })); */
     }
   }
 
@@ -47,9 +51,13 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> gotoLogin() async {
     await Future.delayed(Duration(milliseconds: 1500), () {});
     if (mounted) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
+      Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(builder: (context) => Login()),
+);
+      /* Navigator.push(context, MaterialPageRoute(builder: (context) {
         return Login();
-      }));
+      })); */
     }
   }
 

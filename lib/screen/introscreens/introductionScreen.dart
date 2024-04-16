@@ -69,10 +69,11 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                           final onboardcount =
                               await SharedPreferences.getInstance();
                           await onboardcount.setInt('onBoardCount', 0);
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return Login();
-                          }));
+                          Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(builder: (context) => Login()),
+);
+
                         },
                         child: Text(
                           "DONE    ",
