@@ -2,12 +2,12 @@
 //import "dart:developer";
 import 'package:espy/main.dart';
 import 'package:espy/screen/organizerscreens/organizer.dart';
-import 'package:espy/screen/userEventRegistration.dart';
+import 'package:espy/screen/userscreens/userEventRegistration.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:espy/screen/auth_service.dart';
+import 'package:espy/screen/authentication/auth_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:espy/screen/Login.dart';
+import 'package:espy/screen/login/Login.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -45,11 +45,10 @@ class NavDrawer extends StatelessWidget {
             leading: Icon(Icons.input),
             title: Text('Welcome'),
             onTap: () => {
-              /* Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: ((context) => EventOrganizerApp()))) */
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-                          return EventOrganizerApp();
-                        }))
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return EventOrganizerApp();
+      }))
+         
             }
           ),
           ListTile(

@@ -266,21 +266,19 @@ class _OrganiserFormState extends State<OrganiserForm> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState != null && _formKey.currentState!.validate()) {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) {
-                          return RegistrationDetailsPage();
-                        }));
+                     
                       // Validate the form
-                      /*if (_filePath != null) {
+                      if (_filePath != null) {
                         // Save and proceed to next page for registration details form
-                        Navigator.push(context, MaterialPageRoute(builder: (context) {
-                          return RegistrationDetailsPage();
-                        }));
+                       Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return RegistrationForm();
+      }));
                       } else {
                         // Show error message if file is not uploaded
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Please upload the poster of the event')),
                         );
-                      }*/
+                      }
                     }
                   },
                   child: Text('Save and Proceed'),

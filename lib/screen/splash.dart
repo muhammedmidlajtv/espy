@@ -1,9 +1,7 @@
 import 'package:espy/main.dart';
-import 'package:espy/screen/Login.dart';
-import 'package:espy/screen/introductionScreen.dart';
-import 'package:espy/screen/SignUp.dart';
-import 'package:espy/screen/profile.dart';
-import 'package:espy/screen/user_homeScreen.dart';
+import 'package:espy/screen/login/Login.dart';
+import 'package:espy/screen/introscreens/introductionScreen.dart';
+import 'package:espy/screen/userscreens/user_homeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,43 +20,37 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     checkUserLoggedIn();
     _navigatetohome();
-
-    
   }
 
   _onboardcheck() async {
-  final onboardcount = await SharedPreferences.getInstance();
-  final int? onBoardCount = onboardcount.getInt('onBoardCount');
-  
-  if (mounted) { // Check if the widget is still mounted
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) =>
-            onBoardCount != 0 ? IntroductionScreen() : IntroductionScreen(),
-      ),
-    );
+    final onboardcount = await SharedPreferences.getInstance();
+    final int? onBoardCount = onboardcount.getInt('onBoardCount');
+
+    if (mounted) {
+      // Check if the widget is still mounted
+
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return onBoardCount != 0 ? IntroductionScreen() : Login();
+      }));
+    }
   }
-}
 
   _navigatetohome() async {
-  await Future.delayed(Duration(milliseconds: 1500), () {});
-  
-  if (mounted) { // Check if the widget is still mounted
-    _onboardcheck();
+    await Future.delayed(Duration(milliseconds: 1500), () {});
+
+    if (mounted) {
+      // Check if the widget is still mounted
+      _onboardcheck();
+    }
   }
-}
+
   Future<void> gotoLogin() async {
     await Future.delayed(Duration(milliseconds: 1500), () {});
-    if(mounted)
-    {
-      Navigator.pushReplacement(
-
-        // context, MaterialPageRoute(builder: (context) => Login()));
-        context,
-        MaterialPageRoute(builder: (context) => IntroductionScreen()));
+    if (mounted) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return Login();
+      }));
     }
-    
   }
 
   @override
