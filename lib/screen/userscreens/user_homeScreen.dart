@@ -2,21 +2,22 @@
 //import "dart:developer";
 import 'package:espy/main.dart';
 import 'package:espy/screen/organizerscreens/organizer.dart';
-import 'package:espy/screen/userEventRegistration.dart';
+import 'package:espy/screen/userscreens/userEventRegistration.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:espy/screen/auth_service.dart';
+import 'package:espy/screen/authentication/auth_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:espy/screen/Login.dart';
+import 'package:espy/screen/login/Login.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 List<String> image = [
-  'https://cdn.pixabay.com/photo/2017/10/20/10/58/elephant-2870777_960_720.jpg',
-  'https://cdn.pixabay.com/photo/2014/09/08/17/32/humming-bird-439364_960_720.jpg',
-  'https://cdn.pixabay.com/photo/2018/05/03/22/34/lion-3372720_960_720.jpg'
+  'https://t3.ftcdn.net/jpg/03/01/13/20/360_F_301132090_LKoSp3l3cXlCo78zaAe2M9LI2z5yznvB.jpg',
+  'https://hbr.org/resources/images/article_assets/2014/10/25Sep03_Elsbach_how-to-pitch-a-brilliant-idea1.jpg',
+  'https://www.nicmar.ac.in/uploads/ideathon-2023-header.png',
+  'https://fortune.com/img-assets/wp-content/uploads/2016/05/unnamed.jpg'
 ];
-List<String> title = ['Sparrow', 'Elephant', 'Humming Bird', 'Lion'];
+List<String> title = ['Hackathon', 'Idea Pitching', ' Ideathon', 'CFT'];
 
 class NavDrawer extends StatelessWidget {
   @override
@@ -43,7 +44,12 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.input),
             title: Text('Welcome'),
-            onTap: () => {}
+            onTap: () => {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return EventOrganizerApp();
+      }))
+         
+            }
           ),
           ListTile(
             leading: Icon(Icons.verified_user),
@@ -368,8 +374,11 @@ class CardItem extends StatelessWidget {
         ),
       ),
       onTap: () {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: ((context) => userEventRegistration())));
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                          return userEventRegistration();
+                        }));
+        /* Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: ((context) => userEventRegistration()))); */
       },
     );
   }

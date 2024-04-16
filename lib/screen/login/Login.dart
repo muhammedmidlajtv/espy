@@ -1,9 +1,8 @@
 import "dart:developer";
 import 'package:espy/main.dart';
-import "package:espy/screen/auth_service.dart";
-import 'package:espy/screen/SignUp.dart';
-import 'package:espy/screen/splash.dart';
-import 'package:espy/screen/user_homeScreen.dart';
+import "package:espy/screen/authentication/auth_service.dart";
+import 'package:espy/screen/signup/SignUp.dart';
+import 'package:espy/screen/userscreens/user_homeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
