@@ -266,12 +266,13 @@ class _OrganiserFormState extends State<OrganiserForm> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+                     
                       // Validate the form
                       if (_filePath != null) {
                         // Save and proceed to next page for registration details form
-                        Navigator.push(context, MaterialPageRoute(builder: (context) {
-                          return RegistrationDetailsPage();
-                        }));
+                       Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return RegistrationForm();
+      }));
                       } else {
                         // Show error message if file is not uploaded
                         ScaffoldMessenger.of(context).showSnackBar(
