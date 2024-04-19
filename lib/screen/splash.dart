@@ -18,8 +18,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    checkUserLoggedIn();
     _navigatetohome();
+    //checkUserLoggedIn();
   }
 
   _onboardcheck() async {
@@ -28,10 +28,16 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (mounted) {
       // Check if the widget is still mounted
-      Navigator.pushReplacement(
+      
+      onBoardCount != 0
+          ? (Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+              return IntroductionScreen();
+            })))
+          : checkUserLoggedIn();
+      /* Navigator.pushReplacement(
   context,
-  MaterialPageRoute(builder: (context) => onBoardCount != 0 ? IntroductionScreen() : Login()),
-);
+  MaterialPageRoute(builder: (context) => onBoardCount != 0 ? IntroductionScreen() : checkUserLoggedIn()),
+); */
 
       /* Navigator.push(context, MaterialPageRoute(builder: (context) {
         return onBoardCount != 0 ? IntroductionScreen() : Login();
@@ -42,19 +48,19 @@ class _SplashScreenState extends State<SplashScreen> {
   _navigatetohome() async {
     await Future.delayed(Duration(milliseconds: 1500), () {});
 
-    if (mounted) {
+    
       // Check if the widget is still mounted
       _onboardcheck();
-    }
+    
   }
 
   Future<void> gotoLogin() async {
     await Future.delayed(Duration(milliseconds: 1500), () {});
     if (mounted) {
       Navigator.pushReplacement(
-  context,
-  MaterialPageRoute(builder: (context) => Login()),
-);
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+      );
       /* Navigator.push(context, MaterialPageRoute(builder: (context) {
         return Login();
       })); */
@@ -82,12 +88,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> checkUserLoggedIn() async {
     final _SharedPrefs = await SharedPreferences.getInstance();
-    final _userLoggedIn = _SharedPrefs.getBool(SAVE_KEY_NAME);
+    final _userLoggedIn = _SharedPrefs.getBool("userloggedin");
     if (_userLoggedIn == null || _userLoggedIn == false) {
       gotoLogin();
     } else {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: ((context) => user_homeLogin())));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => user_homeLogin()),
+      );
     }
   }
 }

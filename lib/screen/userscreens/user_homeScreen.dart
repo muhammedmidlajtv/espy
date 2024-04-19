@@ -76,7 +76,7 @@ class NavDrawer extends StatelessWidget {
 
               //sharedprefereces
               final _sharedPrefs = await SharedPreferences.getInstance();
-              await _sharedPrefs.clear();
+              await _sharedPrefs.setBool("userloggedin",false);
               //
             },
           ),

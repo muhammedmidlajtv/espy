@@ -266,7 +266,7 @@ class _LoginScreenState extends State<Login> {
           //sharedpreferences
 
           final _sharedPrefs = await SharedPreferences.getInstance();
-         await _sharedPrefs.setBool(SAVE_KEY_NAME, true);
+         await _sharedPrefs.setBool("userloggedin", true);
 
           //
         } else {
