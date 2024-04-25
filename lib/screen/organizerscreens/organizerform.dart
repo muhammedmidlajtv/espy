@@ -1,3 +1,4 @@
+import 'dart:core';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -45,6 +46,10 @@ class _OrganiserFormState extends State<OrganiserForm> {
   final TextEditingController _eventTypeController = TextEditingController();
   final TextEditingController _eventDescriptionController =
       TextEditingController();
+
+  //chance for ambiguity
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _designationController = TextEditingController();
 
   String imageUrl = '';
   String FileName = "";
@@ -219,7 +224,6 @@ class _OrganiserFormState extends State<OrganiserForm> {
                   child: Text('Choose a File'),
                 ),
                 Container(
-                  
                   child: Text(FileName),
                 ),
                 SizedBox(height: 10),
@@ -257,10 +261,10 @@ class _OrganiserFormState extends State<OrganiserForm> {
                     showDialog(
                       context: context,
                       builder: (context) {
-                        TextEditingController _nameController =
-                            TextEditingController();
-                        TextEditingController _designationController =
-                            TextEditingController();
+                        // TextEditingController _nameController =
+                        //     TextEditingController();
+                        // TextEditingController _designationController =
+                        //     TextEditingController();
                         return AlertDialog(
                           title: Text('Add Speaker'),
                           content: Column(
@@ -333,13 +337,12 @@ class _OrganiserFormState extends State<OrganiserForm> {
                       if (imageUrl.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("please upload poster")));
-                      }else{
-                             Navigator.push(context,
-                             MaterialPageRoute(builder: (context) {
+                      } else {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
                           //  return RegistrationForm();
-                           return RegistrationDetailsPage();
-
-                           }));
+                          return RegistrationDetailsPage();
+                        }));
                       }
 
                       CollectionReference collRef =
@@ -351,6 +354,8 @@ class _OrganiserFormState extends State<OrganiserForm> {
                         'type': _eventTypeController.text,
                         'mode': _eventMode.toString(),
                         'description': _eventDescriptionController.text,
+                        'speaker_desig': _nameController.text,
+                        'speaker_name':   _designationController.text,
                         'poster': imageUrl
                       });
                     }
