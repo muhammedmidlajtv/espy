@@ -1,8 +1,8 @@
 // import 'dart:html';
 
-import 'package:espy/screen/SignUp.dart';
+import 'package:espy/screen/signup/SignUp.dart';
 import 'package:espy/screen/splash.dart';
-import 'package:espy/screen/user_homeScreen.dart';
+import 'package:espy/screen/userscreens/user_homeScreen.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {

@@ -1,10 +1,7 @@
 import 'package:espy/main.dart';
-import 'package:espy/screen/Login.dart';
-import 'package:espy/screen/introductionScreen.dart';
-import 'package:espy/screen/SignUp.dart';
-import 'package:espy/screen/introductionScreen.dart';
-import 'package:espy/screen/profile.dart';
-import 'package:espy/screen/user_homeScreen.dart';
+import 'package:espy/screen/login/Login.dart';
+import 'package:espy/screen/introscreens/introductionScreen.dart';
+import 'package:espy/screen/userscreens/user_homeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,37 +18,53 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    checkUserLoggedIn();
     _navigatetohome();
-
-    
+    //checkUserLoggedIn();
   }
 
   _onboardcheck() async {
     final onboardcount = await SharedPreferences.getInstance();
     final int? onBoardCount = onboardcount.getInt('onBoardCount');
-    
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                onBoardCount != 0 ? IntroductionScreen() : Login()));
+
+    if (mounted) {
+      // Check if the widget is still mounted
+      
+      onBoardCount != 0
+          ? (Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+              return IntroductionScreen();
+            })))
+          : checkUserLoggedIn();
+      /* Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(builder: (context) => onBoardCount != 0 ? IntroductionScreen() : checkUserLoggedIn()),
+); */
+
+      /* Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return onBoardCount != 0 ? IntroductionScreen() : Login();
+      })); */
+    }
   }
 
-   _navigatetohome() async {
+  _navigatetohome() async {
     await Future.delayed(Duration(milliseconds: 1500), () {});
 
-    _onboardcheck();
-    // context, MaterialPageRoute(builder: (context) => ProfilePage()));
+    
+      // Check if the widget is still mounted
+      _onboardcheck();
+    
   }
 
   Future<void> gotoLogin() async {
     await Future.delayed(Duration(milliseconds: 1500), () {});
-    Navigator.pushReplacement(
-
-        // context, MaterialPageRoute(builder: (context) => Login()));
+    if (mounted) {
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Login()));
+        MaterialPageRoute(builder: (context) => Login()),
+      );
+      /* Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return Login();
+      })); */
+    }
   }
 
   @override
@@ -75,12 +88,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> checkUserLoggedIn() async {
     final _SharedPrefs = await SharedPreferences.getInstance();
-    final _userLoggedIn = _SharedPrefs.getBool(SAVE_KEY_NAME);
+    final _userLoggedIn = _SharedPrefs.getBool("userloggedin");
     if (_userLoggedIn == null || _userLoggedIn == false) {
       gotoLogin();
     } else {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: ((context) => user_homeLogin())));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => user_homeLogin()),
+      );
     }
   }
 }

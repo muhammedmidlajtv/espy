@@ -1,4 +1,4 @@
-import 'package:espy/screen/Login.dart';
+import 'package:espy/screen/login/Login.dart';
 import 'package:espy/screen/introscreens/intropage1.dart';
 import 'package:espy/screen/introscreens/intropage2.dart';
 import 'package:espy/screen/introscreens/intropage3.dart';
@@ -69,10 +69,11 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                           final onboardcount =
                               await SharedPreferences.getInstance();
                           await onboardcount.setInt('onBoardCount', 0);
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return Login();
-                          }));
+                          Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(builder: (context) => Login()),
+);
+
                         },
                         child: Text(
                           "DONE    ",

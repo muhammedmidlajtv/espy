@@ -1,4 +1,4 @@
-import 'package:espy/screen/user_homeScreen.dart';
+import 'package:espy/screen/userscreens/user_homeScreen.dart';
 import 'package:flutter/material.dart';
 
 class userEventRegistration extends StatelessWidget {

@@ -22,7 +22,6 @@ version: 1.0.0+1
 environment:
   sdk: ">=2.18.2 <3.0.0"
 
-
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
@@ -43,8 +42,10 @@ dependencies:
   firebase_core: ^2.26.0
   firebase_auth: ^4.17.7
   smooth_page_indicator: ^1.1.0
+  intl: ^0.19.0
+  image_picker: ^1.0.8
+  file_picker: ^8.0.0+1
   # shared_preferences: ^2.2.2
-  
 
 dev_dependencies:
   flutter_test:
@@ -78,12 +79,15 @@ flutter:
     - assets/images/drawer_icon.png
     - assets/images/avatar.png
     - assets/images/image.png
+    - assets/images/user.png
+    - assets/images/organizer.png
+    - assets/images/events.png
 
     - assets/images/location_img.png
     - assets/images/calender_icon.png
     - assets/images/Hackathon_Team.png
     - assets/images/category.png
-    
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
