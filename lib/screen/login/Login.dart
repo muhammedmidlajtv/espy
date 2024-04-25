@@ -1,20 +1,44 @@
-import 'package:espy/screen/SignUp.dart';
-import 'package:espy/screen/splash.dart';
-import 'package:espy/screen/user_homeScreen.dart';
+import "dart:developer";
+import 'package:espy/main.dart';
+import "package:espy/screen/authentication/auth_service.dart";
+import 'package:espy/screen/signup/SignUp.dart';
+import 'package:espy/screen/userscreens/user_homeScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Login extends StatelessWidget {
-   Login({super.key});
+// final _textController = TextEditingController();
 
+class Login extends StatefulWidget {
+  Login({super.key});
+
+  @override
+  State<Login> createState() => _LoginScreenState();
+}
+
+// class _LoginScreenState extends State<Login>{
+//   final _email = TextEditingController();
+//   final _password = TextEditingController();
+class _LoginScreenState extends State<Login> {
+  final _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
+  final _email = TextEditingController();
+  final _password = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _email.dispose();
+    _password.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[850],
-            // resizeToAvoidBottomInset: false, // Disable resizing to avoid bottom overflow
+      // resizeToAvoidBottomInset: false, // Disable resizing to avoid bottom overflow
 
-      body: Column(
+      body: SingleChildScrollView(
+        child: Column(
         children: [
           Container(
             height: 300,
@@ -29,10 +53,10 @@ class Login extends StatelessWidget {
             ),
           ),
           Form(
-            // key: _formKey,
+            key: _formKey,
             child: Container(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(20,0,20,0),
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -49,11 +73,14 @@ class Login extends StatelessWidget {
                           borderRadius: BorderRadius.circular(15.0),
                         ),
                         // filled: true,
-                        hintStyle:
-                            TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
+                        hintStyle: TextStyle(
+                            color: Color.fromARGB(255, 166, 162, 162)),
                         hintText: "Enter your  Email",
+                        labelText: "Email",
+
                         // fillColor: Colors.white70,
                       ),
+                      controller: _email,
 
                       // The validator receives the text that the user has entered.
                       validator: (value) {
@@ -75,12 +102,13 @@ class Login extends StatelessWidget {
                           borderRadius: BorderRadius.circular(15.0),
                         ),
                         // filled: true,
-                        hintStyle:
-                            TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
+                        hintStyle: TextStyle(
+                            color: Color.fromARGB(255, 166, 162, 162)),
                         hintText: "Enter your password",
+                        labelText: "Password",
                         // fillColor: Colors.white70,
                       ),
-
+                      controller: _password,
                       // The validator receives the text that the user has entered.
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -93,24 +121,25 @@ class Login extends StatelessWidget {
                       height: 20,
                     ),
                     Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // if (_formKey.currentState!.validate()) {
-                          // If the form is valid, display a snackbar. In the real world,
-                          // you'd often call a server or save the information in a database.
-                          _navigateToHomeUpScreen(context);
-
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            // If the form is valid, display a snackbar. In the real world,
+                            // you'd often call a server or save the information in a database.
+                            _login(context, _email.text, _password.text);
+                            // _navigateToHomeUpScreen(context);
+                          }
                           // ScaffoldMessenger.of(context).showSnackBar(
                           //   const SnackBar(content: Text('Processing Data')),
                           // );
-                        // }
+                          // }
 
-                        // Validate returns true if the form is valid, or false otherwise.
-                      },
-                      child: const Text('Submit'),
-                    ),
-                  )
+                          // Validate returns true if the form is valid, or false otherwise.
+                        },
+                        child: const Text('Submit'),
+                      ),
+                    )
                     // DropdownButton<String>(
                     // items: <String>['A', 'B', 'C', 'D'].map((String value) {
                     //   return DropdownMenuItem<String>(
@@ -143,7 +172,7 @@ class Login extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(0,0,0,0),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,16 +203,17 @@ class Login extends StatelessWidget {
                               onPressed: () {
                                 _navigateToSignUpScreen(context);
                               },
-                              iconSize: 50,
-                              icon: Image.asset("assets/images/gmail_logo.png")),
+                              iconSize: 10,
+                              icon:
+                                  Image.asset("assets/images/gmail_logo.png")),
                           // RaisedButton(
                           //   child: const Text('Pause'),
                           //   onPressed: () {/* ... */},
                           // ),
-                          IconButton(
-                              onPressed: () {},
-                              iconSize: 40,
-                              icon: Image.asset("assets/images/google_logo.png")),
+                          // IconButton(
+                          //     onPressed: () {},
+                          //     iconSize: 10,
+                          //     icon: Image.asset("assets/images/google_logo.png")),
                         ],
                         // ),
                         // ],
@@ -195,18 +225,68 @@ class Login extends StatelessWidget {
             ),
           )
         ],
+      )
       ),
     );
+  }
+
+  void _navigateToSignUpScreen(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => SignUp()));
+  }
+
+  void _navigateToHomeUpScreen(BuildContext context) {
+   Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(builder: (context) => user_homeLogin()),
+);
+  }
+
+  void _navigateToLoginScreen(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => Login()));
+  }
+  //  _login(String email, String password) async {
+  //   final _auth = AuthService();
+  //   final user = await _auth.loginUserWithEmailAndPassword(email, password);
+
+  //   if (user != null) {
+  //     log("User Logged In");
+  //     user_homeLogin();
+  //   }
+  // }
+  void _login(BuildContext context, String email, String password) async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        final user = await _auth.loginUserWithEmailAndPassword(email, password);
+        if (user != null) {
+          log("User Logged In");
+          _navigateToHomeUpScreen(context);
+
+          //sharedpreferences
+
+          final _sharedPrefs = await SharedPreferences.getInstance();
+         await _sharedPrefs.setBool("userloggedin", true);
+
+          //
+        } else {
+          _navigateToLoginScreen(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Invalid email or password')),
+          );
+        }
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(error.toString()),
+          ),
+        );
+      }
+    }
   }
 }
 
 
- void _navigateToSignUpScreen(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignUp()));
-  }
-  void _navigateToHomeUpScreen(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => user_homeLogin()));
-  }
 
 
 //   @override

@@ -1,8 +1,8 @@
 // import 'dart:html';
 
-import 'package:espy/screen/SignUp.dart';
+import 'package:espy/screen/signup/SignUp.dart';
 import 'package:espy/screen/splash.dart';
-import 'package:espy/screen/user_homeScreen.dart';
+import 'package:espy/screen/userscreens/user_homeScreen.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -22,7 +22,7 @@ class ProfilePage extends StatelessWidget {
                         child: CircleAvatar(
                                   backgroundImage: NetworkImage(
                         "https://img.freepik.com/premium-vector/young-smiling-man-avatar-man-with-brown-beard-mustache-hair-wearing-yellow-sweater-sweatshirt-3d-vector-people-character-illustration-cartoon-minimal-style_365941-860.jpg"),
-                                  radius: 150,
+                                  radius: 1500,
                                 ),
                       ),
                   
