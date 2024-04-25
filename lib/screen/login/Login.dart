@@ -134,7 +134,7 @@ class _LoginScreenState extends State<Login> {
                       buttonType: SocialLoginButtonType.generalLogin,
                       borderRadius: 55,
                     ),
-                    SizedBox(height: 50,),
+                    SizedBox(height: 40,),
 
                     SizedBox(
                       height: 20,
@@ -149,13 +149,13 @@ class _LoginScreenState extends State<Login> {
                     )
                     
                     ),
-                    SizedBox(height: 50,),
+                    SizedBox(height: 40,),
                     SocialLoginButton(
                       onPressed: (){},
                       buttonType: SocialLoginButtonType.google,
                       borderRadius: 55,
                     ),
-                    SizedBox(height: 50,),
+                    SizedBox(height: 40,),
                     
                     SizedBox(
                       child: Row(mainAxisAlignment: MainAxisAlignment.center,
