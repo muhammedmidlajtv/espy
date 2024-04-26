@@ -3,6 +3,7 @@ import 'package:espy/main.dart';
 import "package:espy/screen/authentication/auth_service.dart";
 import 'package:espy/screen/signup/SignUp.dart';
 import 'package:espy/screen/userscreens/user_homeScreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -267,7 +268,15 @@ class _LoginScreenState extends State<Login> {
   Future<void> authenticateWithGoogle({required BuildContext context}) async {
     try {
       final googleUser = await AuthService.signInWithGoogle();
+      User user = googleUser.user!;
 
+// Get the display name of the user
+      String? username = user.displayName;
+      String? email = user.email;
+      
+      log(username.toString());
+      log(email.toString());
+      
       log("User Logged In with google");
       _navigateToHomeUpScreen(context);
 
@@ -278,8 +287,8 @@ class _LoginScreenState extends State<Login> {
 
       //
     } on NoGoogleAccountChosenException {
-      return;} 
-    catch (error) {
+      return;
+    } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.toString()),
