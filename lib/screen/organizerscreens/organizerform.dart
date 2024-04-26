@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:espy/screen/organizerscreens/registration.dart';
 import 'package:file_picker/file_picker.dart';
-
+import 'package:espy/main.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart'; // Import DateFormat
@@ -16,43 +16,30 @@ class OrganiserForm extends StatefulWidget {
 }
 
 class _OrganiserFormState extends State<OrganiserForm> {
-  DateTime? _selectedDate; // Variable to store selected date
+  // DateTime? selectedDate; // Variable to store selected date
 
   // Function to open date picker
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
+      initialDate: selectedDate ?? DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime(2101),
     );
-    if (picked != null && picked != _selectedDate) {
+    if (picked != null && picked != selectedDate) {
       setState(() {
-        _selectedDate = picked;
+        selectedDate = picked;
       });
     }
   }
 
-  String _eventMode = 'Online'; // Variable to store selected event mode
-  String? _filePath;
-  List<Map<String, String>> _speakers = [];
+  // List<Map<String, String>> _speakers = [];
 
-  // Text controllers for mandatory fields
-  final TextEditingController _eventNameController = TextEditingController();
-  final TextEditingController _organizerNameController =
-      TextEditingController();
-  final TextEditingController _eventTimeController = TextEditingController();
-  final TextEditingController _eventDateController = TextEditingController();
-  final TextEditingController _eventTypeController = TextEditingController();
-  final TextEditingController _eventDescriptionController =
-      TextEditingController();
-
-  //chance for ambiguity
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _designationController = TextEditingController();
-
-  String imageUrl = '';
+  // String imageUrl = '';
   String FileName = "";
+
+  String? _filePath;
+
   // Form key for validation
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -77,7 +64,7 @@ class _OrganiserFormState extends State<OrganiserForm> {
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 SizedBox(height: 10),
                 TextFormField(
-                  controller: _eventNameController,
+                  controller: eventNameController,
                   decoration: InputDecoration(labelText: 'Name of the Event'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -87,7 +74,7 @@ class _OrganiserFormState extends State<OrganiserForm> {
                   },
                 ),
                 TextFormField(
-                  controller: _organizerNameController,
+                  controller: organizerNameController,
                   decoration:
                       InputDecoration(labelText: 'Name of the Organizer'),
                   validator: (value) {
@@ -98,7 +85,7 @@ class _OrganiserFormState extends State<OrganiserForm> {
                   },
                 ),
                 TextFormField(
-                  controller: _eventTimeController,
+                  controller: eventTimeController,
                   decoration: InputDecoration(labelText: 'Time of the Event'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -119,9 +106,10 @@ class _OrganiserFormState extends State<OrganiserForm> {
                     _selectDate(context); // Open calendar to choose date
                   },
                   controller: TextEditingController(
-                    text: _selectedDate == null
+                    text: selectedDate == null
                         ? ''
-                        : DateFormat('yyyy-MM-dd').format(_selectedDate!),
+                        : DateFormat('yyyy-MM-dd').format(selectedDate!),
+                        
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -129,10 +117,12 @@ class _OrganiserFormState extends State<OrganiserForm> {
                     }
                     return null;
                   },
+                  
                 ),
+                
                 // Dropdown for selecting event type
                 TextFormField(
-                  controller: _eventTypeController,
+                  controller: eventTypeController,
                   decoration: InputDecoration(
                     labelText: 'Type of Event (e.g. Hackathon, Ideathon)',
                   ),
@@ -145,10 +135,10 @@ class _OrganiserFormState extends State<OrganiserForm> {
                 ),
                 // Dropdown for selecting event mode
                 DropdownButtonFormField<String>(
-                  value: _eventMode,
+                  value: eventMode,
                   onChanged: (value) {
                     setState(() {
-                      _eventMode = value!;
+                      eventMode = value!;
                     });
                   },
                   items: ['Online', 'Offline']
@@ -161,7 +151,7 @@ class _OrganiserFormState extends State<OrganiserForm> {
                   decoration: InputDecoration(labelText: 'Mode of Event'),
                 ),
                 TextFormField(
-                  controller: _eventDescriptionController,
+                  controller: eventDescriptionController,
                   decoration: InputDecoration(
                       labelText: 'Brief Description of the Event'),
                   maxLines: null,
@@ -173,6 +163,7 @@ class _OrganiserFormState extends State<OrganiserForm> {
                   },
                 ),
                 TextFormField(
+                  controller: skillController,
                   decoration: InputDecoration(labelText: 'Skills Assessed'),
                   maxLines: null,
                   validator: (value) {
@@ -218,6 +209,7 @@ class _OrganiserFormState extends State<OrganiserForm> {
                       await referenceImageToUpload.putFile(File(file.path));
 
                       imageUrl = await referenceImageToUpload.getDownloadURL();
+                      print(imageUrl);
                     } catch (error) {}
                     // referenceImageToUpload.putFile(File(file!.path));
                   },
@@ -239,7 +231,7 @@ class _OrganiserFormState extends State<OrganiserForm> {
                 SizedBox(height: 10),
                 Column(
                   children: [
-                    for (var speaker in _speakers)
+                    for (var speaker in speakers)
                       ListTile(
                         title: Text(
                             '${speaker['name']} - ${speaker['designation']}'),
@@ -247,7 +239,7 @@ class _OrganiserFormState extends State<OrganiserForm> {
                           icon: Icon(Icons.remove_circle),
                           onPressed: () {
                             setState(() {
-                              _speakers.remove(speaker);
+                              speakers.remove(speaker);
                             });
                           },
                         ),
@@ -271,13 +263,13 @@ class _OrganiserFormState extends State<OrganiserForm> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               TextFormField(
-                                controller: _nameController,
+                                controller: nameController,
                                 decoration: InputDecoration(
                                     labelText: 'Name of the Speaker'),
                               ),
                               SizedBox(height: 10),
                               TextFormField(
-                                controller: _designationController,
+                                controller: designationController,
                                 decoration:
                                     InputDecoration(labelText: 'Designation'),
                               ),
@@ -286,13 +278,12 @@ class _OrganiserFormState extends State<OrganiserForm> {
                           actions: [
                             TextButton(
                               onPressed: () {
-                                if (_nameController.text.isNotEmpty &&
-                                    _designationController.text.isNotEmpty) {
+                                if (nameController.text.isNotEmpty &&
+                                    designationController.text.isNotEmpty) {
                                   setState(() {
-                                    _speakers.add({
-                                      'name': _nameController.text,
-                                      'designation':
-                                          _designationController.text,
+                                    speakers.add({
+                                      'name': nameController.text,
+                                      'designation': designationController.text,
                                     });
                                   });
                                   Navigator.pop(context);
@@ -344,20 +335,6 @@ class _OrganiserFormState extends State<OrganiserForm> {
                           return RegistrationDetailsPage();
                         }));
                       }
-
-                      CollectionReference collRef =
-                          FirebaseFirestore.instance.collection('events');
-                      collRef.add({
-                        'name': _eventNameController.text,
-                        'name_organiser': _organizerNameController.text,
-                        'time': _eventTimeController.text,
-                        'type': _eventTypeController.text,
-                        'mode': _eventMode.toString(),
-                        'description': _eventDescriptionController.text,
-                        'speaker_desig': _nameController.text,
-                        'speaker_name':   _designationController.text,
-                        'poster': imageUrl
-                      });
                     }
                   },
                   child: Text('Save and Proceed'),

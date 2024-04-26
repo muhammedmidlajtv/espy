@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Import 'package:flutter/services.dart' for TextInputFormatter
+import 'package:espy/main.dart';
 
 class RegistrationDetailsPage extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +30,9 @@ class RegistrationDetailsPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20.0),
-              RegistrationForm(),
+              RegistrationForm(
+            
+                  ),
             ],
           ),
         ),
@@ -37,21 +42,14 @@ class RegistrationDetailsPage extends StatelessWidget {
 }
 
 class RegistrationForm extends StatefulWidget {
+
   @override
   _RegistrationFormState createState() => _RegistrationFormState();
 }
 
 class _RegistrationFormState extends State<RegistrationForm> {
-  // Define form fields and their controllers
-  TextEditingController _venueController = TextEditingController();
-  TextEditingController _mapLinkController = TextEditingController();
-  TextEditingController _districtController = TextEditingController();
-  TextEditingController _regLinkController = TextEditingController();
-  String participationType = 'Individual';
-  String participationFee = 'Free';
-  int? participationAmount = 0; // Changed to nullable int
-  int? minParticipants = 1;
-  int? maxParticipants = 1;
+ 
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -62,7 +60,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextFormField(
-            controller: _venueController,
+            controller: venueController,
             decoration: InputDecoration(labelText: 'Venue *'),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -88,7 +86,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
           ),
           if (participationFee == 'Paid') ...[
             TextFormField(
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly], // Allow only digits
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly
+              ], // Allow only digits
               onChanged: (value) {
                 setState(() {
                   participationAmount = int.tryParse(value);
@@ -105,11 +105,11 @@ class _RegistrationFormState extends State<RegistrationForm> {
             ),
           ],
           TextFormField(
-            controller: _mapLinkController,
+            controller: mapLinkController,
             decoration: InputDecoration(labelText: 'Link to Google Map'),
           ),
           TextFormField(
-            controller: _districtController,
+            controller: districtController,
             decoration: InputDecoration(labelText: 'District *'),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -125,7 +125,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 participationType = value!;
               });
             },
-            items: ['Individual', 'Team'].map<DropdownMenuItem<String>>((value) {
+            items:
+                ['Individual', 'Team'].map<DropdownMenuItem<String>>((value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),
@@ -135,7 +136,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
           ),
           if (participationType == 'Team') ...[
             TextFormField(
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly], // Allow only digits
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly
+              ], // Allow only digits
               onChanged: (value) {
                 setState(() {
                   minParticipants = int.tryParse(value);
@@ -150,9 +153,10 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 return null;
               },
             ),
-            
             TextFormField(
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly], // Allow only digits
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly
+              ], // Allow only digits
               onChanged: (value) {
                 setState(() {
                   maxParticipants = int.tryParse(value);
@@ -169,7 +173,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
             ),
           ],
           TextFormField(
-            controller: _regLinkController,
+            controller: regLinkController,
             decoration: InputDecoration(labelText: 'Registration Link *'),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -181,26 +185,57 @@ class _RegistrationFormState extends State<RegistrationForm> {
           SizedBox(height: 20.0),
           ElevatedButton(
             onPressed: () {
-              if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+              if (_formKey.currentState != null &&
+                  _formKey.currentState!.validate()) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Form is valid, ready to publish'))
-                  );
-                  CollectionReference collRef = FirebaseFirestore.instance.collection('event_reg_details');
-                                        collRef.add({
-                        'venue': _venueController.text,
-                        'map': _mapLinkController.text,
-                        'district': _mapLinkController.text,
-                        'type': _districtController.text,
-                        'reg_link': _regLinkController.text,
-                        'participation_Type': participationType.toString(),
-                        'participation_fee' : participationFee.toString()
-                      });
+                    SnackBar(content: Text('Form is valid, ready to publish')));
+                CollectionReference collRef =
+                    FirebaseFirestore.instance.collection('events');
+                collRef.add({
 
+                   //controllers from events basic information page
+
+                  'name': eventNameController.text,
+                  'name_organiser': organizerNameController.text,
+                  'time': eventTimeController.text,
+                  'type': eventTypeController.text,
+                  'mode': eventMode.toString(),
+                  'description': eventDescriptionController.text,
+                  'date' : selectedDate.toString(),
+                  'speaker_desig': designationController.text,
+                  'skill': skillController.text,
+                  'speaker_name': nameController.text,
+                  // 'speaker_name': speakers['designation'],
+
+                for (int i = 0; i < speakers.length; i++) ...{
+                    'speaker_name_$i': speakers[i]['name'],
+                    'speaker_desig_$i': speakers[i]['designation'],
+                  },
+
+                  'poster': imageUrl,
+
+                  // controllers from registration page
+                  'venue': venueController.text,
+                  'map': mapLinkController.text,
+                  'district': districtController.text,
+                  // 'type': districtController.text,
+                  'reg_link': regLinkController.text,
+                  'participation_Type': participationType.toString(),
+                  'participation_fee': participationFee.toString(),
+                  'fee': participationAmount.toString(),
+                  'minparticipants': minParticipants.toString(),
+                  'maxparticipans': maxParticipants.toString()
+
+                 
+                }
+                );
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Please fill in all required fields')),
                 );
               }
+            print(eventNameController.text);
+
             },
             child: Text('Publish'),
           ),
