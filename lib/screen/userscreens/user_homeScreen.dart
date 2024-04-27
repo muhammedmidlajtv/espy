@@ -11,7 +11,7 @@ import 'package:espy/screen/login/Login.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 List<String> image = [
   'https://t3.ftcdn.net/jpg/03/01/13/20/360_F_301132090_LKoSp3l3cXlCo78zaAe2M9LI2z5yznvB.jpg',
   'https://hbr.org/resources/images/article_assets/2014/10/25Sep03_Elsbach_how-to-pitch-a-brilliant-idea1.jpg',
@@ -103,9 +103,13 @@ class user_homeLogin extends StatefulWidget {
 
 class _user_homeLoginState extends State<user_homeLogin> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   List<String> filteredImage = image;
   List<String> filteredTitle = title;
+   String _userId = ""; // Initialize user ID
+  List<String> _preferredDomains = []; // Initialize preferred domains
 
   // Filter options
   List<String> categories = ['Hackathon', 'Ideathon', 'Idea Pitching'];
@@ -113,6 +117,51 @@ class _user_homeLoginState extends State<user_homeLogin> {
   List<String> universities = ['RIT', 'CET', 'MACE'];
 
   RangeValues _currentRangeValues = const RangeValues(20, 60);
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentUser();
+  }
+
+  void _getCurrentUser() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      setState(() {
+        _userId = user.uid;
+      });
+      await _fetchPreferredDomains();
+    }
+  }
+
+   Future<void> _fetchPreferredDomains() async {
+    try {
+      final DocumentSnapshot userDoc = await _firestore.collection('users').doc(_userId).get();
+      if (userDoc.exists) {
+        final data = userDoc.data() as Map<String, dynamic>; // Cast to Map
+        if (data != null && data.containsKey('preferred')) {
+          setState(() {
+            _preferredDomains = List<String>.from(data['preferred']);
+          });
+        }
+      }
+    } catch (e) {
+      print("Error fetching preferred domains: $e");
+    }
+  }
+
+  Future<List<String>> _fetchEventsForPreferredDomains() async {
+    try {
+      final QuerySnapshot eventsQuery = await _firestore.collection('events')
+          .where('domain', whereIn: _preferredDomains)
+          .get();
+      final List<String> eventNames = eventsQuery.docs.map((doc) => doc['name'] as String).toList();
+      return eventNames;
+    } catch (e) {
+      print("Error fetching events: $e");
+      return []; // Return an empty list if no data or error
+    }
+  }
 
   void applyFilters() {
     // Filter the items based on user selections
