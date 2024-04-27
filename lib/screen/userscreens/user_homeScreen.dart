@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:espy/screen/login/Login.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 List<String> image = [
@@ -42,15 +43,13 @@ class NavDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.input),
-            title: Text('Welcome'),
-            onTap: () => {
-              /* Navigator.push(context, MaterialPageRoute(builder: (context) {
+              leading: Icon(Icons.input),
+              title: Text('Welcome'),
+              onTap: () => {
+                    /* Navigator.push(context, MaterialPageRoute(builder: (context) {
         return EventOrganizerApp();
       })) */
-         
-            }
-          ),
+                  }),
           ListTile(
             leading: Icon(Icons.verified_user),
             title: Text('Profile'),
@@ -72,11 +71,12 @@ class NavDrawer extends StatelessWidget {
             // onTap: () => {Navigator.of(context).pop()},
             onTap: () async {
               await auth.signout();
+              await GoogleSignIn().signOut();
               goToLogin(context);
 
               //sharedprefereces
               final _sharedPrefs = await SharedPreferences.getInstance();
-              await _sharedPrefs.setBool("userloggedin",false);
+              await _sharedPrefs.setBool("userloggedin", false);
               //
             },
           ),
@@ -241,7 +241,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
 
                                   //       ],
                                   //     ),
-                                
+
                                   // District filter
                                   DropdownButtonFormField<String>(
                                     value: districts.first,
@@ -343,7 +343,6 @@ class CardItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       child: Card(
-        
         color: Colors.yellow[50],
         elevation: 8.0,
         margin: EdgeInsets.all(4.0),
@@ -375,8 +374,8 @@ class CardItem extends StatelessWidget {
       ),
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-                          return userEventRegistration();
-                        }));
+          return userEventRegistration();
+        }));
         /* Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: ((context) => userEventRegistration()))); */
       },
@@ -385,7 +384,6 @@ class CardItem extends StatelessWidget {
 }
 
 goToLogin(BuildContext context) => Navigator.pushReplacement(
-  context,
-  MaterialPageRoute(builder: (context) => Login()),
-
+      context,
+      MaterialPageRoute(builder: (context) => Login()),
     );
