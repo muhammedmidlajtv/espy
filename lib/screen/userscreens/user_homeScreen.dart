@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:espy/screen/login/Login.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 List<String> image = [
@@ -81,6 +82,7 @@ class NavDrawer extends StatelessWidget {
             // onTap: () => {Navigator.of(context).pop()},
             onTap: () async {
               await auth.signout();
+              await GoogleSignIn().signOut();
               goToLogin(context);
 
               //sharedprefereces
