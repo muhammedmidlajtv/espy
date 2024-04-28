@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 List<String> selected = [];
 
 class SignUp extends StatelessWidget {
- SignUp({super.key});
+  SignUp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -314,9 +314,8 @@ class MyCustomFormState extends State<MyCustomForm> {
                         _selectedTextColor = Colors.white;
 
                         if (_selectedRole == 'User') {
-                           _selectCategories();
-                           
-                          }
+                          _selectCategories();
+                        }
                       });
                     },
                     items: <String>['Organiser', 'User']
@@ -333,24 +332,24 @@ class MyCustomFormState extends State<MyCustomForm> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please select an option';
-                      } 
+                      }
 
                       return null;
                     },
                   ),
-                  if(_selectedRole == 'User')...[
+                  if (_selectedRole == 'User') ...[
                     const Divider(
-                          height: 30,
-                        ),
-                        Wrap(
-                          children: _selectedItems
-                              .map((e) => Chip(
-                                    label: Text(e),
-                                  ))
-                              .toList(),
-                        ),
+                      height: 30,
+                    ),
+                    Wrap(
+                      children: _selectedItems
+                          .map((e) => Chip(
+                                label: Text(e),
+                              ))
+                          .toList(),
+                    ),
                   ],
-                  
+
                   SizedBox(
                     height: 20,
                   ),
@@ -384,10 +383,14 @@ class MyCustomFormState extends State<MyCustomForm> {
                                 .collection('user_login');
                             collRef.add({
                               'name': _name.text,
-                              'email':_email.text,
+                              'email': _email.text,
                               'password1': _password.text,
-                              'password2' : _confirm.text,
-                              'role' : _selectedRole.toString()
+                              'password2': _confirm.text,
+                              'role': _selectedRole.toString(),
+                                for (int i = 0; i < _selectedItems.length; i++) ...{
+                    'preferences$i': _selectedItems[i],
+                    
+                  },
                             });
                           },
                           child: const Text(
