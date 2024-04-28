@@ -7,6 +7,40 @@ import "package:firebase_core/firebase_core.dart";
 
 const SAVE_KEY_NAME = 'UserLoggedIn ';
 
+final TextEditingController eventNameController = TextEditingController();
+final TextEditingController organizerNameController = TextEditingController();
+final TextEditingController eventTimeController = TextEditingController();
+final TextEditingController eventDateController = TextEditingController();
+final TextEditingController eventTypeController = TextEditingController();
+final TextEditingController skillController = TextEditingController();
+
+final TextEditingController eventDescriptionController =
+    TextEditingController();
+
+//chance for ambiguity
+final TextEditingController nameController = TextEditingController();
+final TextEditingController designationController = TextEditingController();
+String imageUrl = "";
+String FileName = "";
+String eventMode = 'Online'; // Variable to store selected event mode
+String? _filePath;
+
+  DateTime? selectedDate; // Variable to store selected date
+    List<Map<String, String>> speakers = [];
+
+
+TextEditingController venueController = TextEditingController();
+TextEditingController mapLinkController = TextEditingController();
+TextEditingController districtController = TextEditingController();
+TextEditingController regLinkController = TextEditingController();
+String participationType = 'Individual';
+String participationFee = 'Free';
+int? participationAmount = 0; // Changed to nullable int
+int? minParticipants = 1;
+int? maxParticipants = 1;
+
+
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

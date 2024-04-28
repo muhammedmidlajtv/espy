@@ -1,6 +1,7 @@
 import 'package:espy/main.dart';
 import 'package:espy/screen/login/Login.dart';
 import 'package:espy/screen/introscreens/introductionScreen.dart';
+import 'package:espy/screen/signup/SignUp.dart';
 import 'package:espy/screen/userscreens/user_homeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -59,7 +60,9 @@ class _SplashScreenState extends State<SplashScreen> {
     if (mounted) {
       Navigator.pushReplacement(
         context,
+        // MaterialPageRoute(builder: (context) => SignUp()),
         MaterialPageRoute(builder: (context) => Login()),
+
       );
       /* Navigator.push(context, MaterialPageRoute(builder: (context) {
         return Login();
