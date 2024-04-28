@@ -1,6 +1,7 @@
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:espy/screen/organizerscreens/organizerform.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class EventOrganizerApp extends StatelessWidget {
   @override
@@ -22,7 +23,10 @@ class EventOrganizerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Elon Musk',style: TextStyle(color: Colors.white),),
+        title: Text(
+          'Elon Musk',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.black,
         actions: [
           CircleAvatar(
@@ -30,58 +34,55 @@ class EventOrganizerPage extends StatelessWidget {
           ),
         ],
       ),
-      body:
-      
-      
-      Container(
-        color: Colors.black,
-        
-        child: ListView(
-          
-          children: [
-            ListTile(
-              title: Text('UPCOMING EVENTS',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 33,color: Colors.white),),
-            ),
-            EventTile(
-              name: 'Event 1',
-              place: 'Location 1',
-              time: '10:00 AM - 12:00 PM',
-              date: '5 December 2024',
-              type: 'Workshop',
-              onDelete: () {
-                // Handle delete action
-              },
-              onEdit: () {
-                // Handle edit action
-              },
-            ),
-            // Add more upcoming events here
-            ListTile(
-              title: Text('PAST EVENTS',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 33,color: Colors.white),),
-            ),
-            EventTile(
-              name: 'Event 2',
-              place: 'Location 2',
-              time: '2:00 PM - 4:00 PM',
-              date: '23 October 2024',
-              type: 'Conference',
-              onDelete: () {
-                // Handle delete action
-              },
-              onEdit: () {
-                // Handle edit action
-              },
-            ),
-            // Add more past events here
-          ],
-        ),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection("events").snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.active) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemBuilder: (context, index) {
+                  DateTime dateTime = DateTime.parse(snapshot.data!.docs[index]["date"].toString());
+                  // Format the DateTime object to display the date
+                  String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
+            
+
+                  return EventTile(
+                    name: snapshot.data!.docs[index]["name"].toString(),
+                    place: snapshot.data!.docs[index]["venue"].toString(),
+                    time: snapshot.data!.docs[index]["time"].toString(),
+                    date: formattedDate,
+                    type: snapshot.data!.docs[index]["type"].toString(),
+                    onDelete: () {
+                      
+                    },
+                    onEdit: () {
+                      
+                    },
+                  );
+                },
+                itemCount: snapshot.data!.docs.length,
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text("${snapshot.hasError.toString()}"),
+              );
+            } else {
+              return Center(
+                child: Text("No data found"),
+              );
+            }
+          } else {
+            return Center(
+              child: CircularProgressIndicator(), // Show loading indicator
+            );
+          }
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-                          return OrganiserForm();
-                        }));
+            return OrganiserForm();
+          }));
           // Handle add new event action
         },
         child: Icon(Icons.add),
@@ -144,7 +145,7 @@ class EventTile extends StatelessWidget {
                 style: TextStyle(fontSize: 19.0),
               ),
               Text(
-                date,
+                date.toString(),
                 style: TextStyle(fontSize: 19.0),
               ),
             ],
@@ -161,10 +162,42 @@ class EventTile extends StatelessWidget {
                 ),
               ),
               Container(
-                child: Row(children: [Text('Edit',style: TextStyle(color: Colors.green.shade900,fontSize: 18,fontWeight: FontWeight.w500),),IconButton(icon:Icon(Icons.edit),onPressed: (){} ,)],),
+                child: Row(
+                  children: [
+                    Text(
+                      'Edit',
+                      style: TextStyle(
+                          color: Colors.green.shade900,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () {
+                        onEdit();
+                      },
+                    )
+                  ],
+                ),
               ),
               Container(
-                child: Row(children: [Text('Delete',style: TextStyle(color: Colors.red.shade900,fontSize: 18,fontWeight: FontWeight.w500),),IconButton(icon:Icon(Icons.delete),onPressed: (){} ,)],),
+                child: Row(
+                  children: [
+                    Text(
+                      'Delete',
+                      style: TextStyle(
+                          color: Colors.red.shade900,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        onDelete();
+                      },
+                    )
+                  ],
+                ),
               ),
             ],
           ),
