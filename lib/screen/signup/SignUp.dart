@@ -5,45 +5,25 @@ import 'package:espy/screen/splash.dart';
 import 'package:espy/screen/userscreens/user_homeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
+
+List<String> selected = [];
 
 class SignUp extends StatelessWidget {
-   const SignUp({super.key});
+  const SignUp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-
-      
-
       child: Scaffold(
-
-        backgroundColor: Colors.grey[850],
-        body: Center(child: SingleChildScrollView(
-          child:const MyCustomForm(),
-        )) 
-      ),
-      
+          backgroundColor: Colors.grey[850],
+          body: Center(
+              child: SingleChildScrollView(
+            child: const MyCustomForm(),
+          ))),
     );
   }
-
-  // @override
-  //   State<SignUp> createState() => MyCustomForm();
 }
-
-// class SignUp  extends StatefulWidget {
-//     SignUp({super.key});
-//     @override
-//     Widget build(BuildContext context) {
-//     return SafeArea(
-//       child: Scaffold(
-//         backgroundColor: Colors.grey[850],
-//         body: SignUp(),
-//       ),
-//     );
-//   }
-//     @override
-//     State<SignUp> createState() => _SignUpScreenState();
-// }
 
 class MyCustomForm extends StatefulWidget {
   const MyCustomForm({super.key});
@@ -53,22 +33,100 @@ class MyCustomForm extends StatefulWidget {
     return MyCustomFormState();
   }
 }
-//////// filter
 
+//multiselect categories
+class MultiSelect extends StatefulWidget {
+  final List<String> items;
+  const MultiSelect({super.key, required this.items});
 
+  @override
+  State<MultiSelect> createState() => _MultiSelectState();
+}
 
+final List<String> _selectedItems = [];
 
+class _MultiSelectState extends State<MultiSelect> {
+  void _itemChange(String itemValue, bool isSelected) {
+    setState(() {
+      if (isSelected) {
+        _selectedItems.add(itemValue);
+      } else {
+        _selectedItems.remove(itemValue);
+      }
+    });
+  }
 
-//////////
+  void _cancel() {
+    Navigator.pop(context);
+  }
 
+  void _submit() {
+    Navigator.pop(context, _selectedItems);
+  }
 
-  //  class _SignUpScreenState extends State<SignUp> {
-  class MyCustomFormState extends State<MyCustomForm> {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text("Select Categories"),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: widget.items
+              .map((item) => CheckboxListTile(
+                    value: _selectedItems.contains(item),
+                    title: Text(item),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    onChanged: (isChecked) => _itemChange(item, isChecked!),
+                  ))
+              .toList(),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: _cancel,
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: _submit,
+          child: const Text('Submit'),
+        )
+      ],
+    );
+  }
+}
+
+class MyCustomFormState extends State<MyCustomForm> {
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
 
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
+
+  List<String> _categories = [];
+
+  void _selectCategories() async {
+    final List<String> items = [
+      'Hackathon',
+      'Ideathon',
+      'Article Writing',
+      'Talk Session',
+      'Workshop'
+    ];
+
+    final List<String>? results = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return MultiSelect(
+          items: items,
+        );
+      },
+    );
+
+    if (results != null) {
+      setState(() {
+        _categories = results;
+      });
+    }
+  }
 
   final _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
@@ -94,7 +152,7 @@ class MyCustomForm extends StatefulWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(0,0,0,45),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 45),
           child: Container(
             height: 300,
             child: DecoratedBox(
@@ -112,7 +170,7 @@ class MyCustomForm extends StatefulWidget {
           key: _formKey,
           child: Container(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20,0,20,0),
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -229,139 +287,83 @@ class MyCustomForm extends StatefulWidget {
                       return null;
                     },
                   ),
-                   SizedBox(height: 20),
-                  // Replace TextFormField with DropdownButtonFormField
-                  // DropdownButtonFormField<String>(
-                  //   value: _selectedRole,
-                  //   decoration: InputDecoration(
-                  //     fillColor: Color.fromARGB(255, 0, 0, 0),
-                  //     filled: true,
-                  //     border: OutlineInputBorder(
-                  //       borderRadius: BorderRadius.circular(15.0),
-                  //     ),
-                  //     hintStyle: TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
-                  //     hintText: "Who are you?",
-                  //     labelText: "Who are you",
-                  //   ),
-                  //   onChanged: (String? newValue) {
-                  //     setState(() {
-                  //       _selectedRole = newValue;
-                  //       _selectedTextColor = Colors.white;
-                  //     });
-                  //   },
-                  //   items: <String>['Organiser', 'User']
-                  //       .map<DropdownMenuItem<String>>((String value) {
-                  //     return DropdownMenuItem<String>(
-                  //       value: value,
-                  //       child: Text(
-                  //         value,
-                  //         style: TextStyle(color: _selectedRole == value ? Colors.white : Colors.black),
-                  //         ),
-                  //     );
-                  //   }).toList(),
-                  //   selectedItemBuilder: (BuildContext context) {
-                  //    return <String>['Organiser', 'User'].map<Widget>((String value) {
-                  //     return Text(
-                  //      value,
-                  //      style: TextStyle(color: Colors.white), // Set the selected item text color to white
-                  //   );
-                  //   }).toList(),
-                  //   validator: (value) {
-                  //     if (value == null || value.isEmpty) {
-                  //       return 'Please select an option';
-                  //     }
-                  //     return null;
-                  //   },
-                  // ),
-           DropdownButtonFormField<String>(
-  value: _selectedRole,
-  decoration: InputDecoration(
-    filled: true,
-    fillColor: Color.fromARGB(255, 0, 0, 0), // Set the initial background color of the field to black
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(15.0),
-    ),
-    hintStyle: TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
-    hintText: "Who are you?",
-    labelText: "Who are you",
-  ),
-  dropdownColor: Colors.black, // Set the dropdown option background color to black
-  onChanged: (String? newValue) {
-    setState(() {
-      _selectedRole = newValue;
-      _selectedTextColor = Colors.white;
-    });
-  },
-  items: <String>['Organiser', 'User']
-      .map<DropdownMenuItem<String>>((String value) {
-    return DropdownMenuItem<String>(
-      value: value,
-    
-      child: Text(
-        value,
-        style: TextStyle(color: _selectedTextColor),
-      ),
-    );
-  }).toList(),
-  validator: (value) {
-    if (value == null || value.isEmpty) {
-      return 'Please select an option';
-    }
-    return null;
-  },
-),
+                  SizedBox(height: 20),
 
+                  DropdownButtonFormField<String>(
+                    value: _selectedRole,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Color.fromARGB(255, 0, 0,
+                          0), // Set the initial background color of the field to black
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      hintStyle:
+                          TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
+                      hintText: "Who are you?",
+                      labelText: "Who are you",
+                    ),
+                    dropdownColor: Colors
+                        .black, // Set the dropdown option background color to black
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedRole = newValue;
+                        _selectedTextColor = Colors.white;
 
+                        if (_selectedRole == 'User') {
+                           _selectCategories();
+                           
+                          }
+                      });
+                    },
+                    items: <String>['Organiser', 'User']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: TextStyle(color: _selectedTextColor),
+                        ),
+                      );
+                    }).toList(),
 
-                  // }).toList(),
-                      //   selectedItemBuilder: (BuildContext context) {
-                      //   return <String>['Organiser', 'User'].map<Widget>((String value) {
-                      //  return Text(
-                      //   value,
-                      //   style: TextStyle(color: Colors.white), // Set the selected item text color to white
-                      //   );
-                  // SizedBox(
-                  //   height: 20,
-                  // ),
-                  // TextFormField(
-                  //   style: const TextStyle(color: Colors.white),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please select an option';
+                      } 
 
-                  //   decoration: InputDecoration(
-                  //     fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
-                  //     border: OutlineInputBorder(
-                  //       borderRadius: BorderRadius.circular(15.0),
-                  //     ),
-                  //     // filled: true,
-                  //     hintStyle:
-                  //         TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
-                  //     hintText: "Who are you?",
-                  //     labelText: "Who are you",
-                  //     // fillColor: Colors.white70,
-                  //   ),
-
-                  //   // The validator receives the text that the user has entered.
-                  //   controller: _who,
-                  //   validator: (value) {
-                  //     if (value == null || value.isEmpty) {
-                  //       return 'Please enter some text';
-                  //     }
-                  //     return null;
-                  //   },
-                  // ),
-                  SizedBox(height: 20,),
+                      return null;
+                    },
+                  ),
+                  if(_selectedRole == 'User')...[
+                    const Divider(
+                          height: 30,
+                        ),
+                        Wrap(
+                          children: _selectedItems
+                              .map((e) => Chip(
+                                    label: Text(e),
+                                  ))
+                              .toList(),
+                        ),
+                  ],
+                  
+                  SizedBox(
+                    height: 20,
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(15,0,15,0),
+                      padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
                       child: Container(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color.fromARGB(255, 106, 96, 93),
                             shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(13.0)),
+                                borderRadius: BorderRadius.circular(13.0)),
                             minimumSize: Size(400, 46),
                           ),
-                          onPressed: () async{
+                          onPressed: () async {
                             // Validate returns true if the form is valid, or false otherwise.
                             await _signup(context);
                             if (_formKey.currentState!.validate()) {
@@ -370,11 +372,15 @@ class MyCustomForm extends StatefulWidget {
                               _navigateToLoginScreen(context);
 
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Processing Data')),
+                                const SnackBar(
+                                    content: Text('Processing Data')),
                               );
                             }
                           },
-                          child: const Text('Submit',style: TextStyle(color: Colors.white),),
+                          child: const Text(
+                            'Submit',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                     ),
@@ -384,51 +390,54 @@ class MyCustomForm extends StatefulWidget {
             ),
           ),
         ),
-        SizedBox(height: 20,),
         SizedBox(
-                      child: Row(mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                        Text("Have an account ?   ",style:TextStyle(color: Colors.white),),
-                        GestureDetector(child: Text("Sign In",style:TextStyle(color: Colors.blue),),
-                        onTap: () {
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-                          return Login();
-                        }));
-        /* Navigator.of(context).pushReplacement(
+          height: 20,
+        ),
+        SizedBox(
+          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Text(
+              "Have an account ?   ",
+              style: TextStyle(color: Colors.white),
+            ),
+            GestureDetector(
+              child: Text(
+                "Sign In",
+                style: TextStyle(color: Colors.blue),
+              ),
+              onTap: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) {
+                  return Login();
+                }));
+                /* Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: ((context) => userEventRegistration()))); */
-      },
-                          )
-                      ]),
-                      
-                    ),
-                    SizedBox(height: 20,),
-        
+              },
+            )
+          ]),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+
         // DropdownMenuExample()
       ],
     );
   }
 
-
-void _navigateToLoginScreen(BuildContext context) {
-  Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login()));
-}
-// _signup() async {
-//     final user =
-//         await _auth.createUserWithEmailAndPassword(_email.text, _password.text);
-//     if (user != null) {
-//       log("User Created Succesfully");
-//       user_homeLogin(context);//goTohome changed to userlogin
-//     }
-//   }
-_signup(BuildContext context) async {
-  final user = await _auth.createUserWithEmailAndPassword(_email.text, _password.text);
-  if (user != null) {
-    log("User Created Successfully");
-    // Navigate to the login page after successful signup
-    _navigateToLoginScreen(context);
+  void _navigateToLoginScreen(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => Login()));
   }
-}
 
+  _signup(BuildContext context) async {
+    final user =
+        await _auth.createUserWithEmailAndPassword(_email.text, _password.text);
+    if (user != null) {
+      log("User Created Successfully");
+      // Navigate to the login page after successful signup
+      _navigateToLoginScreen(context);
+    }
+  }
 }
 // class DropdownMenuExample extends StatefulWidget {
 //   const DropdownMenuExample({super.key});
