@@ -2,6 +2,7 @@
 //import "dart:developer";
 import 'package:espy/main.dart';
 import 'package:espy/screen/organizerscreens/organizer.dart';
+import 'package:espy/screen/profile.dart';
 import 'package:espy/screen/userscreens/userEventRegistration.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:espy/screen/authentication/auth_service.dart';
@@ -55,7 +56,14 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.verified_user),
             title: Text('Profile'),
-            onTap: () => {Navigator.of(context).pop()},
+            onTap: () => {
+              // Navigator.of(context).pop()
+              
+                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return ProfilePage();
+              })) 
+                
+              },
           ),
           ListTile(
             leading: Icon(Icons.settings),
