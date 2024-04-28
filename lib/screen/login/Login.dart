@@ -3,9 +3,13 @@ import 'package:espy/main.dart';
 import "package:espy/screen/authentication/auth_service.dart";
 import 'package:espy/screen/signup/SignUp.dart';
 import 'package:espy/screen/userscreens/user_homeScreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:social_login_buttons/social_login_buttons.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 // final _textController = TextEditingController();
 
 class Login extends StatefulWidget {
@@ -38,7 +42,7 @@ class _LoginScreenState extends State<Login> {
       // resizeToAvoidBottomInset: false, // Disable resizing to avoid bottom overflow
 
       body: SingleChildScrollView(
-        child: Column(
+          child: Column(
         children: [
           Container(
             height: 300,
@@ -62,7 +66,7 @@ class _LoginScreenState extends State<Login> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     SizedBox(
-                      height: 20,
+                      height: 40,
                     ),
                     TextFormField(
                       style: const TextStyle(color: Colors.white),
@@ -118,115 +122,91 @@ class _LoginScreenState extends State<Login> {
                       },
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 40,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            // If the form is valid, display a snackbar. In the real world,
-                            // you'd often call a server or save the information in a database.
-                            _login(context, _email.text, _password.text);
-                            // _navigateToHomeUpScreen(context);
-                          }
-                          // ScaffoldMessenger.of(context).showSnackBar(
-                          //   const SnackBar(content: Text('Processing Data')),
-                          // );
-                          // }
-
-                          // Validate returns true if the form is valid, or false otherwise.
-                        },
-                        child: const Text('Submit'),
-                      ),
+                    SocialLoginButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          // If the form is valid, display a snackbar. In the real world,
+                          // you'd often call a server or save the information in a database.
+                          _login(context, _email.text, _password.text);
+                          // _navigateToHomeUpScreen(context);
+                        }
+                      },
+                      buttonType: SocialLoginButtonType.generalLogin,
+                      borderRadius: 55,
+                    ),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    SizedBox(
+                        height: 20,
+                        width: 400,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                height: 0.5,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              "Or    ",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            Expanded(
+                              child: Container(
+                                height: 0.5,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        )),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    SocialLoginButton(
+                      onPressed: () {
+                        authenticateWithGoogle(context: context);
+                      },
+                      buttonType: SocialLoginButtonType.google,
+                      borderRadius: 55,
+                    ),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    SizedBox(
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Not a member ?   ",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            GestureDetector(
+                              child: Text(
+                                "Register Now ",
+                                style: TextStyle(color: Colors.blue),
+                              ),
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return SignUp();
+                                }));
+                                /* Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: ((context) => userEventRegistration()))); */
+                              },
+                            )
+                          ]),
                     )
-                    // DropdownButton<String>(
-                    // items: <String>['A', 'B', 'C', 'D'].map((String value) {
-                    //   return DropdownMenuItem<String>(
-                    //     value: value,
-                    //     child: Text(value),
-                    //   );
-                    // }).toList(),
-                    // onChanged: (_) {},
-                    // ),
-
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(vertical: 16),
-                    //   child: ElevatedButton(
-                    //     onPressed: () {
-                    //       // Validate returns true if the form is valid, or false otherwise.
-                    //       // if (_formKey.currentState!.validate()) {
-                    //       //   // If the form is valid, display a snackbar. In the real world,
-                    //       //   // you'd often call a server or save the information in a database.
-                    //       //   ScaffoldMessenger.of(context).showSnackBar(
-                    //       //     const SnackBar(content: Text('Processing Data')),
-                    //       //   );
-                    //       // }
-                    //     },
-                    //     child: const Text('Submit'),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 400,
-                  height: 290,
-                  // padding: new EdgeInsets.all(0.0),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(40),
-                            topRight: Radius.circular(40)),
-                      ),
-                      color: Color.fromARGB(255, 0, 0, 0),
-                      elevation: 10,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
-                        // mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          // ButtonBar(
-                          // children: <Widget>[
-                          IconButton(
-                              onPressed: () {
-                                _navigateToSignUpScreen(context);
-                              },
-                              iconSize: 10,
-                              icon:
-                                  Image.asset("assets/images/gmail_logo.png")),
-                          // RaisedButton(
-                          //   child: const Text('Pause'),
-                          //   onPressed: () {/* ... */},
-                          // ),
-                          // IconButton(
-                          //     onPressed: () {},
-                          //     iconSize: 10,
-                          //     icon: Image.asset("assets/images/google_logo.png")),
-                        ],
-                        // ),
-                        // ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
         ],
-      )
-      ),
+      )),
     );
   }
 
@@ -236,11 +216,19 @@ class _LoginScreenState extends State<Login> {
   }
 
   void _navigateToHomeUpScreen(BuildContext context) {
-   Navigator.pushReplacement(
-  context,
-  MaterialPageRoute(builder: (context) => user_homeLogin()),
-);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => user_homeLogin()),
+    );
   }
+
+void _navigateToOrganiserUpScreen(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => user_homeLogin()),
+    );
+  }
+
 
   void _navigateToLoginScreen(BuildContext context) {
     Navigator.of(context)
@@ -266,7 +254,7 @@ class _LoginScreenState extends State<Login> {
           //sharedpreferences
 
           final _sharedPrefs = await SharedPreferences.getInstance();
-         await _sharedPrefs.setBool("userloggedin", true);
+          await _sharedPrefs.setBool("userloggedin", true);
 
           //
         } else {
@@ -284,8 +272,53 @@ class _LoginScreenState extends State<Login> {
       }
     }
   }
+
+  Future<void> authenticateWithGoogle({required BuildContext context}) async {
+    try {
+      final googleUser = await AuthService.signInWithGoogle();
+      User user = googleUser.user!;
+
+// Get the display name of the user
+      String? username = user.displayName;
+      String? email = user.email;
+      
+      log(username.toString());
+      log(email.toString());
+      
+      log("User Logged In with google");
+      _navigateToHomeUpScreen(context);
+
+      //sharedpreferences
+
+      final _sharedPrefs = await SharedPreferences.getInstance();
+      await _sharedPrefs.setBool("userloggedin", true);
+
+      //
+    } on NoGoogleAccountChosenException {
+      return;
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.toString()),
+        ),
+      );
+    }
+  }
 }
 
+class NoGoogleAccountChosenException implements Exception {
+  const NoGoogleAccountChosenException();
+}
+
+  /* try {
+    final googleuser=await AuthService.signInWithGoogle();
+    
+  } catch (e) {
+    if (!context.mounted) return;
+    const snackBar = SnackBar(
+      content: Text('no google sign in '),
+    );
+  } */
 
 
 

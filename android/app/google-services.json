@@ -12,7 +12,20 @@
           "package_name": "com.example.espy"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "798612753910-0l4mgr27thbjlgfm5eau4rokvmr4ivit.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.espy",
+            "certificate_hash": "8426ef072d09215ed6be81ee36053e6e9dec4b98"
+          }
+        },
+        {
+          "client_id": "798612753910-0nrpt4ecavb5uhauptm7ql6ct2eg3c4h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDRCQshTwdz2l0rn3MtvTLFyjNXMABHDr0"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "798612753910-0nrpt4ecavb5uhauptm7ql6ct2eg3c4h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

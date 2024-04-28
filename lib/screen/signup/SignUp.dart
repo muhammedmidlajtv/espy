@@ -341,7 +341,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                   //     return null;
                   //   },
                   // ),
-
+   SizedBox(height: 20,),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Padding(
@@ -391,6 +391,24 @@ class MyCustomFormState extends State<MyCustomForm> {
             ),
           ),
         ),
+        SizedBox(height: 20,),
+        SizedBox(
+                      child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                        Text("Have an account ?   ",style:TextStyle(color: Colors.white),),
+                        GestureDetector(child: Text("Sign In",style:TextStyle(color: Colors.blue),),
+                        onTap: () {
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                          return Login();
+                        }));
+        /* Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: ((context) => userEventRegistration()))); */
+      },
+                          )
+                      ]),
+                      
+                    ),
+                    SizedBox(height: 20,),
 
         // DropdownMenuExample()
       ],
