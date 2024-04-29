@@ -8,14 +8,18 @@ class AuthService {
 
   Future<User?> createUserWithEmailAndPassword(
       String email, String password) async {
-    try {
+   // try {
+      
       final cred = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       return cred.user;
-    } catch (e) {
+
+
+    /* } catch (e) {
       log("Something went wrong");
+      return ;
     }
-    return null;
+    return null; */
   }
 
   Future<User?> loginUserWithEmailAndPassword(
