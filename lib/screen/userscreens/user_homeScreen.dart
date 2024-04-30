@@ -20,6 +20,16 @@ List<String> image = [
 ];
 List<String> title = ['Hackathon', 'Idea Pitching', ' Ideathon', 'CFT'];
 
+class EventCard {
+  
+  
+  final String name;
+  final String date;
+  final String poster;
+
+  const EventCard({required this.poster, required this.name, required this.date});
+}
+
 class NavDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -102,6 +112,8 @@ class user_homeLogin extends StatefulWidget {
 }
 
 class _user_homeLoginState extends State<user_homeLogin> {
+  
+  // State<FilterScreen> createState() => FilterScreen(),
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -110,12 +122,9 @@ class _user_homeLoginState extends State<user_homeLogin> {
   List<String> filteredTitle = title;
    String _userId = ""; // Initialize user ID
   List<String> _preferredDomains = []; // Initialize preferred domains
-
+  List<String> eventNames = [];
   // Filter options
-  List<String> categories = ['Hackathon', 'Ideathon', 'Idea Pitching'];
-  List<String> districts = ['Kottayam', 'Kollam', 'Ernankulam'];
-  List<String> universities = ['RIT', 'CET', 'MACE'];
-
+ 
   RangeValues _currentRangeValues = const RangeValues(20, 60);
 
   @override
@@ -153,7 +162,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
   Future<List<String>> _fetchEventsForPreferredDomains() async {
     try {
       final QuerySnapshot eventsQuery = await _firestore.collection('events')
-          .where('domain', whereIn: _preferredDomains)
+          .where('type', whereIn: _preferredDomains)
           .get();
       final List<String> eventNames = eventsQuery.docs.map((doc) => doc['name'] as String).toList();
       return eventNames;
@@ -163,6 +172,72 @@ class _user_homeLoginState extends State<user_homeLogin> {
     }
   }
 
+  Future<List<EventCard>> _fetchEventDetails() async {
+    List<EventCard> eventCards = [];
+
+    for (String eventName in eventNames) {
+      try {
+        final QuerySnapshot eventQuery = await _firestore
+            .collection('events')
+            .where('name', isEqualTo: eventName)
+            .limit(1)
+            .get();
+
+         if (eventQuery.docs.isNotEmpty) {
+          final eventDoc = eventQuery.docs.first;
+          final eventPoster = eventDoc['poster'] as String;
+          final eventDate = eventDoc['date'] as String;
+
+          eventCards.add(EventCard(name: eventName, poster: eventPoster, date: eventDate , ));
+        }
+      } catch (e) {
+        print("Error fetching event details for $eventName: $e");
+      }
+    }
+
+    return eventCards;
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      drawer: NavDrawer(),
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Text("Student Dashboard"),
+      ),
+      body: FutureBuilder<List<EventCard>>(
+        future: _fetchEventDetails(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text("Error fetching event details"));
+             } else if (snapshot.hasData) {
+            final eventCards = snapshot.data!;
+            return ListView.builder(
+              itemCount: eventCards.length,
+              itemBuilder: (context, index) {
+                final card = eventCards[index];
+                return Card(
+                  child: Column(
+                    children: [
+                      Image.network(card.poster),
+                      Text(card.name),
+                      Text(card.date),
+                    ],
+                  ),
+                );
+              },
+            );
+          } else {
+            return Center(child: Text("No events found"));
+          }
+        },
+      ),
+    );
+  }
+//}
   void applyFilters() {
     // Filter the items based on user selections
     setState(() {
@@ -185,7 +260,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
   }
 
   //
-
+/*
   @override
   Widget build(BuildContext context) {
     AuthService _auth = AuthService();
@@ -366,7 +441,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
               ),
               itemCount: image.length,
               itemBuilder: (BuildContext context, int index) {
-                return CardItem(image: image[index], title: title[index]);
+                //return EventCard(poster: [index], name: title[index], date: date[index]);
               },
             ),
           ),
@@ -379,15 +454,165 @@ class _user_homeLoginState extends State<user_homeLogin> {
         child: Icon(Icons.menu),
       ),
     );
+  }*/
+
+   //drawer: NavDrawer(),
+    // body: FilterScreen(scaffoldKey: _scaffoldKey)
+}
+
+
+class FilterScreen extends StatelessWidget {
+  final GlobalKey<ScaffoldState> scaffoldKey;
+
+  FilterScreen({required this.scaffoldKey});
+
+   List<String> categories = ['Hackathon', 'Ideathon', 'Idea Pitching'];
+  List<String> districts = ['Kottayam', 'Kollam', 'Ernankulam'];
+  List<String> universities = ['RIT', 'CET', 'MACE'];
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: scaffoldKey,
+      backgroundColor: Colors.grey[850],
+      drawer: NavDrawer(), // Integrate NavDrawer here
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 22, 0, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 330,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 29, 116, 183),
+                          width: 0.0,
+                        ),
+                      ),
+                      hintText: 'Search',
+                      hintStyle: TextStyle(color: Colors.grey, fontSize: 18),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 50.0,
+                  width: 50.0,
+                  child: IconButton(
+                    icon: Image.asset("assets/images/filter_logo.png"),
+                    onPressed: () {
+                      // Show filter options
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text("Filters"),
+                            content: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  DropdownButtonFormField<String>(
+                                    value: categories.first,
+                                    items: categories.map((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                    onChanged: (String? value) {
+                                      // Handle category filter change
+                                      // setState(() {
+                                      //   // Update selected category
+                                      // });
+                                    },
+                                  ),
+                                  DropdownButtonFormField<String>(
+                                    value: districts.first,
+                                    items: districts.map((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                    onChanged: (String? value) {
+                                      // Handle district filter change
+                                      // setState(() {
+                                      //   // Update selected district
+                                      // });
+                                    },
+                                  ),
+                                  DropdownButtonFormField<String>(
+                                    value: universities.first,
+                                    items: universities.map((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                    onChanged: (String? value) {
+                                      // Handle university filter change
+                                      // setState(() {
+                                      //   // Update selected university
+                                      // });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  // Apply filters
+                                  // applyFilters();
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text("Apply"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.7,
+              ),
+              itemCount: image.length,
+              itemBuilder: (BuildContext context, int index) {
+                //return EventCard(poster: image[index], title: title[index]);
+              },
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          scaffoldKey.currentState!.openDrawer(); // Open the NavDrawer
+        },
+        child: Icon(Icons.menu),
+      ),
+    );
   }
 }
 
-class CardItem extends StatelessWidget {
-  final String image;
-  final String title;
 
-  const CardItem({required this.image, required this.title});
 
+  /*  
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -402,7 +627,7 @@ class CardItem extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.all(0.0),
                 child: Image.network(
-                  image,
+                  name,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -410,7 +635,7 @@ class CardItem extends StatelessWidget {
             Padding(
               padding: EdgeInsets.all(0.0),
               child: Text(
-                title,
+                poster,
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.w700,
@@ -430,7 +655,7 @@ class CardItem extends StatelessWidget {
       },
     );
   }
-}
+//}*/
 
 goToLogin(BuildContext context) => Navigator.pushReplacement(
       context,
