@@ -368,30 +368,57 @@ class MyCustomFormState extends State<MyCustomForm> {
                           onPressed: () async {
                             // Validate returns true if the form is valid, or false otherwise.
                             await _signup(context);
-                            if (_formKey.currentState!.validate()) {
+                            // if (_formKey.currentState!.validate()) {
+                            //   // If the form is valid, display a snackbar. In the real world,
+                            //   // you'd often call a server or save the information in a database.
+                            //   _navigateToLoginScreen(context);
+
+                            //   ScaffoldMessenger.of(context).showSnackBar(
+                            //     const SnackBar(
+                            //         content: Text('Processing Data')),
+                            //   );
+                            // }
+                            // else if(_password.text != _confirm.text){
+                            //   ScaffoldMessenger.of(context).showSnackBar(
+                            //     const SnackBar(
+                            //         content: Text('password didnt match')),
+                            //   );
+                            // }
+                            print(_confirm.text);
+                            print(_password.text);
+                            if (_password.text != _confirm.text) {
                               // If the form is valid, display a snackbar. In the real world,
                               // you'd often call a server or save the information in a database.
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('password didnt match')),
+                              );
+                            } else if (_formKey.currentState!.validate()) {
                               _navigateToLoginScreen(context);
 
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                     content: Text('Processing Data')),
                               );
+                              CollectionReference collRef = FirebaseFirestore
+                                  .instance
+                                  .collection('user_login');
+                              collRef.add({
+                                'name': _name.text,
+                                'email': _email.text,
+                                // 'password1': _password.text,
+                                // 'password2': _confirm.text,
+
+                                'password': _confirm.text,
+
+                                'role': _selectedRole.toString(),
+                                for (int i = 0;
+                                    i < _selectedItems.length;
+                                    i++) ...{
+                                  'preferences$i': _selectedItems[i],
+                                },
+                              });
                             }
-                            CollectionReference collRef = FirebaseFirestore
-                                .instance
-                                .collection('user_login');
-                            collRef.add({
-                              'name': _name.text,
-                              'email': _email.text,
-                              'password1': _password.text,
-                              'password2': _confirm.text,
-                              'role': _selectedRole.toString(),
-                                for (int i = 0; i < _selectedItems.length; i++) ...{
-                    'preferences$i': _selectedItems[i],
-                    
-                  },
-                            });
                           },
                           child: const Text(
                             'Submit',
