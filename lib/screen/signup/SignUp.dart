@@ -4,6 +4,7 @@ import "package:espy/screen/authentication/auth_service.dart";
 import 'package:espy/screen/login/Login.dart';
 import 'package:espy/screen/splash.dart';
 import 'package:espy/screen/userscreens/user_homeScreen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
@@ -521,31 +522,25 @@ class MyCustomFormState extends State<MyCustomForm> {
                           ),
                           onPressed: () async {
                             // Validate returns true if the form is valid, or false otherwise.
-                            await _signup(context);
-                            if (_formKey.currentState!.validate()) {
-                              // If the form is valid, display a snackbar. In the real world,
-                              // you'd often call a server or save the information in a database.
-                              _navigateToLoginScreen(context);
-
+                            if(_password.text!=_confirm.text)
+                            {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Processing Data')),
+                              SnackBar(content: Text('Password doesnt match')),
                               );
                             }
-                            CollectionReference collRef = FirebaseFirestore
-                                .instance
-                                .collection('user_login');
-                            collRef.add({
-                              'name': _name.text,
-                              'email': _email.text,
-                              'password1': _password.text,
-                              'password2': _confirm.text,
-                              'role': _selectedRole.toString(),
-                                for (int i = 0; i < _selectedItems.length; i++) ...{
-                    'preferences$i': _selectedItems[i],
-                    
-                  },
-                            });
+                            else if (_formKey.currentState!.validate()) {
+                              await _signup(context);
+                              // If the form is valid, display a snackbar. In the real world,
+                              // you'd often call a server or save the information in a database.
+                              //_navigateToLoginScreen(context);
+
+                              /* ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Processing Data')),
+                              ); */
+                            }
+
+                            
                           },
                           child: const Text(
                             'Submit',
@@ -598,12 +593,44 @@ class MyCustomFormState extends State<MyCustomForm> {
   }
 
   _signup(BuildContext context) async {
-    final user =
-        await _auth.createUserWithEmailAndPassword(_email.text, _password.text);
-    if (user != null) {
-      log("User Created Successfully");
-      // Navigate to the login page after successful signup
-      _navigateToLoginScreen(context);
+    try {
+      final user = await _auth.createUserWithEmailAndPassword(
+          _email.text, _password.text);
+      if (user != null) {
+        log("User Created Successfully");
+        CollectionReference collRef = FirebaseFirestore
+                                .instance
+                                .collection('user_login');
+                            collRef.add({
+                              'name': _name.text,
+                              'email': _email.text,
+                              'password1': _password.text,
+                              'password2': _confirm.text,
+                              'role': _selectedRole.toString(),
+                              for (int i = 0;
+                                  i < _selectedItems.length;
+                                  i++) ...{
+                                'preferences$i': _selectedItems[i],
+                              },
+                            });
+        // Navigate to the login page after successful signup
+        _navigateToLoginScreen(context);
+      }
+    } on FirebaseAuthException catch (e) {
+      
+        // Handle other exceptions
+        log('Error occurred: ${e.message}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${e.message}')),
+        );
+      
+    } catch (e) {
+      // Handle other exceptions
+
+      log('Error occurred: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred: $e')),
+      );
     }
   }
 }
