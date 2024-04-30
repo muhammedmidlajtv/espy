@@ -1,6 +1,7 @@
 import 'package:espy/main.dart';
 import 'package:espy/screen/login/Login.dart';
 import 'package:espy/screen/introscreens/introductionScreen.dart';
+import 'package:espy/screen/organizerscreens/organizer.dart';
 import 'package:espy/screen/signup/SignUp.dart';
 import 'package:espy/screen/userscreens/user_homeScreen.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     _navigatetohome();
-    //checkUserLoggedIn();
+    //checkLoggedIn();
   }
 
   _onboardcheck() async {
@@ -29,15 +30,16 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (mounted) {
       // Check if the widget is still mounted
-      
+
       onBoardCount != 0
-          ? (Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+          ? (Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) {
               return IntroductionScreen();
             })))
-          : checkUserLoggedIn();
+          : checkLoggedIn();
       /* Navigator.pushReplacement(
   context,
-  MaterialPageRoute(builder: (context) => onBoardCount != 0 ? IntroductionScreen() : checkUserLoggedIn()),
+  MaterialPageRoute(builder: (context) => onBoardCount != 0 ? IntroductionScreen() : checkLoggedIn()),
 ); */
 
       /* Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -49,10 +51,8 @@ class _SplashScreenState extends State<SplashScreen> {
   _navigatetohome() async {
     await Future.delayed(Duration(milliseconds: 1500), () {});
 
-    
-      // Check if the widget is still mounted
-      _onboardcheck();
-    
+    // Check if the widget is still mounted
+    _onboardcheck();
   }
 
   Future<void> gotoLogin() async {
@@ -62,7 +62,6 @@ class _SplashScreenState extends State<SplashScreen> {
         context,
         // MaterialPageRoute(builder: (context) => SignUp()),
         MaterialPageRoute(builder: (context) => Login()),
-
       );
       /* Navigator.push(context, MaterialPageRoute(builder: (context) {
         return Login();
@@ -89,16 +88,22 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void initstate() {}
 
-  Future<void> checkUserLoggedIn() async {
+  Future<void> checkLoggedIn() async {
     final _SharedPrefs = await SharedPreferences.getInstance();
     final _userLoggedIn = _SharedPrefs.getBool("userloggedin");
-    if (_userLoggedIn == null || _userLoggedIn == false) {
-      gotoLogin();
-    } else {
+    final _organizerLoggedIn = _SharedPrefs.getBool("organizerloggedin");
+    if (_userLoggedIn == true) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => user_homeLogin()),
       );
+    } else if (_organizerLoggedIn == true) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => EventOrganizerApp()),
+      );
+    } else {
+      gotoLogin();
     }
   }
 }

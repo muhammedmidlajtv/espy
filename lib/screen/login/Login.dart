@@ -1,6 +1,8 @@
 import "dart:developer";
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:espy/main.dart';
 import "package:espy/screen/authentication/auth_service.dart";
+import 'package:espy/screen/organizerscreens/organizer.dart';
 import 'package:espy/screen/signup/SignUp.dart';
 import 'package:espy/screen/userscreens/user_homeScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -130,7 +132,7 @@ class _LoginScreenState extends State<Login> {
                           // If the form is valid, display a snackbar. In the real world,
                           // you'd often call a server or save the information in a database.
                           _login(context, _email.text, _password.text);
-                          // _navigateToHomeUpScreen(context);
+                          // _navigateToUserHomeUpScreen(context);
                         }
                       },
                       buttonType: SocialLoginButtonType.generalLogin,
@@ -215,20 +217,19 @@ class _LoginScreenState extends State<Login> {
         .push(MaterialPageRoute(builder: (context) => SignUp()));
   }
 
-  void _navigateToHomeUpScreen(BuildContext context) {
+  void _navigateToUserHomeUpScreen(BuildContext context) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => user_homeLogin()),
     );
   }
 
-void _navigateToOrganiserUpScreen(BuildContext context) {
+  void _navigateToOrganiserUpScreen(BuildContext context) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => user_homeLogin()),
+      MaterialPageRoute(builder: (context) => EventOrganizerApp()),
     );
   }
-
 
   void _navigateToLoginScreen(BuildContext context) {
     Navigator.of(context)
@@ -243,18 +244,49 @@ void _navigateToOrganiserUpScreen(BuildContext context) {
   //     user_homeLogin();
   //   }
   // }
+  void checkRole(String email) async {
+    try {
+      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection("user_login")
+          .where("email", isEqualTo: email)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final roleField =
+            (querySnapshot.docs.first.data() as Map<String, dynamic>)['role'];
+        if (roleField != null) {
+          final String role = roleField.toString().toLowerCase();
+          log(role);
+          if (role == "user") {
+            final _sharedPrefs = await SharedPreferences.getInstance();
+          await _sharedPrefs.setBool("userloggedin", true);
+            _navigateToUserHomeUpScreen(context);
+          } else {
+            final _sharedPrefs = await SharedPreferences.getInstance();
+            await _sharedPrefs.setBool("organizerloggedin", true);
+            _navigateToOrganiserUpScreen(context);
+          }
+        } else {
+          // Handle case when role field is null
+          log("Role field is null for user with email: $email");
+        }
+      }
+    } catch (error) {
+      log("Error getting user data: $error");
+    }
+  }
+
   void _login(BuildContext context, String email, String password) async {
     if (_formKey.currentState!.validate()) {
       try {
         final user = await _auth.loginUserWithEmailAndPassword(email, password);
         if (user != null) {
+          checkRole(email);
           log("User Logged In");
-          _navigateToHomeUpScreen(context);
 
           //sharedpreferences
 
-          final _sharedPrefs = await SharedPreferences.getInstance();
-          await _sharedPrefs.setBool("userloggedin", true);
+          
 
           //
         } else {
@@ -281,12 +313,12 @@ void _navigateToOrganiserUpScreen(BuildContext context) {
 // Get the display name of the user
       String? username = user.displayName;
       String? email = user.email;
-      
+
       log(username.toString());
       log(email.toString());
-      
+
       log("User Logged In with google");
-      _navigateToHomeUpScreen(context);
+      _navigateToUserHomeUpScreen(context);
 
       //sharedpreferences
 
