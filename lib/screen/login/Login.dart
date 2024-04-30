@@ -1,23 +1,28 @@
 import "dart:developer";
-import "package:espy/screen/auth_service.dart";
-import 'package:espy/screen/SignUp.dart';
-import 'package:espy/screen/splash.dart';
-import 'package:espy/screen/user_homeScreen.dart';
+import 'package:espy/main.dart';
+import "package:espy/screen/authentication/auth_service.dart";
+import 'package:espy/screen/signup/SignUp.dart';
+import 'package:espy/screen/userscreens/user_homeScreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:social_login_buttons/social_login_buttons.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+// final _textController = TextEditingController();
 
 class Login extends StatefulWidget {
-    Login({super.key});
+  Login({super.key});
 
-    @override
-    State<Login> createState() => _LoginScreenState();
+  @override
+  State<Login> createState() => _LoginScreenState();
 }
 
-  
-
-  // class _LoginScreenState extends State<Login>{
-  //   final _email = TextEditingController();
-  //   final _password = TextEditingController();
-  class _LoginScreenState extends State<Login> {
+// class _LoginScreenState extends State<Login>{
+//   final _email = TextEditingController();
+//   final _password = TextEditingController();
+class _LoginScreenState extends State<Login> {
   final _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
   final _email = TextEditingController();
@@ -34,9 +39,10 @@ class Login extends StatefulWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[850],
-            // resizeToAvoidBottomInset: false, // Disable resizing to avoid bottom overflow
+      // resizeToAvoidBottomInset: false, // Disable resizing to avoid bottom overflow
 
-      body: Column(
+      body: SingleChildScrollView(
+          child: Column(
         children: [
           Container(
             height: 300,
@@ -54,13 +60,13 @@ class Login extends StatefulWidget {
             key: _formKey,
             child: Container(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(20,0,20,0),
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     SizedBox(
-                      height: 20,
+                      height: 40,
                     ),
                     TextFormField(
                       style: const TextStyle(color: Colors.white),
@@ -71,15 +77,15 @@ class Login extends StatefulWidget {
                           borderRadius: BorderRadius.circular(15.0),
                         ),
                         // filled: true,
-                        hintStyle:
-                            TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
+                        hintStyle: TextStyle(
+                            color: Color.fromARGB(255, 166, 162, 162)),
                         hintText: "Enter your  Email",
                         labelText: "Email",
-                        
 
                         // fillColor: Colors.white70,
                       ),
                       controller: _email,
+
                       // The validator receives the text that the user has entered.
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -100,8 +106,8 @@ class Login extends StatefulWidget {
                           borderRadius: BorderRadius.circular(15.0),
                         ),
                         // filled: true,
-                        hintStyle:
-                            TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
+                        hintStyle: TextStyle(
+                            color: Color.fromARGB(255, 166, 162, 162)),
                         hintText: "Enter your password",
                         labelText: "Password",
                         // fillColor: Colors.white70,
@@ -116,127 +122,117 @@ class Login extends StatefulWidget {
                       },
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 40,
                     ),
-                    Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: ElevatedButton(
+                    SocialLoginButton(
                       onPressed: () {
-                         if (_formKey.currentState!.validate()) {
+                        if (_formKey.currentState!.validate()) {
                           // If the form is valid, display a snackbar. In the real world,
                           // you'd often call a server or save the information in a database.
                           _login(context, _email.text, _password.text);
                           // _navigateToHomeUpScreen(context);
-                         }
-                          // ScaffoldMessenger.of(context).showSnackBar(
-                          //   const SnackBar(content: Text('Processing Data')),
-                          // );
-                        // }
-
-                        // Validate returns true if the form is valid, or false otherwise.
+                        }
                       },
-                      child: const Text('Submit'),
+                      buttonType: SocialLoginButtonType.generalLogin,
+                      borderRadius: 55,
                     ),
-                  )
-                    // DropdownButton<String>(
-                    // items: <String>['A', 'B', 'C', 'D'].map((String value) {
-                    //   return DropdownMenuItem<String>(
-                    //     value: value,
-                    //     child: Text(value),
-                    //   );
-                    // }).toList(),
-                    // onChanged: (_) {},
-                    // ),
-
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(vertical: 16),
-                    //   child: ElevatedButton(
-                    //     onPressed: () {
-                    //       // Validate returns true if the form is valid, or false otherwise.
-                    //       // if (_formKey.currentState!.validate()) {
-                    //       //   // If the form is valid, display a snackbar. In the real world,
-                    //       //   // you'd often call a server or save the information in a database.
-                    //       //   ScaffoldMessenger.of(context).showSnackBar(
-                    //       //     const SnackBar(content: Text('Processing Data')),
-                    //       //   );
-                    //       // }
-                    //     },
-                    //     child: const Text('Submit'),
-                    //   ),
-                    // ),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    SizedBox(
+                        height: 20,
+                        width: 400,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                height: 0.5,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              "Or    ",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            Expanded(
+                              child: Container(
+                                height: 0.5,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        )),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    SocialLoginButton(
+                      onPressed: () {
+                        authenticateWithGoogle(context: context);
+                      },
+                      buttonType: SocialLoginButtonType.google,
+                      borderRadius: 55,
+                    ),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    SizedBox(
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Not a member ?   ",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            GestureDetector(
+                              child: Text(
+                                "Register Now ",
+                                style: TextStyle(color: Colors.blue),
+                              ),
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return SignUp();
+                                }));
+                                /* Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: ((context) => userEventRegistration()))); */
+                              },
+                            )
+                          ]),
+                    )
                   ],
                 ),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0,0,0,0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 400,
-                  height: 290,
-                  // padding: new EdgeInsets.all(0.0),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(40),
-                            topRight: Radius.circular(40)),
-                      ),
-                      color: Color.fromARGB(255, 0, 0, 0),
-                      elevation: 10,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
-                        // mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          // ButtonBar(
-                          // children: <Widget>[
-                          IconButton(
-                              onPressed: () {
-                                _navigateToSignUpScreen(context);
-                              },
-                              iconSize: 50,
-                              icon: Image.asset("assets/images/gmail_logo.png")),
-                          // RaisedButton(
-                          //   child: const Text('Pause'),
-                          //   onPressed: () {/* ... */},
-                          // ),
-                          IconButton(
-                              onPressed: () {},
-                              iconSize: 40,
-                              icon: Image.asset("assets/images/google_logo.png")),
-                        ],
-                        // ),
-                        // ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
         ],
-      ),
+      )),
+    );
+  }
+
+  void _navigateToSignUpScreen(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => SignUp()));
+  }
+
+  void _navigateToHomeUpScreen(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => user_homeLogin()),
+    );
+  }
+
+void _navigateToOrganiserUpScreen(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => user_homeLogin()),
     );
   }
 
 
-  void _navigateToSignUpScreen(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignUp()));
-  }
-  void _navigateToHomeUpScreen(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => user_homeLogin()));
-  }
-  
-  
   void _navigateToLoginScreen(BuildContext context) {
-  Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login()));
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => Login()));
   }
   //  _login(String email, String password) async {
   //   final _auth = AuthService();
@@ -248,19 +244,58 @@ class Login extends StatefulWidget {
   //   }
   // }
   void _login(BuildContext context, String email, String password) async {
-  if (_formKey.currentState!.validate()) {
-    try {
-      final user = await _auth.loginUserWithEmailAndPassword(email, password);
-      if (user != null) {
-        log("User Logged In");
-        _navigateToHomeUpScreen(context);
-      } else {
-        _navigateToLoginScreen(context);
+    if (_formKey.currentState!.validate()) {
+      try {
+        final user = await _auth.loginUserWithEmailAndPassword(email, password);
+        if (user != null) {
+          log("User Logged In");
+          _navigateToHomeUpScreen(context);
+
+          //sharedpreferences
+
+          final _sharedPrefs = await SharedPreferences.getInstance();
+          await _sharedPrefs.setBool("userloggedin", true);
+
+          //
+        } else {
+          _navigateToLoginScreen(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Invalid email or password')),
+          );
+        }
+      } catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Invalid email or password'))
-          ,
+          SnackBar(
+            content: Text(error.toString()),
+          ),
         );
       }
+    }
+  }
+
+  Future<void> authenticateWithGoogle({required BuildContext context}) async {
+    try {
+      final googleUser = await AuthService.signInWithGoogle();
+      User user = googleUser.user!;
+
+// Get the display name of the user
+      String? username = user.displayName;
+      String? email = user.email;
+      
+      log(username.toString());
+      log(email.toString());
+      
+      log("User Logged In with google");
+      _navigateToHomeUpScreen(context);
+
+      //sharedpreferences
+
+      final _sharedPrefs = await SharedPreferences.getInstance();
+      await _sharedPrefs.setBool("userloggedin", true);
+
+      //
+    } on NoGoogleAccountChosenException {
+      return;
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -271,12 +306,19 @@ class Login extends StatefulWidget {
   }
 }
 
+class NoGoogleAccountChosenException implements Exception {
+  const NoGoogleAccountChosenException();
+}
 
-
-
-
-  }
-
+  /* try {
+    final googleuser=await AuthService.signInWithGoogle();
+    
+  } catch (e) {
+    if (!context.mounted) return;
+    const snackBar = SnackBar(
+      content: Text('no google sign in '),
+    );
+  } */
 
 
 
