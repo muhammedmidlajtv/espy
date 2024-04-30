@@ -3,7 +3,11 @@ import "dart:async";
 //import 'package:espy/screen/home_screen.dart';
 import 'package:espy/screen/splash.dart';
 import 'package:flutter/material.dart';
+import 'package:espy/screen/signup/SignUp.dart';
+import 'package:espy/screen/login/Login.dart';
+import 'package:flutter/material.dart';
 import "package:firebase_core/firebase_core.dart";
+import "package:espy/screen/authentication/auth_service.dart";
 
 const SAVE_KEY_NAME = 'UserLoggedIn ';
 
@@ -73,3 +77,35 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+class CheckUserLoggedInOrNot extends StatefulWidget {
+  const CheckUserLoggedInOrNot({super.key});
+
+  @override
+  State<CheckUserLoggedInOrNot> createState() => _CheckUserLoggedInOrNotState();
+}
+
+class _CheckUserLoggedInOrNotState extends State<CheckUserLoggedInOrNot> {
+  @override
+  AuthService authService = AuthService();
+  @override
+  void initState() {
+    super.initState();
+    authService.isLoggedIn().then((value) {
+      if (value) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => SignUp()));
+      } else {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => Login()));
+      }
+    });
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(child: CircularProgressIndicator()),
+    );
+  }
+}
+  

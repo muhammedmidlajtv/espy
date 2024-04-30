@@ -5,6 +5,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final _auth = FirebaseAuth.instance;
+  static final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  static String verifyId = "";
 
   Future<User?> createUserWithEmailAndPassword(
       String email, String password) async {
@@ -42,6 +45,52 @@ class AuthService {
   //   }
   //   return null;
   // }
+  static Future sentOtp({
+    required String phone,
+    required Function errorStep,
+    required Function nextStep,
+  }) async {
+    await _firebaseAuth
+        .verifyPhoneNumber(
+      timeout: const Duration(seconds: 30),
+      phoneNumber: "+91$phone",
+      verificationCompleted: (phoneAuthCredential) async {
+        return;
+      },
+      verificationFailed: (error) async {
+        return;
+      },
+      codeSent: (verificationId, forceResendingToken) async {
+        verifyId = verificationId;
+        nextStep();
+      },
+      codeAutoRetrievalTimeout: (verificationId) async {
+        return;
+      },
+    )
+        .onError((error, stackTrace) {
+      errorStep();
+    });
+  }
+
+  // verify the otp code and login
+  static Future loginWithOtp({required String otp}) async {
+    final cred =
+        PhoneAuthProvider.credential(verificationId: verifyId, smsCode: otp);
+
+    try {
+      final user = await _firebaseAuth.signInWithCredential(cred);
+      if (user.user != null) {
+        return "Success";
+      } else {
+        return "Error in Otp login";
+      }
+    } on FirebaseAuthException catch (e) {
+      return e.message.toString();
+    } catch (e) {
+      return e.toString();
+    }
+  }
 
   static Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
@@ -72,4 +121,14 @@ class AuthService {
       log("Something went wrong");
     }
   }
+  Future<bool> isLoggedIn() async {
+  // Ensure that FirebaseAuth instance is initialized.
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  // Check if the current user is not null.
+  var user = auth.currentUser;
+  
+  // Return true if the user is not null, indicating that the user is logged in.
+  return user != null;
+}
 }

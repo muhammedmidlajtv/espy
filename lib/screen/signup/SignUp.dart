@@ -7,6 +7,7 @@ import 'package:espy/screen/userscreens/user_homeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:telephony/telephony.dart';
 
 List<String> selected = [];
 
@@ -128,15 +129,106 @@ class MyCustomFormState extends State<MyCustomForm> {
       });
     }
   }
+  final Telephony telephony = Telephony.instance;
 
   final _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
+  final _formKey1 = GlobalKey<FormState>();
+
+  final TextEditingController _phoneContoller = TextEditingController();
+  final TextEditingController _otpContoller = TextEditingController();
   final _name = TextEditingController();
   final _email = TextEditingController();
   final _password = TextEditingController();
   final _confirm = TextEditingController();
   String? _selectedRole;
   Color _selectedTextColor = Colors.white;
+
+ 
+  void listenToIncomingSMS(BuildContext context) {
+    print("Listening to sms.");
+    telephony.listenIncomingSms(
+        onNewMessage: (SmsMessage message) {
+          // Handle message
+          print("sms received : ${message.body}");
+          // verify if we are reading the correct sms or not
+
+          if (message.body!.contains("phone-auth-15bdb")) {
+            String otpCode = message.body!.substring(0, 6);
+            setState(() {
+              _otpContoller.text = otpCode;
+              // wait for 1 sec and then press handle submit
+              Future.delayed(const Duration(seconds: 1), () {
+                handleSubmit(context);
+              });
+            });
+          }
+        },
+        listenInBackground: false);
+  }
+
+// handle after otp is submitted
+  // void handleSubmit(BuildContext context) {
+  //   if (_formKey1.currentState!.validate()) {
+  //     AuthService.loginWithOtp(otp: _otpContoller.text).then((value) {
+  //       if (value == "Success") {
+  //         Navigator.pop(context);
+  //         Navigator.pushReplacement(
+  //             context, MaterialPageRoute(builder: (context) => Login()));//
+  //       } else {
+  //         Navigator.pop(context);
+  //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //           content: Text(
+  //             value,
+  //             style: const TextStyle(color: Colors.white),
+  //           ),
+  //           backgroundColor: Colors.red,
+  //         ));
+  //       }
+  //     });
+  //   }
+  // }
+  void handleSubmit(BuildContext context) {
+  if (_formKey1.currentState!.validate()) {
+    AuthService.loginWithOtp(otp: _otpContoller.text).then((value) {
+      if (value == "Success") {
+        Navigator.pop(context);
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => Login()));//
+      } else {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            value,
+            style: const TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.red,
+        ));
+      }
+    });
+  }
+  if (_formKey.currentState!.validate()) {
+    _navigateToLoginScreen(context);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+          content: Text('Processing Data')),
+    );
+    CollectionReference collRef = FirebaseFirestore
+        .instance
+        .collection('user_login');
+    collRef.add({
+      'name': _name.text,
+      'email': _email.text,
+      'password1': _password.text,
+      'password2': _confirm.text,
+      'role': _selectedRole.toString(),
+      for (int i = 0; i < _selectedItems.length; i++) ...{
+        'preferences$i': _selectedItems[i],
+      },
+    });
+  }
+}
 
   // final _who = TextEditingController();
 
@@ -290,6 +382,34 @@ class MyCustomFormState extends State<MyCustomForm> {
                       return null;
                     },
                   ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    fillColor: const Color.fromARGB(255, 0, 0, 0),
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    hintStyle: const TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
+                    hintText: "Enter your Phone Number",
+                    labelText: "Enter your phone number", // Prefix text
+                    prefixText: "+91 ",
+                  ),
+                  controller: _phoneContoller, // Controller for phone number
+                  keyboardType: TextInputType.phone, // Set keyboard type to phone
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your phone number';
+                    }
+                    // Add more validation if needed, e.g., regex for phone number format
+                    return null;
+                  },
+                ),
+
                   SizedBox(height: 20),
 
                   DropdownButtonFormField<String>(
@@ -349,10 +469,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                           .toList(),
                     ),
                   ],
-
-                  SizedBox(
-                    height: 20,
-                  ),
+                  const SizedBox(height: 20,),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Padding(
@@ -360,47 +477,127 @@ class MyCustomFormState extends State<MyCustomForm> {
                       child: Container(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 106, 96, 93),
+                            backgroundColor: const Color.fromARGB(255, 106, 96, 93),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(13.0)),
-                            minimumSize: Size(400, 46),
+                              borderRadius: BorderRadius.circular(13.0),
+                            ),
+                            minimumSize: const Size(400, 46),
                           ),
                           onPressed: () async {
-                            // Validate returns true if the form is valid, or false otherwise.
-                            await _signup(context);
                             if (_formKey.currentState!.validate()) {
-                              // If the form is valid, display a snackbar. In the real world,
-                              // you'd often call a server or save the information in a database.
-                              _navigateToLoginScreen(context);
-
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Processing Data')),
+                              AuthService.sentOtp(
+                                phone: _phoneContoller.text,
+                                errorStep: () {
+                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                    content: Text(
+                                      "Error in sending OTP",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ));
+                                },
+                                nextStep: () {
+                                  listenToIncomingSMS(context);
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: const Text("OTP Verification"),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text("Enter 6 digit OTP"),
+                                          const SizedBox(height: 12),
+                                          Form(
+                                            key: _formKey1,
+                                            child: TextFormField(
+                                              keyboardType: TextInputType.number,
+                                              controller: _otpContoller,
+                                              decoration: InputDecoration(
+                                                labelText: "Enter the OTP",
+                                                border: OutlineInputBorder(
+                                                  borderRadius: BorderRadius.circular(32),
+                                                ),
+                                              ),
+                                              validator: (value) {
+                                                if (value!.length != 6) {
+                                                  return "Invalid OTP";
+                                                }
+                                                return null;
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () => handleSubmit(context),
+                                          child: const Text("Submit"),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
                               );
                             }
-                            CollectionReference collRef = FirebaseFirestore
-                                .instance
-                                .collection('user_login');
-                            collRef.add({
-                              'name': _name.text,
-                              'email': _email.text,
-                              'password1': _password.text,
-                              'password2': _confirm.text,
-                              'role': _selectedRole.toString(),
-                                for (int i = 0; i < _selectedItems.length; i++) ...{
-                    'preferences$i': _selectedItems[i],
-                    
-                  },
-                            });
                           },
-                          child: const Text(
-                            'Submit',
-                            style: TextStyle(color: Colors.white),
-                          ),
+                          child: const Text('Submit', style: TextStyle(color: Colors.white)),
                         ),
                       ),
                     ),
                   ),
+
+                  // SizedBox(
+                  //   height: 20,
+                  // ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(vertical: 16),
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                  //     child: Container(
+                  //       child: ElevatedButton(
+                  //         style: ElevatedButton.styleFrom(
+                  //           backgroundColor: Color.fromARGB(255, 106, 96, 93),
+                  //           shape: RoundedRectangleBorder(
+                  //               borderRadius: BorderRadius.circular(13.0)),
+                  //           minimumSize: Size(400, 46),
+                  //         ),
+                  //         onPressed: () async {
+                  //           // Validate returns true if the form is valid, or false otherwise.
+                  //           await _signup(context);
+                  //           if (_formKey.currentState!.validate()) {
+                  //             // If the form is valid, display a snackbar. In the real world,
+                  //             // you'd often call a server or save the information in a database.
+                  //             _navigateToLoginScreen(context);
+
+                  //             ScaffoldMessenger.of(context).showSnackBar(
+                  //               const SnackBar(
+                  //                   content: Text('Processing Data')),
+                  //             );
+                  //           }
+                  //           CollectionReference collRef = FirebaseFirestore
+                  //               .instance
+                  //               .collection('user_login');
+                  //           collRef.add({
+                  //             'name': _name.text,
+                  //             'email': _email.text,
+                  //             'password1': _password.text,
+                  //             'password2': _confirm.text,
+                  //             'role': _selectedRole.toString(),
+                  //               for (int i = 0; i < _selectedItems.length; i++) ...{
+                  //                   'preferences$i': _selectedItems[i],
+                    
+                  // },
+                  //           });
+                  //         },
+                  //         child: const Text(
+                  //           'Submit',
+                  //           style: TextStyle(color: Colors.white),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
