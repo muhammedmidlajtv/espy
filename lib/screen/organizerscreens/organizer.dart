@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:espy/main.dart';
 import 'package:espy/screen/authentication/auth_service.dart';
 import 'package:espy/screen/organizerscreens/organizerform.dart';
 import 'package:espy/screen/userscreens/user_homeScreen.dart';
@@ -30,7 +31,7 @@ class EventOrganizerPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Elon Musk',
+          "userName",
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.black,
