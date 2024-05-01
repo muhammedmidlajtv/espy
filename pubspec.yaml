@@ -95,6 +95,8 @@ flutter:
     - assets/images/calender_icon.png
     - assets/images/Hackathon_Team.png
     - assets/images/category.png
+    - assets/images/tick.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

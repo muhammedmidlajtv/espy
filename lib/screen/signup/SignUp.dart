@@ -450,9 +450,10 @@ class MyCustomFormState extends State<MyCustomForm> {
           'email': _email.text,
           'password': _confirm.text,
           'role': _selectedRole.toString(),
-          for (int i = 0; i < _selectedItems.length; i++) ...{
-            'preferences$i': _selectedItems[i],
-          },
+           "preferences" : _selectedItems,
+          // for (int i = 0; i < _selectedItems.length; i++) ...{
+          //   'preferences$i': _selectedItems[i],
+          // },
         });
         // Navigate to the login page after successful signup
         _navigateToLoginScreen(context);

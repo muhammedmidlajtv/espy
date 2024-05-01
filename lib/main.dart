@@ -5,6 +5,8 @@ import 'package:espy/screen/splash.dart';
 import 'package:flutter/material.dart';
 import "package:firebase_core/firebase_core.dart";
 
+String current_logged_email= "";
+
 const SAVE_KEY_NAME = 'UserLoggedIn ';
 
 final TextEditingController eventNameController = TextEditingController();
@@ -25,9 +27,8 @@ String FileName = "";
 String eventMode = 'Online'; // Variable to store selected event mode
 String? _filePath;
 
-  DateTime? selectedDate; // Variable to store selected date
-    List<Map<String, String>> speakers = [];
-
+DateTime? selectedDate; // Variable to store selected date
+List<Map<String, String>> speakers = [];
 
 TextEditingController venueController = TextEditingController();
 TextEditingController mapLinkController = TextEditingController();
@@ -38,8 +39,6 @@ String participationFee = 'Free';
 int? participationAmount = 0; // Changed to nullable int
 int? minParticipants = 1;
 int? maxParticipants = 1;
-
-
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -222,13 +222,12 @@ class _LoginScreenState extends State<Login> {
     );
   }
 
-void _navigateToOrganiserUpScreen(BuildContext context) {
+  void _navigateToOrganiserUpScreen(BuildContext context) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => user_homeLogin()),
     );
   }
-
 
   void _navigateToLoginScreen(BuildContext context) {
     Navigator.of(context)
@@ -249,6 +248,8 @@ void _navigateToOrganiserUpScreen(BuildContext context) {
         final user = await _auth.loginUserWithEmailAndPassword(email, password);
         if (user != null) {
           log("User Logged In");
+           current_logged_email = email;
+          print(current_logged_email);
           _navigateToHomeUpScreen(context);
 
           //sharedpreferences
@@ -281,10 +282,10 @@ void _navigateToOrganiserUpScreen(BuildContext context) {
 // Get the display name of the user
       String? username = user.displayName;
       String? email = user.email;
-      
+
       log(username.toString());
       log(email.toString());
-      
+
       log("User Logged In with google");
       _navigateToHomeUpScreen(context);
 

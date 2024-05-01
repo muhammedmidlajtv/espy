@@ -41,6 +41,7 @@ class EventOrganizerPage extends StatelessWidget {
           Text(
             'Upcoming Event Details',
             style: TextStyle(
+              
               color: Color.fromARGB(255, 25, 117, 2),
               fontWeight: FontWeight.bold,
               fontSize: 20.0,
@@ -92,6 +93,9 @@ class EventOrganizerPage extends StatelessWidget {
                 }
               },
             ),
+          ),
+          SizedBox(
+            height: 5,
           ),
           Text(
             'Past Event Details',
@@ -189,7 +193,7 @@ class EventTile extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Color.fromARGB(255, 164, 220, 165),
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(10.0),
       ),
@@ -279,6 +283,8 @@ class EventTile extends StatelessWidget {
   }
 }
 
+
+
 class EventTile1 extends StatelessWidget {
   final String name;
   final String place;
@@ -305,7 +311,7 @@ class EventTile1 extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Color.fromARGB(255, 218, 126, 126),
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(10.0),
       ),
