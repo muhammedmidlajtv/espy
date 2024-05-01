@@ -46,13 +46,7 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.input),
             title: Text('Welcome'),
-            onTap: () => {
-              // EventOrganizerApp()
-               Navigator.push(context, MaterialPageRoute(builder: (context) {
-         return EventOrganizerApp();
-       })) 
-         
-            }
+            onTap: () => {}
           ),
           ListTile(
             leading: Icon(Icons.verified_user),

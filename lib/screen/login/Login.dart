@@ -13,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 // final _textController = TextEditingController();
-
+var isObscured=true;
 class Login extends StatefulWidget {
   Login({super.key});
 
@@ -101,12 +101,19 @@ class _LoginScreenState extends State<Login> {
                     ),
                     TextFormField(
                       style: const TextStyle(color: Colors.white),
-
+                      obscureText: isObscured,
+                      
                       decoration: InputDecoration(
                         fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15.0),
                         ),
+                        suffixIcon: IconButton(icon: isObscured? Icon(Icons.visibility):Icon(Icons.visibility_off),onPressed:() {
+                        setState(() {
+                          isObscured=!isObscured;
+                        });
+                      },
+                      ),
                         // filled: true,
                         hintStyle: TextStyle(
                             color: Color.fromARGB(255, 166, 162, 162)),

@@ -121,18 +121,8 @@ class _OrganiserFormState extends State<OrganiserForm> {
                 ),
                 
                 // Dropdown for selecting event type
-                TextFormField(
-                  controller: eventTypeController,
-                  decoration: InputDecoration(
-                    labelText: 'Type of Event (e.g. Hackathon, Ideathon)',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Type of Event is required';
-                    }
-                    return null;
-                  },
-                ),
+                
+                
                 // Dropdown for selecting event mode
                 DropdownButtonFormField<String>(
                   value: eventMode,
@@ -162,6 +152,7 @@ class _OrganiserFormState extends State<OrganiserForm> {
                     return null;
                   },
                 ),
+                
                 TextFormField(
                   controller: skillController,
                   decoration: InputDecoration(labelText: 'Skills Assessed'),
