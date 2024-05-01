@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 
+bool isObscured=true;
+
 List<String> selected = [];
 
 class SignUp extends StatelessWidget {
@@ -240,13 +242,20 @@ class MyCustomFormState extends State<MyCustomForm> {
                   ),
                   TextFormField(
                     style: const TextStyle(color: Colors.white),
-
+                    obscureText: isObscured,
                     decoration: InputDecoration(
                       fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       // filled: true,
+                      
+                      suffixIcon: IconButton(icon: isObscured? Icon(Icons.visibility):Icon(Icons.visibility_off),onPressed:() {
+                        setState(() {
+                          isObscured=!isObscured;
+                        });
+                      },
+                      ),
                       hintStyle:
                           TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
                       hintText: "Enter your password",
@@ -268,13 +277,14 @@ class MyCustomFormState extends State<MyCustomForm> {
                   ),
                   TextFormField(
                     style: const TextStyle(color: Colors.white),
-
+                    
                     decoration: InputDecoration(
                       fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       // filled: true,
+                      
                       hintStyle:
                           TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
                       hintText: "confirm  your password",

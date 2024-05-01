@@ -198,7 +198,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   'name': eventNameController.text,
                   'name_organiser': organizerNameController.text,
                   'time': eventTimeController.text,
-                  'type': eventTypeController.text,
+                  'type': eventType.toString(),
                   'mode': eventMode.toString(),
                   'description': eventDescriptionController.text,
                   'date' : selectedDate.toString(),

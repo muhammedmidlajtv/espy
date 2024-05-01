@@ -13,7 +13,7 @@ final TextEditingController eventNameController = TextEditingController();
 final TextEditingController organizerNameController = TextEditingController();
 final TextEditingController eventTimeController = TextEditingController();
 final TextEditingController eventDateController = TextEditingController();
-final TextEditingController eventTypeController = TextEditingController();
+//final TextEditingController eventTypeController = TextEditingController();
 final TextEditingController skillController = TextEditingController();
 
 final TextEditingController eventDescriptionController =
@@ -25,6 +25,7 @@ final TextEditingController designationController = TextEditingController();
 String imageUrl = "";
 String FileName = "";
 String eventMode = 'Online'; // Variable to store selected event mode
+String eventType = 'Hackathon'; // Variable to store selected event mode
 String? _filePath;
 
 DateTime? selectedDate; // Variable to store selected date

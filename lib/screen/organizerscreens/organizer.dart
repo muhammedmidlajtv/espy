@@ -1,8 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:espy/screen/authentication/auth_service.dart';
 import 'package:espy/screen/organizerscreens/organizerform.dart';
+import 'package:espy/screen/userscreens/user_homeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+final auth = AuthService();
 
 class EventOrganizerApp extends StatelessWidget {
   @override
@@ -41,7 +46,6 @@ class EventOrganizerPage extends StatelessWidget {
           Text(
             'Upcoming Event Details',
             style: TextStyle(
-              
               color: Color.fromARGB(255, 25, 117, 2),
               fontWeight: FontWeight.bold,
               fontSize: 20.0,
@@ -50,20 +54,24 @@ class EventOrganizerPage extends StatelessWidget {
           //code for Upcoming events
           Expanded(
             child: StreamBuilder(
-              stream: FirebaseFirestore.instance.collection("events").snapshots(),
+              stream:
+                  FirebaseFirestore.instance.collection("events").snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.hasData) {
                     return ListView.builder(
                       itemBuilder: (context, index) {
-                        DateTime dateTime = DateTime.parse(snapshot.data!.docs[index]["date"].toString());
+                        DateTime dateTime = DateTime.parse(
+                            snapshot.data!.docs[index]["date"].toString());
                         // Check if the event date is after today
                         if (dateTime.isAfter(DateTime.now())) {
-                          String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
+                          String formattedDate =
+                              DateFormat('yyyy-MM-dd').format(dateTime);
 
                           return EventTile(
                             name: snapshot.data!.docs[index]["name"].toString(),
-                            place: snapshot.data!.docs[index]["venue"].toString(),
+                            place:
+                                snapshot.data!.docs[index]["venue"].toString(),
                             time: snapshot.data!.docs[index]["time"].toString(),
                             date: formattedDate,
                             type: snapshot.data!.docs[index]["type"].toString(),
@@ -108,20 +116,24 @@ class EventOrganizerPage extends StatelessWidget {
           //code for past events
           Expanded(
             child: StreamBuilder(
-              stream: FirebaseFirestore.instance.collection("events").snapshots(),
+              stream:
+                  FirebaseFirestore.instance.collection("events").snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.hasData) {
                     return ListView.builder(
                       itemBuilder: (context, index) {
-                        DateTime dateTime = DateTime.parse(snapshot.data!.docs[index]["date"].toString());
+                        DateTime dateTime = DateTime.parse(
+                            snapshot.data!.docs[index]["date"].toString());
                         // Check if the event date is before today
                         if (dateTime.isBefore(DateTime.now())) {
-                          String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
+                          String formattedDate =
+                              DateFormat('yyyy-MM-dd').format(dateTime);
 
                           return EventTile1(
                             name: snapshot.data!.docs[index]["name"].toString(),
-                            place: snapshot.data!.docs[index]["venue"].toString(),
+                            place:
+                                snapshot.data!.docs[index]["venue"].toString(),
                             time: snapshot.data!.docs[index]["time"].toString(),
                             date: formattedDate,
                             type: snapshot.data!.docs[index]["type"].toString(),
@@ -154,18 +166,34 @@ class EventOrganizerPage extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return OrganiserForm();
-          }));
-        },
-        child: Icon(Icons.add),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(left: 20),
+        child: Row(
+          children: [
+            FloatingActionButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return OrganiserForm();
+                }));
+                // Handle add new event action
+              },
+              child: Icon(Icons.add),
+            ),
+            FloatingActionButton(
+              onPressed: () async {
+                await auth.signout();
+                goToLogin(context);
+                final _sharedPrefs = await SharedPreferences.getInstance();
+                await _sharedPrefs.setBool("organizerloggedin", false);
+              },
+              child: Icon(Icons.exit_to_app),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
-
 
 class EventTile extends StatelessWidget {
   final String name;
@@ -282,8 +310,6 @@ class EventTile extends StatelessWidget {
     );
   }
 }
-
-
 
 class EventTile1 extends StatelessWidget {
   final String name;
