@@ -31,7 +31,7 @@ class EventOrganizerPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "userName",
+          'Elon Musk',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.black,
@@ -55,28 +55,26 @@ class EventOrganizerPage extends StatelessWidget {
           //code for Upcoming events
           Expanded(
             child: StreamBuilder(
-              stream:
-                  FirebaseFirestore.instance.collection("events").snapshots(),
+              stream: FirebaseFirestore.instance.collection("events").snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.hasData) {
                     return ListView.builder(
                       itemBuilder: (context, index) {
-                        DateTime dateTime = DateTime.parse(
-                            snapshot.data!.docs[index]["date"].toString());
+                        DateTime dateTime = DateTime.parse(snapshot.data!.docs[index]["date"].toString());
                         // Check if the event date is after today
                         if (dateTime.isAfter(DateTime.now())) {
-                          String formattedDate =
-                              DateFormat('yyyy-MM-dd').format(dateTime);
+                          String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
 
                           return EventTile(
                             name: snapshot.data!.docs[index]["name"].toString(),
-                            place:
-                                snapshot.data!.docs[index]["venue"].toString(),
+                            place: snapshot.data!.docs[index]["venue"].toString(),
                             time: snapshot.data!.docs[index]["time"].toString(),
                             date: formattedDate,
                             type: snapshot.data!.docs[index]["type"].toString(),
-                            onDelete: () {},
+                            onDelete: () async {
+                              await FirebaseFirestore.instance.collection("events").doc(snapshot.data!.docs[index].id).delete();
+                            },
                             onEdit: () {},
                           );
                         } else {
@@ -117,28 +115,26 @@ class EventOrganizerPage extends StatelessWidget {
           //code for past events
           Expanded(
             child: StreamBuilder(
-              stream:
-                  FirebaseFirestore.instance.collection("events").snapshots(),
+              stream: FirebaseFirestore.instance.collection("events").snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.hasData) {
                     return ListView.builder(
                       itemBuilder: (context, index) {
-                        DateTime dateTime = DateTime.parse(
-                            snapshot.data!.docs[index]["date"].toString());
+                        DateTime dateTime = DateTime.parse(snapshot.data!.docs[index]["date"].toString());
                         // Check if the event date is before today
                         if (dateTime.isBefore(DateTime.now())) {
-                          String formattedDate =
-                              DateFormat('yyyy-MM-dd').format(dateTime);
+                          String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
 
                           return EventTile1(
                             name: snapshot.data!.docs[index]["name"].toString(),
-                            place:
-                                snapshot.data!.docs[index]["venue"].toString(),
+                            place: snapshot.data!.docs[index]["venue"].toString(),
                             time: snapshot.data!.docs[index]["time"].toString(),
                             date: formattedDate,
                             type: snapshot.data!.docs[index]["type"].toString(),
-                            onDelete: () {},
+                            onDelete: () async {
+                              await FirebaseFirestore.instance.collection("events").doc(snapshot.data!.docs[index].id).delete();
+                            },
                             onEdit: () {},
                           );
                         } else {
