@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:espy/main.dart';
 import 'package:espy/screen/authentication/auth_service.dart';
+import 'package:espy/screen/organizerscreens/editing_screen.dart';
 import 'package:espy/screen/organizerscreens/organizerform.dart';
 import 'package:espy/screen/userscreens/user_homeScreen.dart';
 import 'package:flutter/material.dart';
@@ -55,25 +56,32 @@ class EventOrganizerPage extends StatelessWidget {
           //code for Upcoming events
           Expanded(
             child: StreamBuilder(
-              stream: FirebaseFirestore.instance.collection("events").snapshots(),
+              stream:
+                  FirebaseFirestore.instance.collection("events").snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.hasData) {
                     return ListView.builder(
                       itemBuilder: (context, index) {
-                        DateTime dateTime = DateTime.parse(snapshot.data!.docs[index]["date"].toString());
+                        DateTime dateTime = DateTime.parse(
+                            snapshot.data!.docs[index]["date"].toString());
                         // Check if the event date is after today
                         if (dateTime.isAfter(DateTime.now())) {
-                          String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
+                          String formattedDate =
+                              DateFormat('yyyy-MM-dd').format(dateTime);
 
                           return EventTile(
                             name: snapshot.data!.docs[index]["name"].toString(),
-                            place: snapshot.data!.docs[index]["venue"].toString(),
+                            place:
+                                snapshot.data!.docs[index]["venue"].toString(),
                             time: snapshot.data!.docs[index]["time"].toString(),
                             date: formattedDate,
                             type: snapshot.data!.docs[index]["type"].toString(),
                             onDelete: () async {
-                              await FirebaseFirestore.instance.collection("events").doc(snapshot.data!.docs[index].id).delete();
+                              await FirebaseFirestore.instance
+                                  .collection("events")
+                                  .doc(snapshot.data!.docs[index].id)
+                                  .delete();
                             },
                             onEdit: () {},
                           );
@@ -115,25 +123,32 @@ class EventOrganizerPage extends StatelessWidget {
           //code for past events
           Expanded(
             child: StreamBuilder(
-              stream: FirebaseFirestore.instance.collection("events").snapshots(),
+              stream:
+                  FirebaseFirestore.instance.collection("events").snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.hasData) {
                     return ListView.builder(
                       itemBuilder: (context, index) {
-                        DateTime dateTime = DateTime.parse(snapshot.data!.docs[index]["date"].toString());
+                        DateTime dateTime = DateTime.parse(
+                            snapshot.data!.docs[index]["date"].toString());
                         // Check if the event date is before today
                         if (dateTime.isBefore(DateTime.now())) {
-                          String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
+                          String formattedDate =
+                              DateFormat('yyyy-MM-dd').format(dateTime);
 
                           return EventTile1(
                             name: snapshot.data!.docs[index]["name"].toString(),
-                            place: snapshot.data!.docs[index]["venue"].toString(),
+                            place:
+                                snapshot.data!.docs[index]["venue"].toString(),
                             time: snapshot.data!.docs[index]["time"].toString(),
                             date: formattedDate,
                             type: snapshot.data!.docs[index]["type"].toString(),
                             onDelete: () async {
-                              await FirebaseFirestore.instance.collection("events").doc(snapshot.data!.docs[index].id).delete();
+                              await FirebaseFirestore.instance
+                                  .collection("events")
+                                  .doc(snapshot.data!.docs[index].id)
+                                  .delete();
                             },
                             onEdit: () {},
                           );
@@ -274,8 +289,17 @@ class EventTile extends StatelessWidget {
                     ),
                     IconButton(
                       icon: Icon(Icons.edit),
-                      onPressed: () {
-                        onEdit();
+                        onPressed:
+                        () {
+                          // Navigator.of(context).pop()
+                          // print(name);
+
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return EditEventScreen(eventName: name.toString());
+                          }));
+                        ;
+                        // onEdit();
                       },
                     )
                   ],
@@ -391,7 +415,13 @@ class EventTile1 extends StatelessWidget {
                     IconButton(
                       icon: Icon(Icons.edit),
                       onPressed: () {
-                        onEdit();
+                        // Navigator.of(context).pop()
+                        // print(name);
+
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return EditEventScreen(eventName: name.toString());
+                        }));
                       },
                     )
                   ],
@@ -407,6 +437,42 @@ class EventTile1 extends StatelessWidget {
                           fontSize: 18,
                           fontWeight: FontWeight.w500),
                     ),
+                    // StreamBuilder(
+                    //   stream: FirebaseFirestore.instance
+                    //       .collection("events")
+                    //       .snapshots(),
+                    //   builder: (context, snapshot) {
+                    //     if (snapshot.connectionState ==
+                    //         ConnectionState.active) {
+                    //       if (snapshot.hasData) {
+                    //         return EditEventScreen(
+                    //           // organizerEmail: auth.currentUserEmail,
+                    //           currentName:
+                    //               snapshot.data!.docs["name"].toString(),
+                    //           currentVenue: snapshot.data!.docs[index]["venue"]
+                    //               .toString(),
+                    //           currentDate:
+                    //               snapshot.data!.docs[index]["date"].toString(),
+                    //           currentRegLink: snapshot
+                    //               .data!.docs[index]["reg_link"]
+                    //               .toString(),
+                    //         );
+                    //       } else if (snapshot.hasError) {
+                    //         return Center(
+                    //           child: Text("${snapshot.error.toString()}"),
+                    //         );
+                    //       } else {
+                    //         return Center(
+                    //           child: Text("No data found"),
+                    //         );
+                    //       }
+                    //     } else {
+                    //       return Center(
+                    //         child: CircularProgressIndicator(),
+                    //       );
+                    //     }
+                    //   },
+                    // ),
                     IconButton(
                       icon: Icon(Icons.delete),
                       onPressed: () {
