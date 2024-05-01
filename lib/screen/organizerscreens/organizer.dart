@@ -280,13 +280,13 @@ class EventTile extends StatelessWidget {
               Container(
                 child: Row(
                   children: [
-                    Text(
-                      'Edit',
-                      style: TextStyle(
-                          color: Colors.green.shade900,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500),
-                    ),
+                    // Text(
+                    //   'Edit',
+                    //   style: TextStyle(
+                    //       color: Colors.green.shade900,
+                    //       fontSize: 18,
+                    //       fontWeight: FontWeight.w500),
+                    // ),
                     IconButton(
                       icon: Icon(Icons.edit),
                         onPressed:
@@ -308,13 +308,13 @@ class EventTile extends StatelessWidget {
               Container(
                 child: Row(
                   children: [
-                    Text(
-                      'Delete',
-                      style: TextStyle(
-                          color: Colors.red.shade900,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500),
-                    ),
+                    // Text(
+                    //   'Delete',
+                    //   style: TextStyle(
+                    //       color: Colors.red.shade900,
+                    //       fontSize: 18,
+                    //       fontWeight: FontWeight.w500),
+                    // ),
                     IconButton(
                       icon: Icon(Icons.delete),
                       onPressed: () {
@@ -405,13 +405,13 @@ class EventTile1 extends StatelessWidget {
               Container(
                 child: Row(
                   children: [
-                    Text(
-                      'Edit',
-                      style: TextStyle(
-                          color: Colors.green.shade900,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500),
-                    ),
+                    // Text(
+                    //   'Edit',
+                    //   style: TextStyle(
+                    //       color: Colors.green.shade900,
+                    //       fontSize: 18,
+                    //       fontWeight: FontWeight.w500),
+                    // ),
                     IconButton(
                       icon: Icon(Icons.edit),
                       onPressed: () {
@@ -430,13 +430,13 @@ class EventTile1 extends StatelessWidget {
               Container(
                 child: Row(
                   children: [
-                    Text(
-                      'Delete',
-                      style: TextStyle(
-                          color: Colors.red.shade900,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500),
-                    ),
+                    // Text(
+                    //   'Delete',
+                    //   style: TextStyle(
+                    //       color: Colors.red.shade900,
+                    //       fontSize: 18,
+                    //       fontWeight: FontWeight.w500),
+                    // ),
                     // StreamBuilder(
                     //   stream: FirebaseFirestore.instance
                     //       .collection("events")
