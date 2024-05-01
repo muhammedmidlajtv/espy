@@ -231,7 +231,7 @@ class _LoginScreenState extends State<Login> {
     );
   }
 
-  void _navigateToOrganiserUpScreen(BuildContext context) {
+    void _navigateToOrganiserUpScreen(BuildContext context) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => EventOrganizerApp()),
@@ -290,6 +290,8 @@ class _LoginScreenState extends State<Login> {
         if (user != null) {
           checkRole(email);
           log("User Logged In");
+           current_logged_email = email;
+          print(current_logged_email);
 
           //sharedpreferences
 

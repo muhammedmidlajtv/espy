@@ -185,6 +185,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
           SizedBox(height: 20.0),
           ElevatedButton(
             onPressed: () {
+                                // print("/////////////////${current_logged_email}");
+
               if (_formKey.currentState != null &&
                   _formKey.currentState!.validate()) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -224,7 +226,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   'participation_fee': participationFee.toString(),
                   'fee': participationAmount.toString(),
                   'minparticipants': minParticipants.toString(),
-                  'maxparticipans': maxParticipants.toString()
+                  'maxparticipans': maxParticipants.toString(),
+                  "organiser_id": current_logged_email.toString(),
 
                  
                 }
