@@ -152,6 +152,22 @@ class _OrganiserFormState extends State<OrganiserForm> {
                     return null;
                   },
                 ),
+                DropdownButtonFormField<String>(
+                  value: eventType,
+                  onChanged: (value) {
+                    setState(() {
+                      eventType = value!;
+                    });
+                  },
+                  items: ['Hackathon','Ideathon','Workshop','Talk Session']
+                      .map<DropdownMenuItem<String>>((mode) {
+                    return DropdownMenuItem<String>(
+                      value: mode,
+                      child: Text(mode),
+                    );
+                  }).toList(),
+                  decoration: InputDecoration(labelText: 'Type of Event'),
+                ),
                 
                 TextFormField(
                   controller: skillController,
