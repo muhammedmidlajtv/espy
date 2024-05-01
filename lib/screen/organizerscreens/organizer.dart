@@ -1,7 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:espy/screen/authentication/auth_service.dart';
 import 'package:espy/screen/organizerscreens/organizerform.dart';
+import 'package:espy/screen/userscreens/user_homeScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+final auth = AuthService();
 
 class EventOrganizerApp extends StatelessWidget {
   @override
@@ -41,10 +47,11 @@ class EventOrganizerPage extends StatelessWidget {
             if (snapshot.hasData) {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  DateTime dateTime = DateTime.parse(snapshot.data!.docs[index]["date"].toString());
+                  DateTime dateTime = DateTime.parse(
+                      snapshot.data!.docs[index]["date"].toString());
                   // Format the DateTime object to display the date
-                  String formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
-            
+                  String formattedDate =
+                      DateFormat('yyyy-MM-dd').format(dateTime);
 
                   return EventTile(
                     name: snapshot.data!.docs[index]["name"].toString(),
@@ -52,12 +59,8 @@ class EventOrganizerPage extends StatelessWidget {
                     time: snapshot.data!.docs[index]["time"].toString(),
                     date: formattedDate,
                     type: snapshot.data!.docs[index]["type"].toString(),
-                    onDelete: () {
-                      
-                    },
-                    onEdit: () {
-                      
-                    },
+                    onDelete: () {},
+                    onEdit: () {},
                   );
                 },
                 itemCount: snapshot.data!.docs.length,
@@ -78,14 +81,30 @@ class EventOrganizerPage extends StatelessWidget {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return OrganiserForm();
-          }));
-          // Handle add new event action
-        },
-        child: Icon(Icons.add),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(left: 20),
+        child: Row(
+          children: [
+            FloatingActionButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return OrganiserForm();
+                }));
+                // Handle add new event action
+              },
+              child: Icon(Icons.add),
+            ),
+            FloatingActionButton(
+              onPressed: () async {
+                await auth.signout();
+                goToLogin(context);
+                final _sharedPrefs = await SharedPreferences.getInstance();
+                await _sharedPrefs.setBool("organizerloggedin", false);
+              },
+              child: Icon(Icons.exit_to_app),
+            ),
+          ],
+        ),
       ),
     );
   }
