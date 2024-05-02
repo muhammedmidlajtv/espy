@@ -225,8 +225,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.16.0"
-<<<<<<< HEAD
-=======
   firebase_storage:
     dependency: "direct main"
     description:
@@ -251,7 +249,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.9.4"
->>>>>>> a38cae03f9184af9ba8312fdbc04fe57bbe5d047
   flutter:
     dependency: "direct main"
     description: flutter

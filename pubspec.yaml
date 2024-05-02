@@ -53,8 +53,6 @@ dependencies:
   social_login_buttons: ^1.0.7
   google_sign_in: ^6.2.1
   
-
-  
   # shared_preferences: ^2.2.2
 
 dev_dependencies:

@@ -125,8 +125,9 @@ class _user_homeLoginState extends State<user_homeLogin> {
 
   List<String> filteredImage = image;
   List<String> filteredTitle = title;
-   String _userId = ""; // Initialize user ID
-  List<String> _preferredDomains = []; // Initialize preferred domains
+  String _userId =""; 
+  String _Email = "";// Initialize user ID
+  List<dynamic> preferencesList=[];
   List<String> eventNames = [];
   // Filter options
  
@@ -138,24 +139,86 @@ class _user_homeLoginState extends State<user_homeLogin> {
     _getCurrentUser();
   }
 
+  
   void _getCurrentUser() async {
+  final user = _auth.currentUser;
+  if (user != null) {
+    // Get the user's email
+    print("User is signed in with email: ${user.email}");
+    // Now you can use `userEmail` as needed.
+    // For example, you can store it in your `email` field.
+    setState(() {
+       final _Email = user.email;// Assuming `email` is a variable in your state
+    });
+    await _fetchPreferredDomains(_Email);
+    // Continue with other operations (e.g., fetching preferred domains).
+  } else {
+    print("No user is signed in.");
+  }
+}
+  
+ /* void _getCurrentUser() async {
     final user = _auth.currentUser;
+     if (user != null) {
+   print("User is signed in with UID: ${user.uid}");
+ } else {
+   print("No user is signed in.");
+ }
     if (user != null) {
       setState(() {
-        _userId = user.uid;
-      });
+        final _userId = user.uid;
+        });
+      final DocumentSnapshot userDoc = await _firestore.collection('user_login').doc(_email).get();
       await _fetchPreferredDomains();
     }
   }
 
+ */
+ 
+
+Future<void> _fetchPreferredDomains(String _Email) async {
+  try {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final userEmail = user.email; // Get the user's email
+      if (userEmail != null && userEmail.isNotEmpty) {
+        final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection("user_login")
+          .where("email", isEqualTo: userEmail)
+          .get();
+          print(querySnapshot);
+        if (querySnapshot.docs.isNotEmpty) {
+          final firstDocumentData = (querySnapshot.docs.first.data()
+            as Map<String, dynamic>)['preferences'];
+            preferencesList = firstDocumentData != null ? List.from(firstDocumentData) : [];
+
+          } else {
+          print("User document does not exist.");
+      }
+      } else {
+        print("User email is null or empty.");
+      }
+    } else {
+      print("No user is signed in.");
+    }
+  } catch (e) {
+    print("Error fetching preferred domains: $e");
+  }
+}
+
+
+/*
    Future<void> _fetchPreferredDomains() async {
     try {
-      final DocumentSnapshot userDoc = await _firestore.collection('users').doc(_userId).get();
+      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection("user_login")
+          .where("_Email", isEqualTo: email)
+          .get();
       if (userDoc.exists) {
         final data = userDoc.data() as Map<String, dynamic>; // Cast to Map
-        if (data != null && data.containsKey('preferred')) {
+        if (data != null && data.containsKey('preferences0')) {
           setState(() {
-            _preferredDomains = List<String>.from(data['preferred']);
+            _preferredDomains = List<String>.from(data['preferences0']);
           });
         }
       }
@@ -163,12 +226,13 @@ class _user_homeLoginState extends State<user_homeLogin> {
       print("Error fetching preferred domains: $e");
     }
   }
-
+*/
   Future<List<String>> _fetchEventsForPreferredDomains() async {
     try {
       final QuerySnapshot eventsQuery = await _firestore.collection('events')
-          .where('type', whereIn: _preferredDomains)
+          .where('type', whereIn: preferencesList)
           .get();
+          
       final List<String> eventNames = eventsQuery.docs.map((doc) => doc['name'] as String).toList();
       return eventNames;
     } catch (e) {
