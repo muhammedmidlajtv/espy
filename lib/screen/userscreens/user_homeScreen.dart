@@ -2,6 +2,7 @@
 //import "dart:developer";
 import 'package:espy/main.dart';
 import 'package:espy/screen/organizerscreens/organizer.dart';
+import 'package:espy/screen/profile.dart';
 import 'package:espy/screen/userscreens/userEventRegistration.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:espy/screen/authentication/auth_service.dart';
@@ -48,22 +49,26 @@ class NavDrawer extends StatelessWidget {
               color: Colors.green,
               image: DecorationImage(
                 fit: BoxFit.fill,
-                image: AssetImage('assets/images/cover.jpg'),
+                image: AssetImage('assets/images/user.png'),
               ),
             ),
           ),
           ListTile(
-              leading: Icon(Icons.input),
-              title: Text('Welcome'),
-              onTap: () => {
-                    /* Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return EventOrganizerApp();
-      })) */
-                  }),
+            leading: Icon(Icons.input),
+            title: Text('Welcome'),
+            onTap: () => {}
+          ),
           ListTile(
             leading: Icon(Icons.verified_user),
             title: Text('Profile'),
-            onTap: () => {Navigator.of(context).pop()},
+            onTap: () => {
+              // Navigator.of(context).pop()
+              
+                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return ProfilePage();
+              })) 
+                
+              },
           ),
           ListTile(
             leading: Icon(Icons.settings),
@@ -86,7 +91,7 @@ class NavDrawer extends StatelessWidget {
 
               //sharedprefereces
               final _sharedPrefs = await SharedPreferences.getInstance();
-              await _sharedPrefs.setBool("userloggedin", false);
+              await _sharedPrefs.setBool("userloggedin",false);
               //
             },
           ),
@@ -365,7 +370,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
 
                                   //       ],
                                   //     ),
-
+                                
                                   // District filter
                                   DropdownButtonFormField<String>(
                                     value: districts.first,
@@ -617,6 +622,7 @@ class FilterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       child: Card(
+        
         color: Colors.yellow[50],
         elevation: 8.0,
         margin: EdgeInsets.all(4.0),
@@ -648,8 +654,8 @@ class FilterScreen extends StatelessWidget {
       ),
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return userEventRegistration();
-        }));
+                          return userEventRegistration();
+                        }));
         /* Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: ((context) => userEventRegistration()))); */
       },
@@ -658,6 +664,7 @@ class FilterScreen extends StatelessWidget {
 //}*/
 
 goToLogin(BuildContext context) => Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => Login()),
+  context,
+  MaterialPageRoute(builder: (context) => Login()),
+
     );

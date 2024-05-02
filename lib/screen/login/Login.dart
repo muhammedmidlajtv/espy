@@ -1,6 +1,8 @@
 import "dart:developer";
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:espy/main.dart';
 import "package:espy/screen/authentication/auth_service.dart";
+import 'package:espy/screen/organizerscreens/organizer.dart';
 import 'package:espy/screen/signup/SignUp.dart';
 import 'package:espy/screen/userscreens/user_homeScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 // final _textController = TextEditingController();
-
+var isObscured=true;
 class Login extends StatefulWidget {
   Login({super.key});
 
@@ -99,12 +101,19 @@ class _LoginScreenState extends State<Login> {
                     ),
                     TextFormField(
                       style: const TextStyle(color: Colors.white),
-
+                      obscureText: isObscured,
+                      
                       decoration: InputDecoration(
                         fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15.0),
                         ),
+                        suffixIcon: IconButton(icon: isObscured? Icon(Icons.visibility):Icon(Icons.visibility_off),onPressed:() {
+                        setState(() {
+                          isObscured=!isObscured;
+                        });
+                      },
+                      ),
                         // filled: true,
                         hintStyle: TextStyle(
                             color: Color.fromARGB(255, 166, 162, 162)),
@@ -130,7 +139,7 @@ class _LoginScreenState extends State<Login> {
                           // If the form is valid, display a snackbar. In the real world,
                           // you'd often call a server or save the information in a database.
                           _login(context, _email.text, _password.text);
-                          // _navigateToHomeUpScreen(context);
+                          // _navigateToUserHomeUpScreen(context);
                         }
                       },
                       buttonType: SocialLoginButtonType.generalLogin,
@@ -215,10 +224,17 @@ class _LoginScreenState extends State<Login> {
         .push(MaterialPageRoute(builder: (context) => SignUp()));
   }
 
-  void _navigateToHomeUpScreen(BuildContext context) {
+  void _navigateToUserHomeUpScreen(BuildContext context) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => user_homeLogin()),
+    );
+  }
+
+    void _navigateToOrganiserUpScreen(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => EventOrganizerApp()),
     );
   }
 
@@ -235,18 +251,51 @@ class _LoginScreenState extends State<Login> {
   //     user_homeLogin();
   //   }
   // }
+  void checkRole(String email) async {
+    try {
+      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection("user_login")
+          .where("email", isEqualTo: email)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final roleField =
+            (querySnapshot.docs.first.data() as Map<String, dynamic>)['role'];
+        if (roleField != null) {
+          final String role = roleField.toString().toLowerCase();
+          log(role);
+          if (role == "user") {
+            final _sharedPrefs = await SharedPreferences.getInstance();
+          await _sharedPrefs.setBool("userloggedin", true);
+            _navigateToUserHomeUpScreen(context);
+          } else {
+            final _sharedPrefs = await SharedPreferences.getInstance();
+            await _sharedPrefs.setBool("organizerloggedin", true);
+            _navigateToOrganiserUpScreen(context);
+          }
+        } else {
+          // Handle case when role field is null
+          log("Role field is null for user with email: $email");
+        }
+      }
+    } catch (error) {
+      log("Error getting user data: $error");
+    }
+  }
+
   void _login(BuildContext context, String email, String password) async {
     if (_formKey.currentState!.validate()) {
       try {
         final user = await _auth.loginUserWithEmailAndPassword(email, password);
         if (user != null) {
+          checkRole(email);
           log("User Logged In");
-          _navigateToHomeUpScreen(context);
+           current_logged_email = email;
+          print(current_logged_email);
 
           //sharedpreferences
 
-          final _sharedPrefs = await SharedPreferences.getInstance();
-          await _sharedPrefs.setBool("userloggedin", true);
+          
 
           //
         } else {
@@ -273,12 +322,12 @@ class _LoginScreenState extends State<Login> {
 // Get the display name of the user
       String? username = user.displayName;
       String? email = user.email;
-      
+
       log(username.toString());
       log(email.toString());
-      
+
       log("User Logged In with google");
-      _navigateToHomeUpScreen(context);
+      _navigateToUserHomeUpScreen(context);
 
       //sharedpreferences
 
