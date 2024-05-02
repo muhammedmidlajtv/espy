@@ -1,55 +1,69 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:espy/screen/authentication/auth_service.dart';
+import 'package:espy/screen/organizerscreens/organizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Import 'package:flutter/services.dart' for TextInputFormatter
 import 'package:espy/main.dart';
+
+final auth = AuthService();
+
+String current_email = "";
 
 class RegistrationDetailsPage extends StatelessWidget {
 
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Registration Details',
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.black,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'REGISTRATION DETAILS',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0,
+    return FutureBuilder<String?>(
+      future: auth.getCurrentUserEmail(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator(); // Or any loading indicator
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          current_email = snapshot.data ?? "";
+          print("${current_email}");
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(
+                'Registration Details',
+                style: TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Colors.black,
+            ),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'REGISTRATION DETAILS',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                      ),
+                    ),
+                    SizedBox(height: 20.0),
+                    RegistrationForm(),
+                  ],
                 ),
               ),
-              SizedBox(height: 20.0),
-              RegistrationForm(
-            
-                  ),
-            ],
-          ),
-        ),
-      ),
+            ),
+          );
+        }
+      },
     );
   }
 }
 
 class RegistrationForm extends StatefulWidget {
-
   @override
   _RegistrationFormState createState() => _RegistrationFormState();
 }
 
 class _RegistrationFormState extends State<RegistrationForm> {
- 
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -185,7 +199,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
           SizedBox(height: 20.0),
           ElevatedButton(
             onPressed: () {
-                                // print("/////////////////${current_logged_email}");
+              // print("/////////////////${current_logged_email}");
 
               if (_formKey.currentState != null &&
                   _formKey.currentState!.validate()) {
@@ -194,8 +208,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 CollectionReference collRef =
                     FirebaseFirestore.instance.collection('events');
                 collRef.add({
-
-                   //controllers from events basic information page
+                  //controllers from events basic information page
 
                   'name': eventNameController.text,
                   'name_organiser': organizerNameController.text,
@@ -203,13 +216,13 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   'type': eventType.toString(),
                   'mode': eventMode.toString(),
                   'description': eventDescriptionController.text,
-                  'date' : selectedDate.toString(),
+                  'date': selectedDate.toString(),
                   'speaker_desig': designationController.text,
                   'skill': skillController.text,
                   'speaker_name': nameController.text,
                   // 'speaker_name': speakers['designation'],
 
-                for (int i = 0; i < speakers.length; i++) ...{
+                  for (int i = 0; i < speakers.length; i++) ...{
                     'speaker_name_$i': speakers[i]['name'],
                     'speaker_desig_$i': speakers[i]['designation'],
                   },
@@ -227,18 +240,17 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   'fee': participationAmount.toString(),
                   'minparticipants': minParticipants.toString(),
                   'maxparticipans': maxParticipants.toString(),
-                  "organiser_id": current_logged_email.toString(),
-
-                 
-                }
-                );
+                  "organiser_id": current_email,
+                });
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return EventOrganizerApp();
+                }));
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Please fill in all required fields')),
                 );
               }
-            print(eventNameController.text);
-
+              print(eventNameController.text);
             },
             child: Text('Publish'),
           ),

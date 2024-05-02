@@ -120,7 +120,8 @@ class _EditEventScreenState extends State<EditEventScreen> {
                     await eventDoc.reference.update({
                       'date': selectedDate.toString(),
                       'venue': newVenue.text,
-                      'reg_link': newRegLink.text
+                      'reg_link': newRegLink.text,
+                      'time' : eventTimeController.text
                       // Update other fields as needed
                     });
                   }
