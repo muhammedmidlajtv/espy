@@ -109,11 +109,7 @@ class MyCustomFormState extends State<MyCustomForm> {
 
   void _selectCategories() async {
     final List<String> items = [
-      'Hackathon',
-      'Ideathon',
-      'Article Writing',
-      'Talk Session',
-      'Workshop'
+      'Hackathon','Ideathon','Workshop','Talk Session'
     ];
 
     final List<String>? results = await showDialog(

@@ -1,21 +1,65 @@
+import 'dart:typed_data';
+import 'package:flutter/rendering.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:espy/screen/userscreens/user_homeScreen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class userEventRegistration extends StatelessWidget {
-  const userEventRegistration({super.key});
+  final String name;
+  final String venue;
+  final String date;
+  final String type;
+  final String description;
+  final String speaker;
+  final String fee;
+  final String reglink;
+  final String posterlink;
+
+  const userEventRegistration({
+    Key? key,
+    required this.name,
+    required this.venue,
+    required this.date,
+    required this.type,
+    required this.description,
+    required this.speaker,
+    required this.fee,
+    required this.reglink,
+    required this.posterlink,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-         Container(
-           child: SizedBox
-           (
-            height: 230,
-            child: Image.asset("assets/images/Hackathon_Team.png")),
-          ),
-         Card(
+        SizedBox(
+          height: 50,
+        ),
+        Container(
+          child: SizedBox(
+              height: 200,
+              width: 90,
+              child: Image.network(
+                posterlink,
+                fit: BoxFit.fill,
+                loadingBuilder: (BuildContext context, Widget child,
+                    ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child;
+                  } else {
+                    return CircularProgressIndicator();
+                  }
+                },
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return Text('Error loading image');
+                },
+              )),
+        ),
+        Card(
           // elevation: 50,
           shadowColor: Colors.black,
           color: Colors.greenAccent[100],
@@ -26,12 +70,12 @@ class userEventRegistration extends StatelessWidget {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                   //CircleAvatar
+                  //CircleAvatar
                   const SizedBox(
                     height: 10,
                   ), //SizedBox
                   Text(
-                    'Hackathon 3.0',
+                    name,
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.green[900],
@@ -47,51 +91,50 @@ class userEventRegistration extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: SizedBox(
-                          height: 15,
-                          width: 15,
-                          child: Container(child: Image.asset("assets/images/location_img.png"))),
-                      )
-                      ,Text(
-                        "RIT Kottayam , Kerala"
-                        ),
+                            height: 15,
+                            width: 15,
+                            child: Container(
+                                child: Image.asset(
+                                    "assets/images/location_img.png"))),
+                      ),
+                      Text(venue),
                     ],
                   ),
-                   Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: SizedBox(
-                          height: 15,
-                          width: 15,
-                          child: Container(child: Image.asset("assets/images/calender_icon.png"))),
-                      )
-                      ,Text(
-                        "29th September,2024"
-                        ),
+                            height: 15,
+                            width: 15,
+                            child: Container(
+                                child: Image.asset(
+                                    "assets/images/calender_icon.png"))),
+                      ),
+                      Text(date),
                     ],
                   ),
-                   Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: SizedBox(
-                          height: 15,
-                          width: 15,
-                          child: Container(child: Image.asset("assets/images/category.png"))),
-                      )
-                      ,Text(
-                        "HACKATHON"
-                        ),
+                            height: 15,
+                            width: 15,
+                            child: Container(
+                                child:
+                                    Image.asset("assets/images/category.png"))),
+                      ),
+                      Text(type),
                     ],
-                  )
-                  ,
+                  ),
                   SizedBox(
-                    height:10 ,
+                    height: 10,
                   ), //SizedBox
-                  const Text(
-                    'Unlock your creativity with Adobe Photoshop! Join us for an exciting workshop where you will learn the fundamentals of Photoshop, including tools and techniques for editing and enhancing images. Whether you are a beginner or an experienced user, this event is perfect for you',
+                  Text(
+                    description,
                     style: TextStyle(
                       fontSize: 15,
                       color: Color.fromARGB(255, 124, 66, 66),
@@ -100,27 +143,27 @@ class userEventRegistration extends StatelessWidget {
                   const SizedBox(
                     height: 10,
                   ),
-                  Row(children: [
-                    Text(
-                      style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold) ,
-                        "Speaker :"
-                        ),
-                        Text(
-                        " Prof Nisha"
-                        ),
-                  ],),
-                  SizedBox(height: 10,),
-                  Row(children: [
-                    Text(
-                      style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold) ,
-
-                        "Fee :"
-                        ),
-                        Text(
-                        " 100/-"
-                        ),
-                        
-                  ],),
+                  Row(
+                    children: [
+                      Text(
+                          style: TextStyle(
+                              color: Colors.red, fontWeight: FontWeight.bold),
+                          "Speaker :"),
+                      Text(speaker),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                          style: TextStyle(
+                              color: Colors.red, fontWeight: FontWeight.bold),
+                          "Fee :"),
+                      Text(fee),
+                    ],
+                  ),
                   SizedBox(
                     height: 10,
                   ),
@@ -128,94 +171,57 @@ class userEventRegistration extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text("For more info: "),
-                      Text(style: TextStyle(color: Colors.red)," www.espy.com")
+                      Text(style: TextStyle(color: Colors.red), " www.espy.com")
                     ],
-                  )
-                  , //SizedBox
-                  // SizedBox(
- 
-                  //   child: ElevatedButton(
-                  //     onPressed: () => 'Null',
-                  //     style: ButtonStyle(
-                  //         backgroundColor:
-                  //             MaterialStateProperty.all(Colors.green)),
-                  //     child: Padding(
-                  //       padding: const EdgeInsets.all(4),
-                  //       child: Row(
-                  //         children: const [
-                  //           Icon(Icons.touch_app),
-                  //           Text('Visit')
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ),
-                  //   // RaisedButton is deprecated and should not be used
-                  //   // Use ElevatedButton instead
- 
-                  //   // child: RaisedButton(
-                  //   //   onPressed: () => null,
-                  //   //   color: Colors.green,
-                  //   //   child: Padding(
-                  //   //     padding: const EdgeInsets.all(4.0),
-                  //   //     child: Row(
-                  //   //       children: const [
-                  //   //         Icon(Icons.touch_app),
-                  //   //         Text('Visit'),
-                  //   //       ],
-                  //   //     ), //Row
-                  //   //   ), //Padding
-                  //   // ), //RaisedButton
-                  // ) //SizedBox
+                  ),
                 ],
               ), //Column
             ), //Padding
           ), //SizedBox
-        ),//Size
+        ), //Size
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            
-         SizedBox(
- 
-                    child: ElevatedButton(
-                      onPressed: () => 'Null',
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.green)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(4),
-                        child: Row(
-                          children: const [
-                            Icon(Icons.touch_app),
-                            Text( style: 
-                                TextStyle(color: Color.fromARGB(130, 0, 0, 0), fontWeight: FontWeight.bold,fontSize: 17) ,
-
-                            'Register')
-                          ],
-                        ),
-                      ),
-                    ),
-                    // RaisedButton is deprecated and should not be used
-                    // Use ElevatedButton instead
- 
-                    // child: RaisedButton(
-                    //   onPressed: () => null,
-                    //   color: Colors.green,
-                    //   child: Padding(
-                    //     padding: const EdgeInsets.all(4.0),
-                    //     child: Row(
-                    //       children: const [
-                    //         Icon(Icons.touch_app),
-                    //         Text('Visit'),
-                    //       ],
-                    //     ), //Row
-                    //   ), //Padding
-                    // ), //RaisedButton
-                  ) 
+            SizedBox(
+              child: ElevatedButton(
+                onPressed: () async {
+                  if (await canLaunchUrl(Uri.parse(reglink))) {
+                    launchUrl(Uri.parse(reglink));
+                  } else {
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              content: Text('Invalid Link'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            ));
+                  }
+                },
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.green)),
+                child: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: Row(
+                    children: const [
+                      Icon(Icons.touch_app),
+                      Text(
+                          style: TextStyle(
+                              color: Color.fromARGB(130, 0, 0, 0),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17),
+                          'Register')
+                    ],
+                  ),
+                ),
+              ),
+            )
           ],
         )
       ],
     );
-    
   }
 }
