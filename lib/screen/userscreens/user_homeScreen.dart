@@ -430,7 +430,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
                     // Check if the event date is after today
 
                     String formattedDate =
-                        DateFormat('yyyy-MM-dd').format(dateTime);
+                        DateFormat('dd-MM-yyyy').format(dateTime);
 
                     final name = filteredEvents.elementAt(
                         index)['name']; // Access event name from document
@@ -576,7 +576,7 @@ class EventTile extends StatelessWidget {
                   height: 200,
                   width: 300,
                    child: Image.network(
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                     posterlink,
                       height: 200,
                       width: 200,
