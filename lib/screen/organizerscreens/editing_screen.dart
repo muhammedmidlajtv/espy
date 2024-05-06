@@ -36,7 +36,6 @@ class _EditEventScreenState extends State<EditEventScreen> {
   @override
   Widget build(BuildContext context) {
     String eventname = widget.eventName;
-    print(eventname);
     // String newName = "currentName";
     // String newVenue = "currentVenue";
     // String newDate = "currentDate";

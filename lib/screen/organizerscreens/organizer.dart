@@ -13,7 +13,6 @@ final auth = AuthService();
 
 String? currentLogged = "";
 
-
 // Future<String?> getNameFromEmail(String email) async {
 //   try {
 //     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -195,6 +194,7 @@ class EventOrganizerPage extends StatelessWidget {
                                   return EventTile1(
                                     name: snapshot.data!.docs[index]["name"]
                                         .toString(),
+                                        
                                     place: snapshot.data!.docs[index]["venue"]
                                         .toString(),
                                     time: snapshot.data!.docs[index]["time"]
@@ -206,8 +206,9 @@ class EventOrganizerPage extends StatelessWidget {
                                       await FirebaseFirestore.instance
                                           .collection("events")
                                           .doc(snapshot.data!.docs[index].id)
-                                          .delete();
+                                          .delete();                                  
                                     },
+                                    
                                     onEdit: () {},
                                   );
                                 } else {
@@ -357,7 +358,7 @@ class EventTile extends StatelessWidget {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           String name1;
-                          return EditEventScreen(eventName: 'name');
+                          return EditEventScreen(eventName: name);
                         }));
                         onEdit();
                       },
@@ -423,6 +424,7 @@ class EventTile1 extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Row(
+        
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -475,11 +477,13 @@ class EventTile1 extends StatelessWidget {
                     IconButton(
                       icon: Icon(Icons.edit),
                       onPressed: () {
+                         print("77777${name}");
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
+                         
                           return EditEventScreen(eventName: name);
                         }));
-                        onEdit();
+                        // onEdit();
                       },
                     )
                   ],
