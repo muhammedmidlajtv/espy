@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:espy/main.dart';
+import 'package:espy/screen/authentication/auth_service.dart';
 import 'package:espy/screen/signup/SignUp.dart';
 import 'package:espy/screen/splash.dart';
 import 'package:espy/screen/userscreens/user_homeScreen.dart';
@@ -16,6 +17,8 @@ bool _workshop = false;
 bool _ideathon = false;
 bool _talksession = false;
 
+final auth = AuthService();
+
 class ProfilePage extends StatefulWidget {
   ProfilePage({super.key});
 
@@ -24,6 +27,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  // String current_logged = auth.getCurrentUserEmail().toString();
+
   String userName = "...";
   String userEmail = "...";
 
@@ -36,9 +41,13 @@ class _ProfilePageState extends State<ProfilePage> {
   // Method to fetch user data from Firestore
   Future<void> fetchUserData() async {
     try {
+      // String current_logged = auth.getCurrentUserEmail().toString();
+      String? currentLogged = await auth.getCurrentUserEmail();
+      print(currentLogged);
+
+      // print("////////////${currentLogged}");
       // Assuming you have the email address of the current user
-       userEmail =
-          current_logged_email; // Replace with the actual email address
+      userEmail = currentLogged!; // Replace with the actual email address
 
       // Access Firestore collection reference
       CollectionReference collRef =
@@ -56,7 +65,8 @@ class _ProfilePageState extends State<ProfilePage> {
         // Update state with user's name and email
         setState(() {
           userName = (userDoc.data() as Map<String, dynamic>)["name"] ?? "...";
-          userEmail = (userDoc.data() as Map<String, dynamic>)["email"] ?? "...";
+          userEmail =
+              (userDoc.data() as Map<String, dynamic>)["email"] ?? "...";
           print(userEmail);
         });
       } else {
@@ -262,6 +272,11 @@ class _ProfilePageState extends State<ProfilePage> {
                               content:
                                   Text('Preferences updated successfully')),
                         );
+
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return user_homeLogin();
+                        }));
                       } else {
                         // Handle case where user with the specified email address is not found
                         print(

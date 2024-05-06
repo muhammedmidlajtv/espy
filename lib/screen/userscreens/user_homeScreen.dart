@@ -97,6 +97,7 @@ class user_homeLogin extends StatefulWidget {
 
   //filter
 
+
   @override
   _user_homeLoginState createState() => _user_homeLoginState();
 }
@@ -104,6 +105,10 @@ class user_homeLogin extends StatefulWidget {
 class _user_homeLoginState extends State<user_homeLogin> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isLoading = true;
+
+    // Variables for search functionality
+  String _searchQuery = ''; // Initialize search query
+
 
   @override
   void initState() {
@@ -243,6 +248,12 @@ class _user_homeLoginState extends State<user_homeLogin> {
                       hintText: 'Search',
                       hintStyle: TextStyle(color: Colors.grey, fontSize: 18),
                     ),
+                     onChanged: (value) {
+                      // Update search query when text changes
+                      setState(() {
+                        _searchQuery = value.toLowerCase();
+                      });
+                    },
                   ),
                 ),
                 SizedBox(
@@ -407,35 +418,36 @@ class _user_homeLoginState extends State<user_homeLogin> {
                     preferencesList.contains(
                         doc['type'])); // Filter events based on preferencesList
 
-                        
+                final filteredEvents = events.where((event) => event['name'].toLowerCase().contains(_searchQuery));
+
+
                 print("fetched it ");
                 return ListView.builder(
-                  itemCount: events.length,
+                  itemCount: filteredEvents.length,
                   itemBuilder: (context, index) {
                     DateTime dateTime = DateTime.parse(
                         events.elementAt(index)['date'].toString());
                     // Check if the event date is after today
-                    
-                      String formattedDate =
-                          DateFormat('yyyy-MM-dd').format(dateTime);
-                    
 
-                    final name = events.elementAt(
+                    String formattedDate =
+                        DateFormat('yyyy-MM-dd').format(dateTime);
+
+                    final name = filteredEvents.elementAt(
                         index)['name']; // Access event name from document
-                    final venue = events.elementAt(
+                    final venue = filteredEvents.elementAt(
                         index)['venue']; // Access event name from document
                     final date = formattedDate;
-                    final type = events.elementAt(
+                    final type = filteredEvents.elementAt(
                         index)['type']; // Access event name from document
-                    final description = events.elementAt(index)[
+                    final description = filteredEvents.elementAt(index)[
                         'description']; // Access event name from document
-                    final speaker = events.elementAt(index)[
+                    final speaker = filteredEvents.elementAt(index)[
                         'speaker_name']; // Access event name from document
-                    final fee = events.elementAt(
+                    final fee = filteredEvents.elementAt(
                         index)['fee']; // Access event name from document
-                    final reglink = events.elementAt(
+                    final reglink = filteredEvents.elementAt(
                         index)['reg_link']; // Access event name from document
-                    final posterlink = events.elementAt(
+                    final posterlink = filteredEvents.elementAt(
                         index)['poster']; // Access event name from document
 
                     return EventTile(
@@ -559,6 +571,20 @@ class EventTile extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+               Center(
+                 child: SizedBox(
+                  height: 200,
+                  width: 300,
+                   child: Image.network(
+                    fit: BoxFit.cover,
+                    posterlink,
+                      height: 200,
+                      width: 200,
+                    ),
+                    
+                 ),
+               ),
+                  
               GestureDetector(
                 child: Text(
                   name.toUpperCase(),
@@ -567,7 +593,7 @@ class EventTile extends StatelessWidget {
                     fontSize: 25.0,
                     color: Colors.blue,
                   ),
-                ),
+                ),               
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return userEventRegistration(
@@ -586,8 +612,18 @@ class EventTile extends StatelessWidget {
                   ;
                 },
               ),
+              Text(
+                  date,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25.0,
+                    color: const Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ), 
+              
             ],
           ),
+           
         ],
       ),
     );

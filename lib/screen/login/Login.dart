@@ -12,8 +12,10 @@ import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
 // final _textController = TextEditingController();
-var isObscured=true;
+var isObscured = true;
+
 class Login extends StatefulWidget {
   Login({super.key});
 
@@ -102,18 +104,22 @@ class _LoginScreenState extends State<Login> {
                     TextFormField(
                       style: const TextStyle(color: Colors.white),
                       obscureText: isObscured,
-                      
+
                       decoration: InputDecoration(
                         fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15.0),
                         ),
-                        suffixIcon: IconButton(icon: isObscured? Icon(Icons.visibility):Icon(Icons.visibility_off),onPressed:() {
-                        setState(() {
-                          isObscured=!isObscured;
-                        });
-                      },
-                      ),
+                        suffixIcon: IconButton(
+                          icon: isObscured
+                              ? Icon(Icons.visibility)
+                              : Icon(Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              isObscured = !isObscured;
+                            });
+                          },
+                        ),
                         // filled: true,
                         hintStyle: TextStyle(
                             color: Color.fromARGB(255, 166, 162, 162)),
@@ -231,7 +237,7 @@ class _LoginScreenState extends State<Login> {
     );
   }
 
-    void _navigateToOrganiserUpScreen(BuildContext context) {
+  void _navigateToOrganiserUpScreen(BuildContext context) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => EventOrganizerApp()),
@@ -261,12 +267,18 @@ class _LoginScreenState extends State<Login> {
       if (querySnapshot.docs.isNotEmpty) {
         final roleField =
             (querySnapshot.docs.first.data() as Map<String, dynamic>)['role'];
+        final current_user =
+            (querySnapshot.docs.first.data() as Map<String, dynamic>)['name'];
+
+             current_user_name = current_user.toString();
+
+
         if (roleField != null) {
           final String role = roleField.toString().toLowerCase();
           log(role);
           if (role == "user") {
             final _sharedPrefs = await SharedPreferences.getInstance();
-          await _sharedPrefs.setBool("userloggedin", true);
+            await _sharedPrefs.setBool("userloggedin", true);
             _navigateToUserHomeUpScreen(context);
           } else {
             final _sharedPrefs = await SharedPreferences.getInstance();
@@ -290,12 +302,11 @@ class _LoginScreenState extends State<Login> {
         if (user != null) {
           checkRole(email);
           log("User Logged In");
-           current_logged_email = email;
+          current_logged_email = email;
+
           print(current_logged_email);
 
           //sharedpreferences
-
-          
 
           //
         } else {

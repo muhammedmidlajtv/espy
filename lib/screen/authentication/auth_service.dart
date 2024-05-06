@@ -8,12 +8,11 @@ class AuthService {
 
   Future<User?> createUserWithEmailAndPassword(
       String email, String password) async {
-   // try {
-      
-      final cred = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      return cred.user;
+    // try {
 
+    final cred = await _auth.createUserWithEmailAndPassword(
+        email: email, password: password);
+    return cred.user;
 
     /* } catch (e) {
       log("Something went wrong");
@@ -75,5 +74,16 @@ class AuthService {
     } catch (e) {
       log("Something went wrong");
     }
+  }
+
+  Future<String?> getCurrentUserEmail() async {
+    final User? user = _auth.currentUser;
+    // print(user?.email);
+    if (user != null) {
+      return user.email;
+    }else{
+      return null;
+    }
+    
   }
 }

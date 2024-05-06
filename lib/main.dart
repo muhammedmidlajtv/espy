@@ -4,9 +4,10 @@ import "dart:async";
 import 'package:espy/screen/splash.dart';
 import 'package:flutter/material.dart';
 import "package:firebase_core/firebase_core.dart";
+import 'package:shared_preferences/shared_preferences.dart';
 
-
-String current_logged_email= "";
+String current_logged_email = "";
+String current_user_name = "";
 
 const SAVE_KEY_NAME = 'UserLoggedIn ';
 
@@ -44,6 +45,12 @@ int? maxParticipants = 1;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // await SharedPreferences.getInstance().then((prefs) {
+  //   // Retrieve values from shared preferences
+  //   current_logged_email = prefs.getString('current_logged_email') ?? '';
+  //   current_user_name = prefs.getString('current_user_name') ?? '';
+  //   runApp(const MyApp());
+  // });
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
