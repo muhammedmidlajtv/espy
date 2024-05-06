@@ -113,7 +113,7 @@ class EventOrganizerPage extends StatelessWidget {
                                 // Check if the event date is after today
                                 if (dateTime.isAfter(DateTime.now())) {
                                   String formattedDate =
-                                      DateFormat('yyyy-MM-dd').format(dateTime);
+                                      DateFormat('dd-MM-yyyy').format(dateTime);
 
                                   return EventTile(
                                     name: snapshot.data!.docs[index]["name"]
