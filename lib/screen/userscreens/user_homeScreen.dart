@@ -40,7 +40,7 @@ class NavDrawer extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.green,
               image: DecorationImage(
-                fit: BoxFit.fill,
+                fit: BoxFit.cover,
                 image: AssetImage('assets/images/user.png'),
               ),
             ),
@@ -444,7 +444,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
                     // Check if the event date is after today
 
                     String formattedDate =
-                        DateFormat('yyyy-MM-dd').format(dateTime);
+                        DateFormat('dd-MM-yyyy').format(dateTime);
 
                     final name = filteredEvents.elementAt(
                         index)['name']; // Access event name from document
@@ -589,7 +589,7 @@ class EventTile extends StatelessWidget {
                 child: SizedBox(
                   height: 200,
                   width: 300,
-                  child: Image.network(
+                   child: Image.network(
                     fit: BoxFit.cover,
                     posterlink,
                     height: 200,

@@ -41,6 +41,8 @@ class _ProfilePageState extends State<ProfilePage> {
   // Method to fetch user data from Firestore
   Future<void> fetchUserData() async {
     try {
+      List<dynamic> preferencesList = [];
+
       // String current_logged = auth.getCurrentUserEmail().toString();
       String? currentLogged = await auth.getCurrentUserEmail();
       print(currentLogged);
@@ -57,17 +59,48 @@ class _ProfilePageState extends State<ProfilePage> {
       final QuerySnapshot querySnapshot =
           await collRef.where("email", isEqualTo: userEmail).get();
 
+      
+
       // Check if any documents match the query
       if (querySnapshot.docs.isNotEmpty) {
         // Get the first document (assuming there's only one document for each user)
         final DocumentSnapshot userDoc = querySnapshot.docs.first;
-
+        
         // Update state with user's name and email
         setState(() {
           userName = (userDoc.data() as Map<String, dynamic>)["name"] ?? "...";
           userEmail =
               (userDoc.data() as Map<String, dynamic>)["email"] ?? "...";
           print(userEmail);
+
+           _isHackathonPressed = false;
+ _isquiz = false;
+ _workshop = false;
+ _ideathon = false;
+ _talksession = false;
+          final prefList = (querySnapshot.docs.first.data()
+          as Map<String, dynamic>)['preferences'];
+      preferencesList = prefList != null ? List.from(prefList) : [];
+      print(preferencesList);
+      for (var i = 0; i < preferencesList.length; i++) {
+        if (preferencesList[i] == "Hackathon") {
+          _isHackathonPressed = true;
+        }
+        if (preferencesList[i] == "Ideathon") {
+          _ideathon = true;
+        }
+        if (preferencesList[i] == "Workshop") {
+          _workshop = true;
+        }
+        if (preferencesList[i] == "Talk Sessions") {
+          _talksession = true;
+        }
+        if (preferencesList[i] == "Quiz") {
+          _isquiz = true;
+        }
+      }
+
+
         });
       } else {
         // Handle case where user with the specified email address is not found
@@ -168,13 +201,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         : Colors.grey, // Change colors as desired
                   ),
                 ),
-                // ElevatedButton(
-                //   onPressed: () {
-                //     // Action for idea pitching button
-                //   },
-                //   child: Text('Workshop'),
-                // ),
-                // Add more buttons as needed
               ],
             ),
             SizedBox(
@@ -214,14 +240,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         : Colors.grey, // Change colors as desired
                   ),
                 ),
-
-                // ElevatedButton(
-                //   onPressed: () {
-                //     // Action for idea pitching button
-                //   },
-                //   child: Text('Workshop'),
-                // ),
-                // Add more buttons as needed
               ],
             ),
             Column(
