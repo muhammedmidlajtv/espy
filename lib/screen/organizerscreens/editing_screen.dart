@@ -114,16 +114,39 @@ class _EditEventScreenState extends State<EditEventScreen> {
                       .where('name', isEqualTo:eventname)
                       .get();
 
-                  if (eventQuery.docs.isNotEmpty) {
-                    final eventDoc = eventQuery.docs.first;
-                    await eventDoc.reference.update({
-                      'date': selectedDate.toString(),
-                      'venue': newVenue.text,
-                      'reg_link': newRegLink.text,
-                      'time' : eventTimeController.text
-                      // Update other fields as needed
-                    });
-                  }
+                      if (eventQuery.docs.isNotEmpty) {
+      final eventDoc = eventQuery.docs.first;
+      Map<String, dynamic> updatedFields = {};
+
+      // Update fields if corresponding text fields are not empty
+      if (selectedDate != null) {
+        updatedFields['date'] = selectedDate.toString();
+      }
+      if (newVenue.text.isNotEmpty) {
+        updatedFields['venue'] = newVenue.text;
+      }
+      if (newRegLink.text.isNotEmpty) {
+        updatedFields['reg_link'] = newRegLink.text;
+      }
+      if (eventTimeController.text.isNotEmpty) {
+        updatedFields['time'] = eventTimeController.text;
+      }
+
+      // Update the document in Firestore
+      await eventDoc.reference.update(updatedFields);
+    }
+
+                  // if (eventQuery.docs.isNotEmpty) {
+                  //   final eventDoc = eventQuery.docs.first;
+
+                  //   await eventDoc.reference.update({
+                  //     'date': selectedDate.toString(),
+                  //     'venue': newVenue.text,
+                  //     'reg_link': newRegLink.text,
+                  //     'time' : eventTimeController.text
+                  //     // Update other fields as needed
+                  //   });
+                  // }
 
                   Navigator.pop(context);
                 },
