@@ -1,5 +1,6 @@
 // import 'dart:html';
 //import "dart:developer";
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:espy/main.dart';
 import 'package:espy/screen/organizerscreens/organizer.dart';
 import 'package:espy/screen/profile.dart';
@@ -11,15 +12,11 @@ import 'package:flutter/material.dart';
 import 'package:espy/screen/login/Login.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-List<String> image = [
-  'https://t3.ftcdn.net/jpg/03/01/13/20/360_F_301132090_LKoSp3l3cXlCo78zaAe2M9LI2z5yznvB.jpg',
-  'https://hbr.org/resources/images/article_assets/2014/10/25Sep03_Elsbach_how-to-pitch-a-brilliant-idea1.jpg',
-  'https://www.nicmar.ac.in/uploads/ideathon-2023-header.png',
-  'https://fortune.com/img-assets/wp-content/uploads/2016/05/unnamed.jpg'
-];
-List<String> title = ['Hackathon', 'Idea Pitching', ' Ideathon', 'CFT'];
+List<dynamic> preferencesList = [];
 
 class NavDrawer extends StatelessWidget {
   @override
@@ -44,21 +41,19 @@ class NavDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.input),
-            title: Text('Welcome'),
-            onTap: () => {}
-          ),
+              leading: Icon(Icons.input),
+              title: Text('Welcome'),
+              onTap: () => {}),
           ListTile(
             leading: Icon(Icons.verified_user),
             title: Text('Profile'),
             onTap: () => {
               // Navigator.of(context).pop()
-              
-                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return ProfilePage();
-              })) 
-                
-              },
+              }))
+            },
           ),
           ListTile(
             leading: Icon(Icons.settings),
@@ -81,7 +76,7 @@ class NavDrawer extends StatelessWidget {
 
               //sharedprefereces
               final _sharedPrefs = await SharedPreferences.getInstance();
-              await _sharedPrefs.setBool("userloggedin",false);
+              await _sharedPrefs.setBool("userloggedin", false);
               //
             },
           ),
@@ -108,9 +103,24 @@ class user_homeLogin extends StatefulWidget {
 
 class _user_homeLoginState extends State<user_homeLogin> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool _isLoading = true;
 
-  List<String> filteredImage = image;
-  List<String> filteredTitle = title;
+  @override
+  void initState() {
+    _initializePage();
+    super.initState();
+  }
+
+  Future<void> _initializePage() async {
+    // Call your function here
+    await _getCurrentUser();
+    // Once the function completes, update the state to stop loading
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   // Filter options
   List<String> categories = ['Hackathon', 'Ideathon', 'Idea Pitching'];
@@ -118,6 +128,59 @@ class _user_homeLoginState extends State<user_homeLogin> {
   List<String> universities = ['RIT', 'CET', 'MACE'];
 
   RangeValues _currentRangeValues = const RangeValues(20, 60);
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  String _Email = ""; // Initialize user ID
+
+  Future<void> _getCurrentUser() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      // Get the user's email
+      print("User is signed in with email: ${user.email}");
+      // Now you can use `userEmail` as needed.
+      // For example, you can store it in your `email` field.
+      final _Email = user.email.toString();
+      /* setState(() {
+         // Assuming `email` is a variable in your state
+      }); */
+      await _fetchPreferredDomains(_Email);
+      // Continue with other operations (e.g., fetching preferred domains).
+    } else {
+      print("No user is signed in.");
+    }
+  }
+
+  Future<void> _fetchPreferredDomains(String _Email) async {
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        final userEmail = user.email; // Get the user's email
+        if (userEmail != null && userEmail.isNotEmpty) {
+          final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+              .collection("user_login")
+              .where("email", isEqualTo: userEmail)
+              .get();
+
+          if (querySnapshot.docs.isNotEmpty) {
+            final firstDocumentData = (querySnapshot.docs.first.data()
+                as Map<String, dynamic>)['preferences'];
+            preferencesList =
+                firstDocumentData != null ? List.from(firstDocumentData) : [];
+            print('\n');
+            print(preferencesList);
+          } else {
+            print("User document does not exist.");
+          }
+        } else {
+          print("User email is null or empty.");
+        }
+      } else {
+        print("No user is signed in.");
+      }
+    } catch (e) {
+      print("Error fetching preferred domains: $e");
+    }
+  }
 
   void applyFilters() {
     // Filter the items based on user selections
@@ -246,7 +309,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
 
                                   //       ],
                                   //     ),
-                                
+
                                   // District filter
                                   DropdownButtonFormField<String>(
                                     value: districts.first,
@@ -314,7 +377,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
           //           },
           //           child: Icon(Icons.add)
           //           ),
-          Expanded(
+          /* Expanded(
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
@@ -323,6 +386,71 @@ class _user_homeLoginState extends State<user_homeLogin> {
               itemCount: image.length,
               itemBuilder: (BuildContext context, int index) {
                 return CardItem(image: image[index], title: title[index]);
+              },
+            ),
+          ), */
+
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream:
+                  FirebaseFirestore.instance.collection('events').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                      child:
+                          CircularProgressIndicator()); // Show a loading indicator while waiting for data
+                }
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
+                final events = snapshot.data!.docs.where((doc) =>
+                    preferencesList.contains(
+                        doc['type'])); // Filter events based on preferencesList
+
+                        
+                print("fetched it ");
+                return ListView.builder(
+                  itemCount: events.length,
+                  itemBuilder: (context, index) {
+                    DateTime dateTime = DateTime.parse(
+                        events.elementAt(index)['date'].toString());
+                    // Check if the event date is after today
+                    
+                      String formattedDate =
+                          DateFormat('yyyy-MM-dd').format(dateTime);
+                    
+
+                    final name = events.elementAt(
+                        index)['name']; // Access event name from document
+                    final venue = events.elementAt(
+                        index)['venue']; // Access event name from document
+                    final date = formattedDate;
+                    final type = events.elementAt(
+                        index)['type']; // Access event name from document
+                    final description = events.elementAt(index)[
+                        'description']; // Access event name from document
+                    final speaker = events.elementAt(index)[
+                        'speaker_name']; // Access event name from document
+                    final fee = events.elementAt(
+                        index)['fee']; // Access event name from document
+                    final reglink = events.elementAt(
+                        index)['reg_link']; // Access event name from document
+                    final posterlink = events.elementAt(
+                        index)['poster']; // Access event name from document
+
+                    return EventTile(
+                      name: name,
+                      venue: venue,
+                      date: date,
+                      type: type,
+                      description: description,
+                      speaker: speaker,
+                      fee: fee,
+                      reglink: reglink,
+                      posterlink: posterlink,
+                    );
+                  },
+                );
               },
             ),
           ),
@@ -348,7 +476,6 @@ class CardItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       child: Card(
-        
         color: Colors.yellow[50],
         elevation: 8.0,
         margin: EdgeInsets.all(4.0),
@@ -379,9 +506,6 @@ class CardItem extends StatelessWidget {
         ),
       ),
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-                          return userEventRegistration();
-                        }));
         /* Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: ((context) => userEventRegistration()))); */
       },
@@ -390,7 +514,82 @@ class CardItem extends StatelessWidget {
 }
 
 goToLogin(BuildContext context) => Navigator.pushReplacement(
-  context,
-  MaterialPageRoute(builder: (context) => Login()),
-
+      context,
+      MaterialPageRoute(builder: (context) => Login()),
     );
+
+class EventTile extends StatelessWidget {
+  final String name;
+  final String venue;
+  final String date;
+  final String type;
+  final String description;
+  final String speaker;
+  final String fee;
+  final String reglink;
+  final String posterlink;
+
+  const EventTile({
+    Key? key,
+    required this.name,
+    required this.venue,
+    required this.date,
+    required this.type,
+    required this.description,
+    required this.speaker,
+    required this.fee,
+    required this.reglink,
+    required this.posterlink,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      padding: EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Color.fromARGB(255, 164, 220, 165),
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GestureDetector(
+                child: Text(
+                  name.toUpperCase(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25.0,
+                    color: Colors.blue,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return userEventRegistration(
+                      name: name,
+                      venue: venue,
+                      date: date,
+                      type: type,
+                      description: description,
+                      speaker: speaker,
+                      fee: fee,
+                      reglink: reglink,
+                      posterlink: posterlink,
+                    );
+                  }));
+
+                  ;
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
