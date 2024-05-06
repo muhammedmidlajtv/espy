@@ -18,6 +18,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 List<dynamic> preferencesList = [];
 
+String selectedCategory = 'Hackathon';
+String selectedDistrict = 'Kottayam';
+String selectedUniversity = 'RIT';
+
+
 class NavDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -97,7 +102,6 @@ class user_homeLogin extends StatefulWidget {
 
   //filter
 
-
   @override
   _user_homeLoginState createState() => _user_homeLoginState();
 }
@@ -106,9 +110,8 @@ class _user_homeLoginState extends State<user_homeLogin> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isLoading = true;
 
-    // Variables for search functionality
+  // Variables for search functionality
   String _searchQuery = ''; // Initialize search query
-
 
   @override
   void initState() {
@@ -248,7 +251,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
                       hintText: 'Search',
                       hintStyle: TextStyle(color: Colors.grey, fontSize: 18),
                     ),
-                     onChanged: (value) {
+                    onChanged: (value) {
                       // Update search query when text changes
                       setState(() {
                         _searchQuery = value.toLowerCase();
@@ -286,6 +289,9 @@ class _user_homeLoginState extends State<user_homeLogin> {
                                       // Handle category filter change
                                       setState(() {
                                         // Update selected category
+                                            selectedCategory = value ?? 'Hackathon';
+
+                                      
                                       });
                                     },
                                   ),
@@ -334,6 +340,8 @@ class _user_homeLoginState extends State<user_homeLogin> {
                                       // Handle district filter change
                                       setState(() {
                                         // Update selected district
+                                        selectedDistrict = value ?? 'Hackathon';
+
                                       });
                                     },
                                   ),
@@ -351,6 +359,8 @@ class _user_homeLoginState extends State<user_homeLogin> {
                                       // Handle university filter change
                                       setState(() {
                                         // Update selected university
+                                        selectedUniversity = value ?? 'Hackathon';
+
                                       });
                                     },
                                   ),
@@ -361,6 +371,8 @@ class _user_homeLoginState extends State<user_homeLogin> {
                               TextButton(
                                 onPressed: () {
                                   // Apply filters
+                                  print(categories);
+
                                   applyFilters();
                                   Navigator.of(context).pop();
                                 },
@@ -418,8 +430,10 @@ class _user_homeLoginState extends State<user_homeLogin> {
                     preferencesList.contains(
                         doc['type'])); // Filter events based on preferencesList
 
-                final filteredEvents = events.where((event) => event['name'].toLowerCase().contains(_searchQuery));
-
+                final filteredEvents = events.where((event) =>
+                    // event['name'].toLowerCase().contains(_searchQuery));
+                    event['name'].toLowerCase().contains(_searchQuery) &&
+                    event['type'] == selectedCategory && event['district'] == selectedDistrict && event['venue'] == selectedUniversity );
 
                 print("fetched it ");
                 return ListView.builder(
@@ -571,20 +585,26 @@ class EventTile extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-               Center(
-                 child: SizedBox(
+              Center(
+                child: SizedBox(
                   height: 200,
                   width: 300,
-                   child: Image.network(
+                  child: Image.network(
                     fit: BoxFit.cover,
                     posterlink,
-                      height: 200,
-                      width: 200,
-                    ),
-                    
-                 ),
-               ),
-                  
+                    height: 200,
+                    width: 200,
+                  ),
+                ),
+              ),
+              Text(
+                date,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25.0,
+                  color: const Color.fromARGB(255, 0, 0, 0),
+                ),
+              ),
               GestureDetector(
                 child: Text(
                   name.toUpperCase(),
@@ -593,7 +613,7 @@ class EventTile extends StatelessWidget {
                     fontSize: 25.0,
                     color: Colors.blue,
                   ),
-                ),               
+                ),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return userEventRegistration(
@@ -612,18 +632,8 @@ class EventTile extends StatelessWidget {
                   ;
                 },
               ),
-              Text(
-                  date,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25.0,
-                    color: const Color.fromARGB(255, 0, 0, 0),
-                  ),
-                ), 
-              
             ],
           ),
-           
         ],
       ),
     );
