@@ -407,7 +407,6 @@ class _user_homeLoginState extends State<user_homeLogin> {
                     preferencesList.contains(
                         doc['type'])); // Filter events based on preferencesList
 
-                        
                 print("fetched it ");
                 return ListView.builder(
                   itemCount: events.length,
@@ -415,10 +414,9 @@ class _user_homeLoginState extends State<user_homeLogin> {
                     DateTime dateTime = DateTime.parse(
                         events.elementAt(index)['date'].toString());
                     // Check if the event date is after today
-                    
-                      String formattedDate =
-                          DateFormat('yyyy-MM-dd').format(dateTime);
-                    
+
+                    String formattedDate =
+                        DateFormat('yyyy-MM-dd').format(dateTime);
 
                     final name = events.elementAt(
                         index)['name']; // Access event name from document

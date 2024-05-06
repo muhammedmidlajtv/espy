@@ -272,6 +272,11 @@ class _ProfilePageState extends State<ProfilePage> {
                               content:
                                   Text('Preferences updated successfully')),
                         );
+
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return user_homeLogin();
+                        }));
                       } else {
                         // Handle case where user with the specified email address is not found
                         print(

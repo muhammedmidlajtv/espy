@@ -14,25 +14,24 @@ final auth = AuthService();
 String? currentLogged = "";
 
 
-Future<String?> getNameFromEmail(String email) async {
-  try {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('user_login')
-        .where('email', isEqualTo: email)
-        .limit(1)
-        .get();
+// Future<String?> getNameFromEmail(String email) async {
+//   try {
+//     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+//         .collection('user_login')
+//         .where('email', isEqualTo: email)
+//         .limit(1)
+//         .get();
 
-    if (querySnapshot.docs.isNotEmpty) {
-      return querySnapshot.docs.first['name'];
-    } else {
-      return null; // User with the provided email not found
-    }
-  } catch (e) {
-    print('Error fetching name: $e');
-    return null;
-  }
-}
-
+//     if (querySnapshot.docs.isNotEmpty) {
+//       return querySnapshot.docs.first['name'];
+//     } else {
+//       return null; // User with the provided email not found
+//     }
+//   } catch (e) {
+//     print('Error fetching name: $e');
+//     return null;
+//   }
+// }
 
 class EventOrganizerApp extends StatelessWidget {
   @override
@@ -69,10 +68,7 @@ class EventOrganizerPage extends StatelessWidget {
             String? currentLogged = snapshot.data;
             print(
                 "/////${currentLogged}"); // Now this should print the actual email
-              
 
-                        
-            
             return Scaffold(
               appBar: AppBar(
                 title: Text(
@@ -272,7 +268,6 @@ class EventOrganizerPage extends StatelessWidget {
         }
       },
     );
-    
   }
 }
 
@@ -362,7 +357,7 @@ class EventTile extends StatelessWidget {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           String name1;
-                          return EditEventScreen( eventName: 'name');
+                          return EditEventScreen(eventName: 'name');
                         }));
                         onEdit();
                       },
@@ -482,7 +477,7 @@ class EventTile1 extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return EditEventScreen( eventName: name);
+                          return EditEventScreen(eventName: name);
                         }));
                         onEdit();
                       },
