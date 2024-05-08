@@ -47,11 +47,12 @@ class _LoginScreenState extends State<Login> {
 
       body: 
       Stack(
+        fit: StackFit.expand,
         children: [
            Positioned.fill(
         child: Image.asset(
           "assets/images/signin_bg.png", // Replace with your image path
-          fit: BoxFit.cover,
+          fit: BoxFit.fill,
         ),
       ),
       SingleChildScrollView(
