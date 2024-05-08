@@ -16,15 +16,24 @@ List<String> selected = [];
 class SignUp extends StatelessWidget {
   SignUp({super.key});
 
-  @override
+@override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          backgroundColor: Colors.grey[850],
-          body: Center(
-              child: SingleChildScrollView(
-            child: const MyCustomForm(),
-          ))),
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/signup_bg.png"),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Center(
+            child: SingleChildScrollView(
+              child: const MyCustomForm(),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -184,15 +193,16 @@ class MyCustomFormState extends State<MyCustomForm> {
                     style: const TextStyle(color: Colors.white),
 
                     decoration: InputDecoration(
-                      fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
+                      fillColor: Colors.white24, filled: true,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       // filled: true,
                       hintStyle:
-                          TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
+                          TextStyle(color: const Color.fromARGB(255, 255, 255, 255)),
                       hintText: "Enter your name",
                       labelText: "Names",
+                      labelStyle: TextStyle(color: const Color.fromARGB(255, 255, 255, 255))
                       // fillColor: Colors.white70,
                     ),
 
@@ -212,7 +222,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                     style: const TextStyle(color: Colors.white),
 
                     decoration: InputDecoration(
-                      fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
+                      fillColor: Colors.white24, filled: true,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0),
                       ),
@@ -221,6 +231,8 @@ class MyCustomFormState extends State<MyCustomForm> {
                           TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
                       hintText: "Enter your Email",
                       labelText: "Email",
+                        labelStyle: TextStyle(color: const Color.fromARGB(255, 255, 255, 255))
+
                       // fillColor: Colors.white70,
                     ),
 
@@ -240,7 +252,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                     style: const TextStyle(color: Colors.white),
                     obscureText: isObscured,
                     decoration: InputDecoration(
-                      fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
+                      fillColor: Colors.white24, filled: true,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0),
                       ),
@@ -256,6 +268,8 @@ class MyCustomFormState extends State<MyCustomForm> {
                           TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
                       hintText: "Enter your password",
                       labelText: "Password",
+                      labelStyle: TextStyle(color: const Color.fromARGB(255, 255, 255, 255))
+
                       // fillColor: Colors.white70,
                     ),
 
@@ -275,7 +289,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                     style: const TextStyle(color: Colors.white),
                     
                     decoration: InputDecoration(
-                      fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
+                      fillColor: Colors.white24, filled: true,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0),
                       ),
@@ -285,6 +299,8 @@ class MyCustomFormState extends State<MyCustomForm> {
                           TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
                       hintText: "confirm  your password",
                       labelText: "Confirm password",
+                      labelStyle: TextStyle(color: const Color.fromARGB(255, 255, 255, 255))
+
                       // fillColor: Colors.white70,
                     ),
 
@@ -303,8 +319,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                     value: _selectedRole,
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: Color.fromARGB(255, 0, 0,
-                          0), // Set the initial background color of the field to black
+                      fillColor: Colors.white24, // Set the initial background color of the field to black
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15.0),
                       ),
@@ -312,6 +327,8 @@ class MyCustomFormState extends State<MyCustomForm> {
                           TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
                       hintText: "Who are you?",
                       labelText: "Who are you",
+                     labelStyle: TextStyle(color: const Color.fromARGB(255, 255, 255, 255))
+
                     ),
                     dropdownColor: Colors
                         .black, // Set the dropdown option background color to black
@@ -367,7 +384,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                       child: Container(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 106, 96, 93),
+                            backgroundColor: Color(0xFF2F8CAD),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(13.0)),
                             minimumSize: Size(400, 46),

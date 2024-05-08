@@ -118,197 +118,206 @@ class _ProfilePageState extends State<ProfilePage> {
       backgroundColor: Colors.grey[850],
       // resizeToAvoidBottomInset: false, // Disable resizing to avoid bottom overflow
 
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 80,
-            ),
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: NetworkImage(
-                  'https://pbs.twimg.com/media/EYVxlOSXsAExOpX.jpg'), // Replace with your image URL
-            ),
-            SizedBox(height: 20),
-            Text(
-              userName,
-              style: TextStyle(
-                fontSize: 24,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+      body: Container(
+         decoration: BoxDecoration(
+          // Set background image
+          image: DecorationImage(
+            image: AssetImage("assets/images/user_profile_bg.png"), // Change the path to your image
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 80,
               ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              userEmail,
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.white,
+              CircleAvatar(
+                radius: 50,
+                backgroundImage: NetworkImage(
+                    'https://pbs.twimg.com/media/EYVxlOSXsAExOpX.jpg'), // Replace with your image URL
               ),
-            ),
-            SizedBox(
-              height: 100,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _isHackathonPressed =
-                          !_isHackathonPressed; // Toggle the boolean value
-                    });
-                    // Your button action here
-                  },
-                  child: Text('Hackathon'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _isHackathonPressed
-                        ? Colors.blue
-                        : Colors.grey, // Change colors as desired
-                  ),
+              SizedBox(height: 20),
+              Text(
+                userName,
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
-                SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _workshop = !_workshop;
-                    });
-                    // Your button action here
-                  },
-                  child: Text('Workshop'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _workshop
-                        ? Colors.blue
-                        : Colors.grey, // Change colors as desired
-                  ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                userEmail,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.white,
                 ),
-                SizedBox(
-                  width: 10,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _isquiz = !_isquiz;
-                    });
-                    // Your button action here
-                  },
-                  child: Text('Quiz'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _isquiz
-                        ? Colors.blue
-                        : Colors.grey, // Change colors as desired
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _ideathon = !_ideathon;
-                    });
-                    // Your button action here
-                  },
-                  child: Text('Ideathon'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _ideathon
-                        ? Colors.blue
-                        : Colors.grey, // Change colors as desired
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _talksession = !_talksession;
-                    });
-                    // Your button action here
-                  },
-                  child: Text('Talk sessions'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _talksession
-                        ? Colors.blue
-                        : Colors.grey, // Change colors as desired
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                SizedBox(
-                  width: 80,
-                  height: 80,
-                  child: IconButton(
-                    onPressed: () async {
-                      List<String> selectedPreferences = [];
-                      if (_isHackathonPressed)
-                        selectedPreferences.add("Hackathon");
-                      if (_isquiz) selectedPreferences.add("Quiz");
-                      if (_workshop) selectedPreferences.add("Workshop");
-                      if (_ideathon) selectedPreferences.add("Ideathon");
-                      if (_talksession)
-                        selectedPreferences.add("Talk Sessions");
-
-                      // Assuming you have the email address of the current user
-                      // String userEmail = "john.doe@example.com"; // Replace with the actual email address
-
-                      // Access Firestore collection reference
-                      CollectionReference collRef =
-                          FirebaseFirestore.instance.collection('user_login');
-
-                      // Query for the user document with the specified email address
-                      // print("////////////////////////{$current_logged_email}");
-                      print(current_logged_email);
-                      final QuerySnapshot querySnapshot =
-                          await FirebaseFirestore.instance
-                              .collection("user_login")
-                              .where("email", isEqualTo: current_logged_email)
-                              .get();
-                      print(querySnapshot);
-                      // Check if any documents match the query
-                      if (querySnapshot.docs.isNotEmpty) {
-                        // Loop through each document in the query results
-                        for (DocumentSnapshot userDoc in querySnapshot.docs) {
-                          // Update user preferences for the document with the specified email
-                          await userDoc.reference.update({
-                            'preferences': selectedPreferences,
-                          });
-                        }
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content:
-                                  Text('Preferences updated successfully')),
-                        );
-
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return user_homeLogin();
-                        }));
-                      } else {
-                        // Handle case where user with the specified email address is not found
-                        print(
-                            "User not found with email: $current_logged_email");
-                      }
-
-                      // Optionally, you can navigate to another screen or show a confirmation message.
+              ),
+              SizedBox(
+                height: 100,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _isHackathonPressed =
+                            !_isHackathonPressed; // Toggle the boolean value
+                      });
+                      // Your button action here
                     },
-                    icon: Image.asset("assets/images/tick.png"),
+                    child: Text('Hackathon'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _isHackathonPressed
+                          ? Colors.blue
+                          : Colors.grey, // Change colors as desired
+                    ),
                   ),
-                ),
-              ],
-            )
-          ],
+                  SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _workshop = !_workshop;
+                      });
+                      // Your button action here
+                    },
+                    child: Text('Workshop'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _workshop
+                          ? Colors.blue
+                          : Colors.grey, // Change colors as desired
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _isquiz = !_isquiz;
+                      });
+                      // Your button action here
+                    },
+                    child: Text('Quiz'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _isquiz
+                          ? Colors.blue
+                          : Colors.grey, // Change colors as desired
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _ideathon = !_ideathon;
+                      });
+                      // Your button action here
+                    },
+                    child: Text('Ideathon'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _ideathon
+                          ? Colors.blue
+                          : Colors.grey, // Change colors as desired
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _talksession = !_talksession;
+                      });
+                      // Your button action here
+                    },
+                    child: Text('Talk sessions'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _talksession
+                          ? Colors.blue
+                          : Colors.grey, // Change colors as desired
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    width: 80,
+                    height: 80,
+                    child: IconButton(
+                      onPressed: () async {
+                        List<String> selectedPreferences = [];
+                        if (_isHackathonPressed)
+                          selectedPreferences.add("Hackathon");
+                        if (_isquiz) selectedPreferences.add("Quiz");
+                        if (_workshop) selectedPreferences.add("Workshop");
+                        if (_ideathon) selectedPreferences.add("Ideathon");
+                        if (_talksession)
+                          selectedPreferences.add("Talk Sessions");
+        
+                        // Assuming you have the email address of the current user
+                        // String userEmail = "john.doe@example.com"; // Replace with the actual email address
+        
+                        // Access Firestore collection reference
+                        CollectionReference collRef =
+                            FirebaseFirestore.instance.collection('user_login');
+        
+                        // Query for the user document with the specified email address
+                        // print("////////////////////////{$current_logged_email}");
+                        print(current_logged_email);
+                        final QuerySnapshot querySnapshot =
+                            await FirebaseFirestore.instance
+                                .collection("user_login")
+                                .where("email", isEqualTo: current_logged_email)
+                                .get();
+                        print(querySnapshot);
+                        // Check if any documents match the query
+                        if (querySnapshot.docs.isNotEmpty) {
+                          // Loop through each document in the query results
+                          for (DocumentSnapshot userDoc in querySnapshot.docs) {
+                            // Update user preferences for the document with the specified email
+                            await userDoc.reference.update({
+                              'preferences': selectedPreferences,
+                            });
+                          }
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content:
+                                    Text('Preferences updated successfully')),
+                          );
+        
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return user_homeLogin();
+                          }));
+                        } else {
+                          // Handle case where user with the specified email address is not found
+                          print(
+                              "User not found with email: $current_logged_email");
+                        }
+        
+                        // Optionally, you can navigate to another screen or show a confirmation message.
+                      },
+                      icon: Image.asset("assets/images/tick.png"),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

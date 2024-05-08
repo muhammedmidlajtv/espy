@@ -70,7 +70,7 @@ class userEventRegistration extends StatelessWidget {
             Card(
               // elevation: 50,
               shadowColor: Colors.black,
-              color: Colors.greenAccent[100],
+              color: Color.fromARGB(255, 136, 178, 192),
               child: SizedBox(
                 width: 250,
                 height: 480,
