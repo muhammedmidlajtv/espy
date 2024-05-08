@@ -408,6 +408,8 @@ Widget build(BuildContext context) {
                           onPressed: () async {
                                         // Call the _signup method when the button is pressed
                           await _signup(context);
+                          
+                    
                           CollectionReference collRef = FirebaseFirestore
                               .instance
                               .collection('user_login');

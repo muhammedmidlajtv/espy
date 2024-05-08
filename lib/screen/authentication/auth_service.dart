@@ -5,8 +5,6 @@ import 'package:espy/screen/login/Login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:email_otp/email_otp.dart';
-
-
 import "package:espy/screen/crud_service.dart";
 class AuthService {
   final _auth = FirebaseAuth.instance;
