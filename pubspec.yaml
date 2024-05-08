@@ -52,6 +52,11 @@ dependencies:
   url_launcher: ^6.2.6
   social_login_buttons: ^1.0.7
   google_sign_in: ^6.2.1
+  firebase_messaging: ^14.9.1
+  flutter_local_notifications: ^17.1.2
+  http: ^1.2.1
+ 
+  
   
   # shared_preferences: ^2.2.2
 

@@ -2,7 +2,7 @@ import "dart:developer";
 import 'package:espy/screen/login/Login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
+import "package:espy/screen/crud_service.dart";
 class AuthService {
   final _auth = FirebaseAuth.instance;
 
@@ -21,6 +21,11 @@ class AuthService {
     return null; */
   }
 
+  
+  static Future<bool> isLoggedIn() async {
+    var user = FirebaseAuth.instance.currentUser;
+    return user != null;
+  }
   Future<User?> loginUserWithEmailAndPassword(
       String email, String password) async {
     try {
@@ -71,6 +76,7 @@ class AuthService {
   Future<void> signout() async {
     try {
       await _auth.signOut();
+      
     } catch (e) {
       log("Something went wrong");
     }

@@ -4,6 +4,54 @@ import 'package:espy/screen/organizerscreens/organizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Import 'package:flutter/services.dart' for TextInputFormatter
 import 'package:espy/main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
+Future<void> sendNotification(String eventName, String eventDate, String eventType) async {
+  try {
+    // Retrieve tokens from the 'user_login' collection in Firestore
+    // Retrieve tokens from the 'user_login' collection in Firestore
+    final usersSnapshot = await FirebaseFirestore.instance.collection('user_login').where('preferences', arrayContains: eventType).get();
+
+
+    // Extract tokens from the snapshot
+    List<String> userEmails = usersSnapshot.docs.map((doc) => doc['email'] as String).toList();
+
+    // Retrieve tokens corresponding to the filtered user emails from the 'user_tokens' collection
+    final tokensSnapshot = await FirebaseFirestore.instance.collection('user_tokens').where('email', whereIn: userEmails).get();
+
+    // Extract tokens from the snapshot
+    final tokens = tokensSnapshot.docs.map((doc) => doc['token']).toList();
+
+    // Define the notification payload
+    final notification = {
+      'notification': {
+        'title': 'New Event Added!',
+        'body': 'Event: $eventName, a $eventType on $eventDate.',
+      },
+      'registration_ids': tokens, // Send the notification to filtered tokens
+    };
+    // Send the notification to Firebase Cloud Messaging (FCM)
+    final response = await http.post(
+      Uri.parse('https://fcm.googleapis.com/fcm/send'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'key=AAAAufEHjfY:APA91bEb1pbWV_nGBipcrD1VGK7pnzZduXLf-Da2I8_51pl-D9JTzomIL9ob-iJq5msHB-4MvwuOi74gJ5sT5FhgK09iLyEcg8bF4APJm0v4pMG9AQLSeU-4v0mqjTYffSOtiG4C0Duf', // Replace with your Firebase server key
+      },
+      body: jsonEncode(notification),
+    );
+
+    if (response.statusCode == 200) {
+      print('Notification sent successfully');
+    } else {
+      print('Failed to send notification. Status code: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error sending notification: $e');
+  }
+}
 
 final auth = AuthService();
 
@@ -200,7 +248,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
           ElevatedButton(
             onPressed: () {
               // print("/////////////////${current_logged_email}");
-
+              
               if (_formKey.currentState != null &&
                   _formKey.currentState!.validate()) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -242,6 +290,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   'maxparticipans': maxParticipants.toString(),
                   "organiser_id": current_email,
                 });
+                sendNotification(eventNameController.text, selectedDate.toString(),eventType.toString());
+                
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return EventOrganizerApp();
                 }));
@@ -253,9 +303,11 @@ class _RegistrationFormState extends State<RegistrationForm> {
               print(eventNameController.text);
             },
             child: Text('Publish'),
+            
           ),
         ],
       ),
     );
   }
+  
 }

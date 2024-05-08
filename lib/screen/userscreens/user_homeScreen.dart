@@ -2,6 +2,7 @@
 //import "dart:developer";
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:espy/main.dart';
+import 'package:espy/screen/crud_service.dart';
 import 'package:espy/screen/organizerscreens/organizer.dart';
 import 'package:espy/screen/profile.dart';
 import 'package:espy/screen/userscreens/userEventRegistration.dart';
@@ -15,6 +16,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import "package:espy/screen/notification_service.dart";
+
+final _auth = FirebaseAuth.instance;
 
 List<dynamic> preferencesList = [];
 
@@ -70,8 +74,32 @@ class NavDrawer extends StatelessWidget {
             title: Text('Logout'),
             // onTap: () => {Navigator.of(context).pop()},
             onTap: () async {
+              try {
+                String? email = FirebaseAuth.instance.currentUser?.email;
+                if (email != null) {
+                  // Query documents based on email
+                  final QuerySnapshot querySnapshot = await FirebaseFirestore
+                      .instance
+                      .collection("user_tokens")
+                      .where("email", isEqualTo: email)
+                      .get();
+
+                  // Iterate through documents and delete each one
+                  querySnapshot.docs.forEach((doc) async {
+                    await doc.reference.delete();
+                  });
+
+                  print('Documents deleted successfully');
+                } else {
+                  print('User is not logged in');
+                }
+              } catch (e) {
+                print('Error deleting documents: $e');
+              }
+
               await auth.signout();
               await GoogleSignIn().signOut();
+              await CRUDService.deleteUserToken();
               goToLogin(context);
 
               //sharedprefereces
@@ -97,7 +125,6 @@ class user_homeLogin extends StatefulWidget {
 
   //filter
 
-
   @override
   _user_homeLoginState createState() => _user_homeLoginState();
 }
@@ -106,12 +133,12 @@ class _user_homeLoginState extends State<user_homeLogin> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isLoading = true;
 
-    // Variables for search functionality
+  // Variables for search functionality
   String _searchQuery = ''; // Initialize search query
-
 
   @override
   void initState() {
+    PushNotifications.getDeviceToken();
     _initializePage();
     super.initState();
   }
@@ -248,7 +275,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
                       hintText: 'Search',
                       hintStyle: TextStyle(color: Colors.grey, fontSize: 18),
                     ),
-                     onChanged: (value) {
+                    onChanged: (value) {
                       // Update search query when text changes
                       setState(() {
                         _searchQuery = value.toLowerCase();
@@ -418,8 +445,8 @@ class _user_homeLoginState extends State<user_homeLogin> {
                     preferencesList.contains(
                         doc['type'])); // Filter events based on preferencesList
 
-                final filteredEvents = events.where((event) => event['name'].toLowerCase().contains(_searchQuery));
-
+                final filteredEvents = events.where((event) =>
+                    event['name'].toLowerCase().contains(_searchQuery));
 
                 print("fetched it ");
                 return ListView.builder(
@@ -571,20 +598,18 @@ class EventTile extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-               Center(
-                 child: SizedBox(
+              Center(
+                child: SizedBox(
                   height: 200,
                   width: 300,
-                   child: Image.network(
+                  child: Image.network(
                     fit: BoxFit.fill,
                     posterlink,
-                      height: 200,
-                      width: 200,
-                    ),
-                    
-                 ),
-               ),
-                  
+                    height: 200,
+                    width: 200,
+                  ),
+                ),
+              ),
               GestureDetector(
                 child: Text(
                   name.toUpperCase(),
@@ -593,7 +618,7 @@ class EventTile extends StatelessWidget {
                     fontSize: 25.0,
                     color: Colors.blue,
                   ),
-                ),               
+                ),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return userEventRegistration(
@@ -613,17 +638,15 @@ class EventTile extends StatelessWidget {
                 },
               ),
               Text(
-                  date,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25.0,
-                    color: const Color.fromARGB(255, 0, 0, 0),
-                  ),
-                ), 
-              
+                date,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25.0,
+                  color: const Color.fromARGB(255, 0, 0, 0),
+                ),
+              ),
             ],
           ),
-           
         ],
       ),
     );

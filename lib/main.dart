@@ -1,10 +1,19 @@
 import "dart:async";
+import 'dart:convert';
 // import 'dart:ffi';
 //import 'package:espy/screen/home_screen.dart';
 import 'package:espy/screen/splash.dart';
+import 'package:espy/screen/userscreens/user_homeScreen.dart';
 import 'package:flutter/material.dart';
 import "package:firebase_core/firebase_core.dart";
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import "firebase_options.dart";
+import "package:espy/screen/notification_service.dart";
+import "package:espy/screen/message.dart" as message;
+
+final navigatorKey = GlobalKey<NavigatorState>();
 
 String current_logged_email = "";
 String current_user_name = "";
@@ -43,6 +52,13 @@ int? participationAmount = 0; // Changed to nullable int
 int? minParticipants = 1;
 int? maxParticipants = 1;
 
+
+
+Future _firebaseBackgroundMessage(RemoteMessage message) async {
+  if (message.notification != null) {
+    print("Some notification Received in background...");
+  }
+}
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // await SharedPreferences.getInstance().then((prefs) {
@@ -51,7 +67,65 @@ Future<void> main() async {
   //   current_user_name = prefs.getString('current_user_name') ?? '';
   //   runApp(const MyApp());
   // });
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await PushNotifications.init();
+  await PushNotifications.localNotiInit();
+  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessage);
+
+  // on background notification tapped
+  // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+  //   if (message.notification != null) {
+  //     print("Background Notification Tapped");
+  //     navigatorKey.currentState!.pushNamed("/message", arguments: message);
+  //   }
+  // });
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+  if (message.notification != null) {
+    print("Background Notification Tapped");
+    navigatorKey.currentState!.push(MaterialPageRoute(
+      builder: (context) => user_homeLogin(),
+    ));
+  }
+});
+   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    String payloadData = jsonEncode(message.data);
+    print("Got a message in foreground");
+    if (message.notification != null) {
+      // if (kIsWeb) {
+      //   showNotification(
+      //       title: message.notification!.title!,
+      //       body: message.notification!.body!);
+      // } else {
+        PushNotifications.showSimpleNotification(
+            title: message.notification!.title!,
+            body: message.notification!.body!,
+            payload: payloadData);
+      // }
+    }
+  });
+  final RemoteMessage? message = await FirebaseMessaging.instance.getInitialMessage();
+
+  if (message != null) {
+    print("Launched from terminated state");
+    Future.delayed(Duration(seconds: 1), () {
+      navigatorKey.currentState!.push(MaterialPageRoute(
+        builder: (context) => user_homeLogin(),
+      ));
+    });
+  }
+
+  // final RemoteMessage? message =
+  //     await FirebaseMessaging.instance.getInitialMessage();
+
+  // if (message != null) {
+  //   print("Launched from terminated state");
+  //   Future.delayed(Duration(seconds: 1), () {
+  //     navigatorKey.currentState!.pushNamed("/message", arguments: message);
+  //   });
+  // }
+  
   runApp(const MyApp());
 }
 
@@ -78,6 +152,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const SplashScreen(),
+      navigatorKey: navigatorKey,
+       routes: {
+        "/message": (context) => message.Message()
+      },
     );
   }
 }
