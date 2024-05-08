@@ -49,7 +49,7 @@ class NavDrawer extends StatelessWidget {
             title: Text('Profile'),
             onTap: () => {
               // Navigator.of(context).pop()
-
+              Navigator.pop(context),
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return ProfilePage();
               }))
@@ -97,7 +97,6 @@ class user_homeLogin extends StatefulWidget {
 
   //filter
 
-
   @override
   _user_homeLoginState createState() => _user_homeLoginState();
 }
@@ -106,9 +105,8 @@ class _user_homeLoginState extends State<user_homeLogin> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isLoading = true;
 
-    // Variables for search functionality
+  // Variables for search functionality
   String _searchQuery = ''; // Initialize search query
-
 
   @override
   void initState() {
@@ -214,6 +212,13 @@ class _user_homeLoginState extends State<user_homeLogin> {
   Widget build(BuildContext context) {
     AuthService _auth = AuthService();
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text(' ESPY',style: TextStyle(fontWeight: FontWeight.bold),),
+        backgroundColor: Colors.grey[850],
+        foregroundColor: Colors.white,
+      ),
+
       key: _scaffoldKey,
 
       backgroundColor: Colors.grey[850],
@@ -227,152 +232,216 @@ class _user_homeLoginState extends State<user_homeLogin> {
         // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 22, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: 330,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      filled: true,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 29, 116, 183),
-                          width: 0.0,
+                Align(
+                  alignment: Alignment.topRight,
+                  child: SizedBox(
+                    height: 50,
+                    width: 360,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(
+                            color: Color.fromARGB(255, 29, 116, 183),
+                            width: 0.0,
+                          ),
                         ),
+                        hintText: 'Search',
+                        suffixIcon: GestureDetector(
+                          child: Icon(
+                            Icons.filter_list, // or Icons.filter_alt
+                            size: 30, // Adjust size as needed
+                            color: Colors.blue, // Adjust color as needed
+                            
+                          ),
+                          onTap: () {
+                            showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Filters"),
+                              content: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    // Category filter
+                                    DropdownButtonFormField<String>(
+                                      value: categories.first,
+                                      items: categories.map((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String? value) {
+                                        // Handle category filter change
+                                        setState(() {
+                                          // Update selected category
+                                        });
+                                      },
+                                    ),
+
+                                    // District filter
+                                    DropdownButtonFormField<String>(
+                                      value: districts.first,
+                                      items: districts.map((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String? value) {
+                                        // Handle district filter change
+                                        setState(() {
+                                          // Update selected district
+                                        });
+                                      },
+                                    ),
+
+                                    // University filter
+                                    DropdownButtonFormField<String>(
+                                      value: universities.first,
+                                      items: universities.map((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String? value) {
+                                        // Handle university filter change
+                                        setState(() {
+                                          // Update selected university
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    // Apply filters
+                                    applyFilters();
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text("Apply"),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                            
+                          },
+                        ),
+                        
                       ),
-                      hintText: 'Search',
-                      hintStyle: TextStyle(color: Colors.grey, fontSize: 18),
+                      onChanged: (value) {
+                        // Update search query when text changes
+                        setState(() {
+                          _searchQuery = value.toLowerCase();
+                        });
+                      },
                     ),
-                     onChanged: (value) {
-                      // Update search query when text changes
-                      setState(() {
-                        _searchQuery = value.toLowerCase();
-                      });
-                    },
                   ),
                 ),
-                SizedBox(
-                  height: 50.0,
-                  width: 50.0,
-                  child: IconButton(
-                    // iconSize: 200,
-                    icon: Image.asset("assets/images/filter_logo.png"),
+                /* Align(
+                  alignment: Alignment.topRight,
+                  child: SizedBox(
+                    height: 50.0,
+                    width: 50.0,
+                    child: IconButton(
+                      // iconSize: 200,
+                      icon: Icon(
+                        Icons.filter_list, // or Icons.filter_alt
+                        size: 30, // Adjust size as needed
+                        color: Colors.blue, // Adjust color as needed
+                      ),
+                      onPressed: () {
+                        // Show filter options
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Filters"),
+                              content: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    // Category filter
+                                    DropdownButtonFormField<String>(
+                                      value: categories.first,
+                                      items: categories.map((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String? value) {
+                                        // Handle category filter change
+                                        setState(() {
+                                          // Update selected category
+                                        });
+                                      },
+                                    ),
 
-                    onPressed: () {
-                      // Show filter options
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text("Filters"),
-                            content: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  // Category filter
-                                  DropdownButtonFormField<String>(
-                                    value: categories.first,
-                                    items: categories.map((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                                    onChanged: (String? value) {
-                                      // Handle category filter change
-                                      setState(() {
-                                        // Update selected category
-                                      });
-                                    },
-                                  ),
+                                    // District filter
+                                    DropdownButtonFormField<String>(
+                                      value: districts.first,
+                                      items: districts.map((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String? value) {
+                                        // Handle district filter change
+                                        setState(() {
+                                          // Update selected district
+                                        });
+                                      },
+                                    ),
 
-                                  // Price range filter
-                                  //     Column(
-                                  //       mainAxisAlignment: MainAxisAlignment.start,
-                                  //       children: [
-                                  //         // Text("Price Range:"),
-                                  //         // SizedBox(width: 10),
-                                  //          RangeSlider(
-                                  //         values: RangeValues(start, end),
-                                  //         labels: RangeLabels(start.toString(), end.toString()),
-                                  //         onChanged: (value) {
-                                  //           setState(() {
-                                  //             start = value.start;
-                                  //             end = value.end;
-                                  //           });
-                                  //         },
-                                  //         min: 10.0,
-                                  //         max: 80.0,
-                                  //       ),
-                                  // //       Text(
-                                  // // "Start: " +
-                                  // //     start.toStringAsFixed(2) +
-                                  // //     "\nEnd: " +
-                                  // //     end.toStringAsFixed(2),
-                                  // // style: const TextStyle(
-                                  // //   fontSize: 32.0,
-                                  // // ),
-                                  // //  )
-
-                                  //       ],
-                                  //     ),
-
-                                  // District filter
-                                  DropdownButtonFormField<String>(
-                                    value: districts.first,
-                                    items: districts.map((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                                    onChanged: (String? value) {
-                                      // Handle district filter change
-                                      setState(() {
-                                        // Update selected district
-                                      });
-                                    },
-                                  ),
-
-                                  // University filter
-                                  DropdownButtonFormField<String>(
-                                    value: universities.first,
-                                    items: universities.map((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                                    onChanged: (String? value) {
-                                      // Handle university filter change
-                                      setState(() {
-                                        // Update selected university
-                                      });
-                                    },
-                                  ),
-                                ],
+                                    // University filter
+                                    DropdownButtonFormField<String>(
+                                      value: universities.first,
+                                      items: universities.map((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String? value) {
+                                        // Handle university filter change
+                                        setState(() {
+                                          // Update selected university
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  // Apply filters
-                                  applyFilters();
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text("Apply"),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    // Apply filters
+                                    applyFilters();
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text("Apply"),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
                   ),
-                ),
+                ) */
               ],
             ),
           ),
@@ -400,7 +469,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
               },
             ),
           ), */
-
+          SizedBox(height: 10,),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream:
@@ -418,8 +487,8 @@ class _user_homeLoginState extends State<user_homeLogin> {
                     preferencesList.contains(
                         doc['type'])); // Filter events based on preferencesList
 
-                final filteredEvents = events.where((event) => event['name'].toLowerCase().contains(_searchQuery));
-
+                final filteredEvents = events.where((event) =>
+                    event['name'].toLowerCase().contains(_searchQuery));
 
                 print("fetched it ");
                 return ListView.builder(
@@ -571,20 +640,18 @@ class EventTile extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-               Center(
-                 child: SizedBox(
+              Center(
+                child: SizedBox(
                   height: 200,
                   width: 300,
-                   child: Image.network(
+                  child: Image.network(
                     fit: BoxFit.fill,
                     posterlink,
-                      height: 200,
-                      width: 200,
-                    ),
-                    
-                 ),
-               ),
-                  
+                    height: 200,
+                    width: 200,
+                  ),
+                ),
+              ),
               GestureDetector(
                 child: Text(
                   name.toUpperCase(),
@@ -593,7 +660,7 @@ class EventTile extends StatelessWidget {
                     fontSize: 25.0,
                     color: Colors.blue,
                   ),
-                ),               
+                ),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return userEventRegistration(
@@ -613,17 +680,15 @@ class EventTile extends StatelessWidget {
                 },
               ),
               Text(
-                  date,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25.0,
-                    color: const Color.fromARGB(255, 0, 0, 0),
-                  ),
-                ), 
-              
+                date,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25.0,
+                  color: const Color.fromARGB(255, 0, 0, 0),
+                ),
+              ),
             ],
           ),
-           
         ],
       ),
     );
