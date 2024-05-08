@@ -39,6 +39,7 @@ class EventOrganizerApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Event Organizer',
       theme: ThemeData(
+        
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
@@ -50,224 +51,256 @@ class EventOrganizerApp extends StatelessWidget {
 class EventOrganizerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<String?>(
-      future: auth.getCurrentUserEmail(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          // Return a loading indicator while fetching data
-          return CircularProgressIndicator();
-        } else {
-          // Once data is fetched, check if there's any error
-          if (snapshot.hasError) {
-            return Center(
-              child: Text("Error: ${snapshot.error}"),
-            );
+    return Container(
+      
+      child: FutureBuilder<String?>(
+        future: auth.getCurrentUserEmail(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // Return a loading indicator while fetching data
+            return CircularProgressIndicator();
           } else {
-            // If no error, get the current user's email
-            String? currentLogged = snapshot.data;
-            print(
-                "/////${currentLogged}"); // Now this should print the actual email
-
-            return Scaffold(
-              appBar: AppBar(
-                title: Text(
-                  "current_user_name",
-                  style: TextStyle(color: Colors.white),
-                ),
-                backgroundColor: Colors.black,
-                actions: [
-                  CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/organizer.png'),
+            // Once data is fetched, check if there's any error
+            if (snapshot.hasError) {
+              return Center(
+                child: Text("Error: ${snapshot.error}"),
+              );
+            } else {
+              // If no error, get the current user's email
+              String? currentLogged = snapshot.data;
+              print(
+                  "/////${currentLogged}"); // Now this should print the actual email
+      
+              return Scaffold(       
+                appBar: AppBar(
+                  title: Text(
+                    "current_user_name",
+                    style: TextStyle(color: Colors.white),
                   ),
-                ],
-              ),
-              body: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Upcoming Event Details',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 25, 117, 2),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                  //code for Upcoming events
-                  Expanded(
-                    child: StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection("events")
-                          .where("organiser_id",
-                              isEqualTo:
-                                  currentLogged) // Filter events by user's email
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.active) {
-                          if (snapshot.hasData) {
-                            return ListView.builder(
-                              itemBuilder: (context, index) {
-                                DateTime dateTime = DateTime.parse(snapshot
-                                    .data!.docs[index]["date"]
-                                    .toString());
-                                // Check if the event date is after today
-                                if (dateTime.isAfter(DateTime.now())) {
-                                  String formattedDate =
-                                      DateFormat('dd-MM-yyyy').format(dateTime);
-
-                                  return EventTile(
-                                    name: snapshot.data!.docs[index]["name"]
-                                        .toString(),
-                                    place: snapshot.data!.docs[index]["venue"]
-                                        .toString(),
-                                    time: snapshot.data!.docs[index]["time"]
-                                        .toString(),
-                                    date: formattedDate,
-                                    type: snapshot.data!.docs[index]["type"]
-                                        .toString(),
-                                    onDelete: () async {
-                                      await FirebaseFirestore.instance
-                                          .collection("events")
-                                          .doc(snapshot.data!.docs[index].id)
-                                          .delete();
-                                    },
-                                    onEdit: () {},
-                                  );
-                                } else {
-                                  // Return an empty container for events that are in the past
-                                  return Container();
-                                }
-                              },
-                              itemCount: snapshot.data!.docs.length,
-                            );
-                          } else if (snapshot.hasError) {
-                            return Center(
-                              child: Text("${snapshot.error.toString()}"),
-                            );
-                          } else {
-                            return Center(
-                              child: Text("No data found"),
-                            );
-                          }
-                        } else {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    'Past Event Details',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                  //code for past events
-                  Expanded(
-                    child: StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection("events")
-                          .where("organiser_id",
-                              isEqualTo:
-                                  currentLogged) // Filter events by user's email
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.active) {
-                          if (snapshot.hasData) {
-                            return ListView.builder(
-                              itemBuilder: (context, index) {
-                                DateTime dateTime = DateTime.parse(snapshot
-                                    .data!.docs[index]["date"]
-                                    .toString());
-                                // Check if the event date is before today
-                                if (dateTime.isBefore(DateTime.now())) {
-                                  String formattedDate =
-                                      DateFormat('yyyy-MM-dd').format(dateTime);
-
-                                  return EventTile1(
-                                    name: snapshot.data!.docs[index]["name"]
-                                        .toString(),
-                                        
-                                    place: snapshot.data!.docs[index]["venue"]
-                                        .toString(),
-                                    time: snapshot.data!.docs[index]["time"]
-                                        .toString(),
-                                    date: formattedDate,
-                                    type: snapshot.data!.docs[index]["type"]
-                                        .toString(),
-                                    onDelete: () async {
-                                      await FirebaseFirestore.instance
-                                          .collection("events")
-                                          .doc(snapshot.data!.docs[index].id)
-                                          .delete();                                  
-                                    },
-                                    
-                                    onEdit: () {},
-                                  );
-                                } else {
-                                  // Return an empty container for events that are in the future
-                                  return Container();
-                                }
-                              },
-                              itemCount: snapshot.data!.docs.length,
-                            );
-                          } else if (snapshot.hasError) {
-                            return Center(
-                              child: Text("${snapshot.error.toString()}"),
-                            );
-                          } else {
-                            return Center(
-                              child: Text("No data found"),
-                            );
-                          }
-                        } else {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              floatingActionButton: Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Row(
-                  children: [
-                    FloatingActionButton(
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return OrganiserForm();
-                        }));
-                        // Handle add new event action
-                      },
-                      child: Icon(Icons.add),
-                    ),
-                    FloatingActionButton(
-                      onPressed: () async {
-                        await auth.signout();
-                        goToLogin(context);
-                        final _sharedPrefs =
-                            await SharedPreferences.getInstance();
-                        await _sharedPrefs.setBool("organizerloggedin", false);
-                      },
-                      child: Icon(Icons.exit_to_app),
+                  backgroundColor: Colors.black,
+                  
+                  actions: [
+                    CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/organizer.png'),
                     ),
                   ],
                 ),
-              ),
-            );
+                body: Container(
+                    decoration: BoxDecoration(
+      image: DecorationImage(
+        image: AssetImage('assets/images/organiser_dash_bg.png'), // Path to your background image
+        fit: BoxFit.cover, // Adjust the image's size to cover the entire container
+      ),
+    ),
+                  child: Column(
+                    
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Upcoming Event Details',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 25, 117, 2),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.0,
+                        ),
+                      ),
+                      //code for Upcoming events
+                      Expanded(
+                        child: StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection("events")
+                              .where("organiser_id",
+                                  isEqualTo:
+                                      currentLogged) // Filter events by user's email
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.active) {
+                              if (snapshot.hasData) {
+                                return ListView.builder(
+                                  itemBuilder: (context, index) {
+                                    DateTime dateTime = DateTime.parse(snapshot
+                                        .data!.docs[index]["date"]
+                                        .toString());
+                                    // Check if the event date is after today
+                                    if (dateTime.isAfter(DateTime.now())) {
+                                      String formattedDate =
+                                          DateFormat('dd-MM-yyyy').format(dateTime);
+                                
+                                      return EventTile(
+                                        name: snapshot.data!.docs[index]["name"]
+                                            .toString(),
+                                        place: snapshot.data!.docs[index]["venue"]
+                                            .toString(),
+                                        time: snapshot.data!.docs[index]["time"]
+                                            .toString(),
+                                        date: formattedDate,
+                                        type: snapshot.data!.docs[index]["type"]
+                                            .toString(),
+                                        onDelete: () async {
+                                          await FirebaseFirestore.instance
+                                              .collection("events")
+                                              .doc(snapshot.data!.docs[index].id)
+                                              .delete();
+                                        },
+                                        onEdit: () {},
+                                      );
+                                    } else {
+                                      // Return an empty container for events that are in the past
+                                      return Container();
+                                    }
+                                  },
+                                  itemCount: snapshot.data!.docs.length,
+                                );
+                              } else if (snapshot.hasError) {
+                                return Center(
+                                  child: Text("${snapshot.error.toString()}"),
+                                );
+                              } else {
+                                return Center(
+                                  child: Text("No data found"),
+                                );
+                              }
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        'Past Event Details',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.0,
+                        ),
+                      ),
+                      //code for past events
+                      Expanded(
+                        child: StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection("events")
+                              .where("organiser_id",
+                                  isEqualTo:
+                                      currentLogged) // Filter events by user's email
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.active) {
+                              if (snapshot.hasData) {
+                                return ListView.builder(
+                                  itemBuilder: (context, index) {
+                                    DateTime dateTime = DateTime.parse(snapshot
+                                        .data!.docs[index]["date"]
+                                        .toString());
+                                    // Check if the event date is before today
+                                    if (dateTime.isBefore(DateTime.now())) {
+                                      String formattedDate =
+                                          DateFormat('yyyy-MM-dd').format(dateTime);
+                                
+                                      return EventTile1(
+                                        name: snapshot.data!.docs[index]["name"]
+                                            .toString(),
+                                            
+                                        place: snapshot.data!.docs[index]["venue"]
+                                            .toString(),
+                                        time: snapshot.data!.docs[index]["time"]
+                                            .toString(),
+                                        date: formattedDate,
+                                        type: snapshot.data!.docs[index]["type"]
+                                            .toString(),
+                                        onDelete: () async {
+                                          await FirebaseFirestore.instance
+                                              .collection("events")
+                                              .doc(snapshot.data!.docs[index].id)
+                                              .delete();                                  
+                                        },
+                                        
+                                        onEdit: () {},
+                                      );
+                                    } else {
+                                      // Return an empty container for events that are in the future
+                                      return Container();
+                                    }
+                                  },
+                                  itemCount: snapshot.data!.docs.length,
+                                );
+                              } else if (snapshot.hasError) {
+                                return Center(
+                                  child: Text("${snapshot.error.toString()}"),
+                                );
+                              } else {
+                                return Center(
+                                  child: Text("No data found"),
+                                );
+                              }
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                floatingActionButton: Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Row(
+                    children: [
+                      FloatingActionButton(
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return OrganiserForm();
+                          }));
+                          // Handle add new event action
+                        },
+                        child: Container(
+                    
+                           decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+              color: Color(0xFF3E96D3), // Background color
+              // Shape of the container (circle for icon)
+            ),
+                        padding: EdgeInsets.all(16), // Padding around the icon
+
+                          child: Icon(Icons.add,                                         // Color of the icon
+                          ),
+                        ),
+                      ),
+                      FloatingActionButton(
+                        onPressed: () async {
+                          await auth.signout();
+                          goToLogin(context);
+                          final _sharedPrefs =
+                              await SharedPreferences.getInstance();
+                          await _sharedPrefs.setBool("organizerloggedin", false);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+              color: Color(0xFF3E96D3), // Background color
+              borderRadius: BorderRadius.circular(15), // Rounded corners
+            ),
+                        padding: EdgeInsets.all(16), // Padding around the icon
+
+                          
+                          child: Icon(Icons.exit_to_app,)),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
           }
-        }
-      },
+        },
+      ),
     );
   }
 }
@@ -298,7 +331,7 @@ class EventTile extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 164, 220, 165),
+        color: Colors.white24,
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(10.0),
       ),
@@ -315,19 +348,22 @@ class EventTile extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: 25.0,
                   decoration: TextDecoration.underline,
+                  color: Colors.white
                 ),
               ),
               Text(
                 place,
-                style: TextStyle(fontSize: 19.0),
+                style: TextStyle(fontSize: 19.0,color: Colors.white
+),
               ),
               Text(
                 time,
-                style: TextStyle(fontSize: 19.0),
+                style: TextStyle(fontSize: 19.0,color: Colors.white
+),
               ),
               Text(
                 date.toString(),
-                style: TextStyle(fontSize: 19.0),
+                style: TextStyle(fontSize: 19.0,color: Colors.white),
               ),
             ],
           ),
@@ -437,19 +473,20 @@ class EventTile1 extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: 25.0,
                   decoration: TextDecoration.underline,
+                  color: Colors.white
                 ),
               ),
               Text(
                 place,
-                style: TextStyle(fontSize: 19.0),
+                style: TextStyle(fontSize: 19.0,color: Colors.white),
               ),
               Text(
                 time,
-                style: TextStyle(fontSize: 19.0),
+                style: TextStyle(fontSize: 19.0,color: Colors.white),
               ),
               Text(
                 date.toString(),
-                style: TextStyle(fontSize: 19.0),
+                style: TextStyle(fontSize: 19.0,color: Colors.white),
               ),
             ],
           ),
