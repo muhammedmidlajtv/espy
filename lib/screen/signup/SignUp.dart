@@ -11,6 +11,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:telephony/telephony.dart';
 import 'package:email_otp/email_otp.dart';
 
+bool isObscured=true;
+
 List<String> selected = [];
 
 class SignUp extends StatelessWidget {
@@ -109,11 +111,7 @@ class MyCustomFormState extends State<MyCustomForm> {
 
   void _selectCategories() async {
     final List<String> items = [
-      'Hackathon',
-      'Ideathon',
-      'Article Writing',
-      'Talk Session',
-      'Workshop'
+      'Hackathon','Ideathon','Workshop','Talk Session'
     ];
 
     final List<String>? results = await showDialog(

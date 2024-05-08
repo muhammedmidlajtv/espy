@@ -1,3 +1,4 @@
+import 'dart:async';
 import "dart:developer" as dev;
 import 'dart:math' as math;
 import 'package:espy/screen/login/Login.dart';
@@ -6,13 +7,14 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:email_otp/email_otp.dart';
 
 
+import "package:espy/screen/crud_service.dart";
 class AuthService {
   final _auth = FirebaseAuth.instance;
     EmailOTP myauth = EmailOTP();
 
-  // static final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  static final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  // static String verifyId = "";
+  static String verifyId = "";
 
    Future<User?> createUserWithEmailAndPassword(
       String email, String password) async {
@@ -34,6 +36,11 @@ class AuthService {
  
   
 
+  
+  static Future<bool> isLoggedIn() async {
+    var user = FirebaseAuth.instance.currentUser;
+    return user != null;
+  }
   Future<User?> loginUserWithEmailAndPassword(
       String email, String password) async {
     try {
@@ -79,10 +86,22 @@ class AuthService {
   Future<void> signout() async {
     try {
       await _auth.signOut();
+      
     } catch (e) {
       dev.log("Something went wrong");
     }
   }
  
 
+
+  Future<String?> getCurrentUserEmail() async {
+    final User? user = _auth.currentUser;
+    // print(user?.email);
+    if (user != null) {
+      return user.email;
+    }else{
+      return null;
+    }
+    
+  }
 }
