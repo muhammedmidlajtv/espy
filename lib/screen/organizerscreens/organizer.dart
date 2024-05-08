@@ -4,6 +4,7 @@ import 'package:espy/screen/authentication/auth_service.dart';
 import 'package:espy/screen/organizerscreens/editing_screen.dart';
 import 'package:espy/screen/organizerscreens/organizerform.dart';
 import 'package:espy/screen/userscreens/user_homeScreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -74,7 +75,7 @@ class EventOrganizerPage extends StatelessWidget {
               return Scaffold(       
                 appBar: AppBar(
                   title: Text(
-                    "current_user_name",
+                    'ESPY',
                     style: TextStyle(color: Colors.white),
                   ),
                   backgroundColor: Colors.black,
@@ -250,51 +251,56 @@ class EventOrganizerPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                floatingActionButton: Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Row(
-                    children: [
-                      FloatingActionButton(
-                        onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return OrganiserForm();
-                          }));
-                          // Handle add new event action
-                        },
-                        child: Container(
+                floatingActionButton: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Row(
+                        children: [
+                          FloatingActionButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return OrganiserForm();
+                              }));
+                              // Handle add new event action
+                            },
+                            child: Container(
+                        
+                               decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                  color: Color(0xFF3E96D3), // Background color
+                                  // Shape of the container (circle for icon)
+                                ),
+                            padding: EdgeInsets.all(16), // Padding around the icon
                     
-                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-              color: Color(0xFF3E96D3), // Background color
-              // Shape of the container (circle for icon)
-            ),
-                        padding: EdgeInsets.all(16), // Padding around the icon
-
-                          child: Icon(Icons.add,                                         // Color of the icon
+                              child: Icon(Icons.add,                                         // Color of the icon
+                              ),
+                            ),
                           ),
-                        ),
+                          FloatingActionButton(
+                            onPressed: () async {
+                              await auth.signout();
+                              goToLogin(context);
+                              final _sharedPrefs =
+                                  await SharedPreferences.getInstance();
+                              await _sharedPrefs.setBool("organizerloggedin", false);
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Color(0xFF3E96D3), // Background color
+                                  borderRadius: BorderRadius.circular(15), // Rounded corners
+                                ),
+                            padding: EdgeInsets.all(16), // Padding around the icon
+                    
+                              
+                              child: Icon(Icons.exit_to_app,)),
+                          ),
+                        ],
                       ),
-                      FloatingActionButton(
-                        onPressed: () async {
-                          await auth.signout();
-                          goToLogin(context);
-                          final _sharedPrefs =
-                              await SharedPreferences.getInstance();
-                          await _sharedPrefs.setBool("organizerloggedin", false);
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-              color: Color(0xFF3E96D3), // Background color
-              borderRadius: BorderRadius.circular(15), // Rounded corners
-            ),
-                        padding: EdgeInsets.all(16), // Padding around the icon
-
-                          
-                          child: Icon(Icons.exit_to_app,)),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               );
             }
@@ -343,34 +349,16 @@ class EventTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
+
                 name.toUpperCase(),
+                
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 25.0,
                   decoration: TextDecoration.underline,
-                  color: Colors.white
+                  color: Color.fromARGB(255, 255, 255, 255)
                 ),
               ),
-              Text(
-                place,
-                style: TextStyle(fontSize: 19.0,color: Colors.white
-),
-              ),
-              Text(
-                time,
-                style: TextStyle(fontSize: 19.0,color: Colors.white
-),
-              ),
-              Text(
-                date.toString(),
-                style: TextStyle(fontSize: 19.0,color: Colors.white),
-              ),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
               Text(
                 type,
                 style: TextStyle(
@@ -378,6 +366,28 @@ class EventTile extends StatelessWidget {
                   color: Colors.blue, // Customize the color if needed
                 ),
               ),
+              Text(
+                place,
+                style: TextStyle(fontSize: 19.0,color: Color.fromARGB(255, 204, 192, 192)
+),
+              ),
+              Text(
+                time,
+                style: TextStyle(fontSize: 19.0,color: Color.fromARGB(255, 204, 192, 192)
+),
+              ),
+              Text(
+                date.toString(),
+                style: TextStyle(fontSize: 19.0,color: Color.fromARGB(255, 204, 192, 192))
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              SizedBox(height: 50,),
+              
               Container(
                 child: Row(
                   children: [
@@ -390,6 +400,7 @@ class EventTile extends StatelessWidget {
                     // ),
                     IconButton(
                       icon: Icon(Icons.edit),
+                      color: Colors.white,
                       onPressed: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
@@ -414,6 +425,7 @@ class EventTile extends StatelessWidget {
                     // ),
                     IconButton(
                       icon: Icon(Icons.delete),
+                      color: Color.fromARGB(255, 169, 35, 25),
                       onPressed: () {
                         onDelete();
                       },
@@ -468,12 +480,13 @@ class EventTile1 extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                name.toUpperCase(),
+                name.toLowerCase(),
+                
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 25.0,
                   decoration: TextDecoration.underline,
-                  color: Colors.white
+                  color: Color.fromARGB(255, 87, 84, 84)
                 ),
               ),
               Text(
@@ -504,13 +517,7 @@ class EventTile1 extends StatelessWidget {
               Container(
                 child: Row(
                   children: [
-                    // Text(
-                    //   'Edit',
-                    //   style: TextStyle(
-                    //       color: Colors.green.shade900,
-                    //       fontSize: 18,
-                    //       fontWeight: FontWeight.w500),
-                    // ),
+                    
                     IconButton(
                       icon: Icon(Icons.edit),
                       onPressed: () {
@@ -529,13 +536,7 @@ class EventTile1 extends StatelessWidget {
               Container(
                 child: Row(
                   children: [
-                    // Text(
-                    //   'Delete',
-                    //   style: TextStyle(
-                    //       color: Colors.red.shade900,
-                    //       fontSize: 18,
-                    //       fontWeight: FontWeight.w500),
-                    // ),
+                    
                     IconButton(
                       icon: Icon(Icons.delete),
                       onPressed: () {

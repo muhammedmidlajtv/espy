@@ -44,14 +44,15 @@ class userEventRegistration extends StatelessWidget {
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          /* crossAxisAlignment: CrossAxisAlignment.stretch, */
           children: [
             Container(
               child: SizedBox(
-                  height: 200,
-                  width: 90,
+                  height: 300,
+                  width: 300,
                   child: Image.network(
                     posterlink,
+                    
                     fit: BoxFit.fill,
                     loadingBuilder: (BuildContext context, Widget child,
                         ImageChunkEvent? loadingProgress) {
@@ -67,130 +68,135 @@ class userEventRegistration extends StatelessWidget {
                     },
                   )),
             ),
-            Card(
-              // elevation: 50,
-              shadowColor: Colors.black,
-              color: Color.fromARGB(255, 136, 178, 192),
-              child: SizedBox(
-                width: 250,
-                height: 480,
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: [
-                      
-                      //CircleAvatar
-                      const SizedBox(
-                        height: 10,
-                      ), //SizedBox
-                      Text(
-                        name,
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.green[900],
-                          fontWeight: FontWeight.w500,
-                        ), //Textstyle
-                      ), //Text
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Card(
+                  // elevation: 50,
+                  shadowColor: Colors.black,
+                  color: Color.fromARGB(255, 136, 178, 192),
+                  child: SizedBox(
+                    width: 250,
+                    height: 480,
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SizedBox(
-                                height: 15,
-                                width: 15,
-                                child: Container(
-                                    child: Image.asset(
-                                        "assets/images/location_img.png"))),
-                          ),
-                          Text(venue),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SizedBox(
-                                height: 15,
-                                width: 15,
-                                child: Container(
-                                    child: Image.asset(
-                                        "assets/images/calender_icon.png"))),
-                          ),
-                          Text(date),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SizedBox(
-                                height: 15,
-                                width: 15,
-                                child: Container(
-                                    child: Image.asset(
-                                        "assets/images/category.png"))),
-                          ),
-                          Text(type),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ), //SizedBox
-                      Text(
-                        description,
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Color.fromARGB(255, 124, 66, 66),
-                        ), //Textstyle
-                      ), //Text
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
+                          
+                          //CircleAvatar
+                          const SizedBox(
+                            height: 10,
+                          ), //SizedBox
                           Text(
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold),
-                              "Speaker :"),
-                          Text(speaker),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
+                            name,
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.green[900],
+                              fontWeight: FontWeight.w500,
+                            ), //Textstyle
+                          ), //Text
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(
+                                    height: 15,
+                                    width: 15,
+                                    child: Container(
+                                        child: Image.asset(
+                                            "assets/images/location_img.png"))),
+                              ),
+                              Text(venue),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(
+                                    height: 15,
+                                    width: 15,
+                                    child: Container(
+                                        child: Image.asset(
+                                            "assets/images/calender_icon.png"))),
+                              ),
+                              Text(date),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(
+                                    height: 15,
+                                    width: 15,
+                                    child: Container(
+                                        child: Image.asset(
+                                            "assets/images/category.png"))),
+                              ),
+                              Text(type),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ), //SizedBox
                           Text(
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold),
-                              "Fee :"),
-                          Text(fee),
+                            description,
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Color.fromARGB(255, 124, 66, 66),
+                            ), //Textstyle
+                          ), //Text
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                  style: TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold),
+                                  "Speaker :"),
+                              Text(speaker),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                  style: TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold),
+                                  "Fee :"),
+                              Text(fee),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text("For more info: "),
+                              Text(
+                                  style: TextStyle(color: Colors.red),
+                                  " www.espy.com")
+                            ],
+                          ),
                         ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text("For more info: "),
-                          Text(
-                              style: TextStyle(color: Colors.red),
-                              " www.espy.com")
-                        ],
-                      ),
-                    ],
-                  ), //Column
-                ), //Padding
-              ), //SizedBox
+                      ), //Column
+                    ), //Padding
+                  ), //SizedBox
+                ),
+              ],
             ), //Size
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
