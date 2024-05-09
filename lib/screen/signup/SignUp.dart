@@ -18,15 +18,24 @@ List<String> selected = [];
 class SignUp extends StatelessWidget {
   SignUp({super.key});
 
-  @override
+@override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          backgroundColor: Colors.grey[850],
-          body: Center(
-              child: SingleChildScrollView(
-            child: const MyCustomForm(),
-          ))),
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/signup_bg.png"),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Center(
+            child: SingleChildScrollView(
+              child: const MyCustomForm(),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -222,16 +231,17 @@ Widget build(BuildContext context) {
                   style: const TextStyle(color: Colors.white),
 
                   decoration: InputDecoration(
-                    fillColor: Color.fromARGB(255, 0, 0, 0),
+                    fillColor: Colors.white24,
                     filled: true,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15.0),
                     ),
                     // filled: true,
                     hintStyle:
-                        TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
+                        TextStyle(color: const Color.fromARGB(255, 255, 255, 255)),
                     hintText: "Enter your name",
                     labelText: "Names",
+                      labelStyle: TextStyle(color: const Color.fromARGB(255, 255, 255, 255))
                     // fillColor: Colors.white70,
                   ),
 
@@ -251,7 +261,7 @@ Widget build(BuildContext context) {
                   style: const TextStyle(color: Colors.white),
 
                   decoration: InputDecoration(
-                    fillColor: Color.fromARGB(255, 0, 0, 0),
+                    fillColor: Colors.white24,
                     filled: true,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15.0),
@@ -261,66 +271,78 @@ Widget build(BuildContext context) {
                         TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
                     hintText: "Enter your Email",
                     labelText: "Email",
+                        labelStyle: TextStyle(color: const Color.fromARGB(255, 255, 255, 255))
+
                     // fillColor: Colors.white70,
                   ),
 
-                  // The validator receives the text that the user has entered.
-                  controller: _email,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  style: const TextStyle(color: Colors.white),
+                    // The validator receives the text that the user has entered.
+                    controller: _email,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    style: const TextStyle(color: Colors.white),
+                    obscureText: isObscured,
+                    decoration: InputDecoration(
+                      fillColor: Colors.white24, filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      // filled: true,
+                      
+                      suffixIcon: IconButton(icon: isObscured? Icon(Icons.visibility):Icon(Icons.visibility_off),onPressed:() {
+                        setState(() {
+                          isObscured=!isObscured;
+                        });
+                      },
+                      ),
+                      hintStyle:
+                          TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
+                      hintText: "Enter your password",
+                      labelText: "Password",
+                      labelStyle: TextStyle(color: const Color.fromARGB(255, 255, 255, 255))
 
-                  decoration: InputDecoration(
-                    fillColor: Color.fromARGB(255, 0, 0, 0),
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                      // fillColor: Colors.white70,
                     ),
-                    // filled: true,
-                    hintStyle:
-                        TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
-                    hintText: "Enter your password",
-                    labelText: "Password",
-                    // fillColor: Colors.white70,
+
+                    // The validator receives the text that the user has entered.
+                    controller: _password,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    style: const TextStyle(color: Colors.white),
+                    
+                    decoration: InputDecoration(
+                      fillColor: Colors.white24, filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      // filled: true,
+                      
+                      hintStyle:
+                          TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
+                      hintText: "confirm  your password",
+                      labelText: "Confirm password",
+                      labelStyle: TextStyle(color: const Color.fromARGB(255, 255, 255, 255))
 
-                  // The validator receives the text that the user has entered.
-                  controller: _password,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  style: const TextStyle(color: Colors.white),
-
-                  decoration: InputDecoration(
-                    fillColor: Color.fromARGB(255, 0, 0, 0),
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                      // fillColor: Colors.white70,
                     ),
-                    // filled: true,
-                    hintStyle:
-                        TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
-                    hintText: "confirm  your password",
-                    labelText: "Confirm password",
-                    // fillColor: Colors.white70,
-                  ),
 
                   // The validator receives the text that the user has entered.
                   controller: _confirm,
@@ -333,26 +355,27 @@ Widget build(BuildContext context) {
                 ),
                 SizedBox(height: 20),
 
-                DropdownButtonFormField<String>(
-                  value: _selectedRole,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Color.fromARGB(255, 0, 0, 0),
-                    // Set the initial background color of the field to black
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                  DropdownButtonFormField<String>(
+                    value: _selectedRole,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white24, // Set the initial background color of the field to black
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      hintStyle:
+                          TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
+                      hintText: "Who are you?",
+                      labelText: "Who are you",
+                     labelStyle: TextStyle(color: const Color.fromARGB(255, 255, 255, 255))
+
                     ),
-                    hintStyle:
-                        TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
-                    hintText: "Who are you?",
-                    labelText: "Who are you",
-                  ),
-                  dropdownColor: Colors.black,
-                  // Set the dropdown option background color to black
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedRole = newValue;
-                      _selectedTextColor = Colors.white;
+                    dropdownColor: Colors
+                        .black, // Set the dropdown option background color to black
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedRole = newValue;
+                        _selectedTextColor = Colors.white;
 
                       if (_selectedRole == 'User') {
                         _selectCategories();
@@ -399,7 +422,7 @@ Widget build(BuildContext context) {
                       child: Container(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 106, 96, 93),
+                            backgroundColor: Color(0xFF2F8CAD),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(13.0),
                             ),

@@ -116,6 +116,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
 
                       if (eventQuery.docs.isNotEmpty) {
       final eventDoc = eventQuery.docs.first;
+      
       Map<String, dynamic> updatedFields = {};
 
       // Update fields if corresponding text fields are not empty

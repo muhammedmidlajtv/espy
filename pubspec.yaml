@@ -41,7 +41,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core: ^2.26.0
   firebase_auth: ^4.17.7
-  
+
   smooth_page_indicator: ^1.1.0
   intl: ^0.19.0
   image_picker: ^1.0.8
@@ -104,7 +104,11 @@ flutter:
     - assets/images/Hackathon_Team.png
     - assets/images/category.png
     - assets/images/tick.png
-
+    - assets/images/signup_bg.png
+    - assets/images/user_profile_bg.png
+    - assets/images/organiser_dash_bg.png
+    - assets/images/user_dashboard.png
+    - assets/images/signin_bg.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
