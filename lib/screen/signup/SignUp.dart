@@ -433,19 +433,19 @@ Widget build(BuildContext context) {
                           await _signup(context);
                           
                     
-                          CollectionReference collRef = FirebaseFirestore
-                              .instance
-                              .collection('user_login');
-                          collRef.add({
-                            'name': _name.text,
-                            'email': _email.text,
-                            'password1': _password.text,
-                            'password2': _confirm.text,
-                            'role': _selectedRole.toString(),
-                            for (int i = 0; i < _selectedItems.length; i++) ...{
-                              'preferences$i': _selectedItems[i],
-                            },
-                          });
+                          // CollectionReference collRef = FirebaseFirestore
+                          //     .instance
+                          //     .collection('user_login');
+                          // collRef.add({
+                          //   'name': _name.text,
+                          //   'email': _email.text,
+                          //   'password1': _password.text,
+                          //   // 'password2': _confirm.text,
+                          //   'role': _selectedRole.toString(),
+                          //   for (int i = 0; i < _selectedItems.length; i++) ...{
+                          //     'preferences$i': _selectedItems[i],
+                          //   },
+                          // });
                           if (_formKey1.currentState!.validate()) {
                             final user = await _auth.createUserWithEmailAndPassword(_email.text, _password.text);
                           }
@@ -543,6 +543,20 @@ Widget build(BuildContext context) {
                       );
                      final userCredential = await _auth.createUserWithEmailAndPassword(_email.text, _password.text);
                       if (userCredential != null) {
+                         CollectionReference collRef = FirebaseFirestore
+                              .instance
+                              .collection('user_login');
+                          collRef.add({
+                            'name': _name.text,
+                            'email': _email.text,
+                            'password1': _password.text,
+                            // 'password2': _confirm.text,
+                            'role': _selectedRole.toString(),
+                            for (int i = 0; i < _selectedItems.length; i++) ...{
+                              'preferences$i': _selectedItems[i],
+                            },
+                          });
+                        
                         Navigator.pop(context);
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
                       }

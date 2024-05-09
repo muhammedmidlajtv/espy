@@ -1,5 +1,6 @@
 import "dart:async";
 import 'dart:convert';
+import 'dart:io';
 // import 'dart:ffi';
 //import 'package:espy/screen/home_screen.dart';
 import 'package:espy/screen/splash.dart';
@@ -130,8 +131,16 @@ Future<void> main() async {
   //     navigatorKey.currentState!.pushNamed("/message", arguments: message);
   //   });
   // }
-  
+    HttpOverrides.global = MyHttpOverrides();
+
   runApp(const MyApp());
+}
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+  }
 }
 
 class MyApp extends StatelessWidget {
