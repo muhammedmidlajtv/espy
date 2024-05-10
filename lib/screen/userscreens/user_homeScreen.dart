@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:espy/main.dart';
 import 'package:espy/screen/crud_service.dart';
+import 'package:espy/screen/feedback.dart';
 import 'package:espy/screen/organizerscreens/organizer.dart';
 import 'package:espy/screen/profile.dart';
 import 'package:espy/screen/userscreens/userEventRegistration.dart';
@@ -41,7 +42,7 @@ class NavDrawer extends StatelessWidget {
         children: <Widget>[
           DrawerHeader(
             child: Text(
-              'Side menu',
+              '',
               style: TextStyle(
                   color: Color.fromRGBO(200, 53, 53, 1), fontSize: 25),
             ),
@@ -49,7 +50,7 @@ class NavDrawer extends StatelessWidget {
               color: Colors.green,
               image: DecorationImage(
                 fit: BoxFit.cover,
-                image: AssetImage('assets/images/user.png'),
+                image: AssetImage('assets/images/login_img.png'),
               ),
             ),
           ),
@@ -61,7 +62,7 @@ class NavDrawer extends StatelessWidget {
             leading: Icon(Icons.verified_user),
             title: Text('Profile'),
             onTap: () => {
-              // Navigator.of(context).pop()
+              Navigator.of(context).pop(),
 
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return ProfilePage();
@@ -76,7 +77,9 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.border_color),
             title: Text('Feedback'),
-            onTap: () => {Navigator.of(context).pop()},
+            onTap: () => {   Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return FeedbackApp();
+              }))},
           ),
           ListTile(
             leading: Icon(Icons.exit_to_app),
