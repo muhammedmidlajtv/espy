@@ -2,12 +2,14 @@ import "dart:developer";
 import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:espy/screen/authentication/auth_service.dart";
 import 'package:espy/screen/login/Login.dart';
-import 'package:espy/screen/splash.dart';
-import 'package:espy/screen/userscreens/user_homeScreen.dart';
+//import 'package:espy/screen/splash.dart';
+//import 'package:espy/screen/userscreens/user_homeScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
+//import 'package:flutter/services.dart';
+import 'package:telephony/telephony.dart';
+import 'package:email_otp/email_otp.dart';
 
 bool isObscured=true;
 
@@ -136,17 +138,52 @@ class MyCustomFormState extends State<MyCustomForm> {
       });
     }
   }
+  final Telephony telephony = Telephony.instance;
 
   final _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
+  final _formKey1 = GlobalKey<FormState>();
+
+  //final  _emailController = TextEditingController();
+  final  _otpController = TextEditingController();
   final _name = TextEditingController();
   final _email = TextEditingController();
   final _password = TextEditingController();
   final _confirm = TextEditingController();
   String? _selectedRole;
   Color _selectedTextColor = Colors.white;
+  EmailOTP myauth = EmailOTP();
 
-  // final _who = TextEditingController();
+ 
+
+// handle after otp is submitted
+//   void handleSubmit(BuildContext context) {
+//     if (_formKey.currentState!.validate()) {
+//       // Validate OTP against the OTP sent to the email
+//       _auth.verifyOtpFromEmail(
+//           _emailController.text, // Pass the email from the text controller
+//           _otpController.text,
+//           ).then((UserCredential? userCredential) {
+//   if (userCredential != null) {
+//     // OTP verification successful, navigate to login screen
+//     Navigator.pop(context);
+//     Navigator.pushReplacement(
+//       context,
+//       MaterialPageRoute(builder: (context) => Login()),
+//     );
+//   } else {
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       SnackBar(
+//         content: Text(
+//           'Invalid OTP',
+//           style: const TextStyle(color: Colors.white),
+//         ),
+//         backgroundColor: Colors.red,
+//       ),
+//     );
+//   }
+// });
+    
 
   @override
   void dispose() {
@@ -155,86 +192,89 @@ class MyCustomFormState extends State<MyCustomForm> {
     _password.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    // Build a Form widget using the _formKey created above.
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 45),
-          child: Container(
-            height: 300,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                // color: Colors.black,
-                image: DecorationImage(
-                    image: AssetImage("assets/images/epsy_logo.png"),
-                    fit: BoxFit.cover),
+ @override
+Widget build(BuildContext context) {
+  // Build a Form widget using the _formKey created above.
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.end,
+    children: [
+      Padding(
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 45),
+        child: Container(
+          height: 300,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              // color: Colors.black,
+              image: DecorationImage(
+                image: AssetImage("assets/images/epsy_logo.png"),
+                fit: BoxFit.cover,
               ),
-              child: Center(child: Text("")),
             ),
+            child: Center(child: Text("")),
           ),
         ),
-        Form(
-          key: _formKey,
-          child: Container(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // SizedBox(
-                  //   height: 20,
-                  // ),
-                  TextFormField(
-                    // controller : nameController,
-                    style: const TextStyle(color: Colors.white),
+      ),
+      Form(
+        key: _formKey,
+        child: Container(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // SizedBox(
+                //   height: 20,
+                // ),
+                TextFormField(
+                  // controller : nameController,
+                  style: const TextStyle(color: Colors.white),
 
-                    decoration: InputDecoration(
-                      fillColor: Colors.white24, filled: true,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      // filled: true,
-                      hintStyle:
-                          TextStyle(color: const Color.fromARGB(255, 255, 255, 255)),
-                      hintText: "Enter your name",
-                      labelText: "Names",
-                      labelStyle: TextStyle(color: const Color.fromARGB(255, 255, 255, 255))
-                      // fillColor: Colors.white70,
+                  decoration: InputDecoration(
+                    fillColor: Colors.white24,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0),
                     ),
-
-                    // The validator receives the text that the user has entered.
-                    controller: _name,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
+                    // filled: true,
+                    hintStyle:
+                        TextStyle(color: const Color.fromARGB(255, 255, 255, 255)),
+                    hintText: "Enter your name",
+                    labelText: "Names",
+                      labelStyle: TextStyle(color: const Color.fromARGB(255, 255, 255, 255))
+                    // fillColor: Colors.white70,
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  TextFormField(
-                    style: const TextStyle(color: Colors.white),
 
-                    decoration: InputDecoration(
-                      fillColor: Colors.white24, filled: true,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      // filled: true,
-                      hintStyle:
-                          TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
-                      hintText: "Enter your Email",
-                      labelText: "Email",
+                  // The validator receives the text that the user has entered.
+                  controller: _name,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  style: const TextStyle(color: Colors.white),
+
+                  decoration: InputDecoration(
+                    fillColor: Colors.white24,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    // filled: true,
+                    hintStyle:
+                        TextStyle(color: Color.fromARGB(255, 166, 162, 162)),
+                    hintText: "Enter your Email",
+                    labelText: "Email",
                         labelStyle: TextStyle(color: const Color.fromARGB(255, 255, 255, 255))
 
-                      // fillColor: Colors.white70,
-                    ),
+                    // fillColor: Colors.white70,
+                  ),
 
                     // The validator receives the text that the user has entered.
                     controller: _email,
@@ -304,16 +344,16 @@ class MyCustomFormState extends State<MyCustomForm> {
                       // fillColor: Colors.white70,
                     ),
 
-                    // The validator receives the text that the user has entered.
-                    controller: _confirm,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 20),
+                  // The validator receives the text that the user has entered.
+                  controller: _confirm,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
 
                   DropdownButtonFormField<String>(
                     value: _selectedRole,
@@ -337,46 +377,44 @@ class MyCustomFormState extends State<MyCustomForm> {
                         _selectedRole = newValue;
                         _selectedTextColor = Colors.white;
 
-                        if (_selectedRole == 'User') {
-                          _selectCategories();
-                        }
-                      });
-                    },
-                    items: <String>['Organiser', 'User']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: TextStyle(color: _selectedTextColor),
-                        ),
-                      );
-                    }).toList(),
-
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please select an option';
+                      if (_selectedRole == 'User') {
+                        _selectCategories();
                       }
+                    });
+                  },
+                  items: <String>['Organiser', 'User']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: TextStyle(color: _selectedTextColor),
+                      ),
+                    );
+                  }).toList(),
 
-                      return null;
-                    },
-                  ),
-                  if (_selectedRole == 'User') ...[
-                    const Divider(
-                      height: 30,
-                    ),
-                    Wrap(
-                      children: _selectedItems
-                          .map((e) => Chip(
-                                label: Text(e),
-                              ))
-                          .toList(),
-                    ),
-                  ],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please select an option';
+                    }
 
-                  SizedBox(
-                    height: 20,
+                    return null;
+                  },
+                ),
+                if (_selectedRole == 'User') ...[
+                  const Divider(
+                    height: 30,
                   ),
+                  Wrap(
+                    children: _selectedItems
+                        .map((e) => Chip(
+                              label: Text(e),
+                            ))
+                        .toList(),
+                  ),
+                ],
+      
+                const SizedBox(height: 20,),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Padding(
@@ -386,140 +424,258 @@ class MyCustomFormState extends State<MyCustomForm> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF2F8CAD),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(13.0)),
-                            minimumSize: Size(400, 46),
+                              borderRadius: BorderRadius.circular(13.0),
+                            ),
+                            minimumSize: const Size(400, 46),
                           ),
                           onPressed: () async {
-                            // Validate returns true if the form is valid, or false otherwise.
-                            if (_password.text != _confirm.text) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text('Password doesnt match')),
-                              );
-                            } else if (_formKey.currentState!.validate()) {
-                              await _signup(context);
-                              // If the form is valid, display a snackbar. In the real world,
-                              // you'd often call a server or save the information in a database.
-                              //_navigateToLoginScreen(context);
-
-                              /* ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Processing Data')),
-                              ); */
-                            }
+                                        // Call the _signup method when the button is pressed
+                          await _signup(context);
+                          
+                    
+                          // CollectionReference collRef = FirebaseFirestore
+                          //     .instance
+                          //     .collection('user_login');
+                          // collRef.add({
+                          //   'name': _name.text,
+                          //   'email': _email.text,
+                          //   'password1': _password.text,
+                          //   // 'password2': _confirm.text,
+                          //   'role': _selectedRole.toString(),
+                          //   for (int i = 0; i < _selectedItems.length; i++) ...{
+                          //     'preferences$i': _selectedItems[i],
+                          //   },
+                          // });
+                          if (_formKey1.currentState!.validate()) {
+                            final user = await _auth.createUserWithEmailAndPassword(_email.text, _password.text);
+                          }
                           },
-                          child: const Text(
-                            'Submit',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
+                        child: const Text(
+                          'Submit',
+                          style: TextStyle(color: Colors.white),
+                                ),
+                                ),
+                             ),
+                            ),
+                           ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  SizedBox(
+                    child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Text(
+                        "Have an account ?   ",
+                        style: TextStyle(color: Colors.white),
                       ),
+                      GestureDetector(
+                        child: Text(
+                          "Sign In",
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                        onTap: () {
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (context) {
+                            return Login();
+                          }));
+                          /* Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: ((context) => userEventRegistration()))); */
+                        },
+                        )
+                      ],
                     ),
                   ),
+                  const SizedBox(height: 20,),
                 ],
               ),
             ),
           ),
         ),
-        SizedBox(
-          height: 20,
-        ),
-        SizedBox(
-          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text(
-              "Have an account ?   ",
-              style: TextStyle(color: Colors.white),
-            ),
-            GestureDetector(
-              child: Text(
-                "Sign In",
-                style: TextStyle(color: Colors.blue),
-              ),
-              onTap: () {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) {
-                  return Login();
-                }));
-                /* Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: ((context) => userEventRegistration()))); */
-              },
-            )
-          ]),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-
-        // DropdownMenuExample()
       ],
     );
   }
 
+
+
+
   void _navigateToLoginScreen(BuildContext context) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => Login()));
+  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Login()));
   }
 
-  _signup(BuildContext context) async {
-    try {
-      final user = await _auth.createUserWithEmailAndPassword(
-          _email.text, _password.text);
-      if (user != null) {
-        log("User Created Successfully");
-        CollectionReference collRef =
-            FirebaseFirestore.instance.collection('user_login');
-        collRef.add({
-          'name': _name.text,
-          'email': _email.text,
-          'password': _confirm.text,
-          'role': _selectedRole.toString(),
-           "preferences" : _selectedItems,
-          // for (int i = 0; i < _selectedItems.length; i++) ...{
-          //   'preferences$i': _selectedItems[i],
-          // },
-        });
-        // Navigate to the login page after successful signup
-        _navigateToLoginScreen(context);
+ _signup(BuildContext context) async {
+  try {
+    // Validate the form
+    if (_formKey.currentState!.validate()) {
+      // Send OTP
+      myauth.setConfig(
+        appEmail: "espyproject24@gmail.com",
+        appName: "ESPY",
+        userEmail: _email.text,
+        otpLength: 6,
+        otpType: OTPType.digitsOnly,
+      );
+      if (await myauth.sendOTP() == true) {
+        // OTP sent successfully, show dialog for entering OTP
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Enter OTP"),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: [
+                    Text("An OTP has been sent to your email."),
+                    TextField(
+                      controller: _otpController,
+                      decoration: InputDecoration(labelText: "OTP"),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                ElevatedButton(
+                  onPressed: () async {
+                    if (await myauth.verifyOTP(otp: _otpController.text)) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("OTP is verified"),
+                        ),
+                      );
+                     final userCredential = await _auth.createUserWithEmailAndPassword(_email.text, _password.text);
+                      if (userCredential != null) {
+                         CollectionReference collRef = FirebaseFirestore
+                              .instance
+                              .collection('user_login');
+                          collRef.add({
+                            'name': _name.text,
+                            'email': _email.text,
+                            'password1': _password.text,
+                            // 'password2': _confirm.text,
+                            'role': _selectedRole.toString(),
+                                       "preferences" : _selectedItems,
+
+                            // for (int i = 0; i < _selectedItems.length; i++) ...{
+                            //   'preferences$i': _selectedItems[i],
+                            // },
+                          });
+                        
+                        Navigator.pop(context);
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
+                      }
+                      // Navigate to login page after successful OTP verification
+                      // Navigator.pop(context); // Close the OTP dialog
+                      // _navigateToLoginScreen(context); // Navigate to login page
+                    }else {
+                      // Invalid OTP
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Invalid OTP. Please try again."),
+                        ),
+                      );
+                    }
+                  },
+                  child: Text("Verify"),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        // Failed to send OTP
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Oops, OTP send failed"),
+          ),
+        );
       }
-    } on FirebaseAuthException catch (e) {
-      // Handle other exceptions
-      log('Error occurred: ${e.message}');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${e.message}')),
-      );
-    } catch (e) {
-      // Handle other exceptions
-
-      log('Error occurred: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred: $e')),
-      );
     }
+  } catch (e) {
+    log('Error occurred: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('An error occurred: $e')),
+    );
   }
+ }
 }
-// class DropdownMenuExample extends StatefulWidget {
-//   const DropdownMenuExample({super.key});
+                    
+//   _signup(BuildContext context) async {
+//   try {
+//     final userCredential = await _auth.createUserWithEmailAndPassword(
+//         _email.text, _password.text);
 
-//   @override
-//   State<DropdownMenuExample> createState() => _DropdownMenuExampleState();
-// }
-
-// class _DropdownMenuExampleState extends State<DropdownMenuExample> {
-//   String dropdownValue = list.first;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return DropdownMenu<String>(
-//       initialSelection: list.first,
-//       onSelected: (String? value) {
-//         // This is called when the user selects an item.
-//         setState(() {
-//           dropdownValue = value!;
-//         });
+//     log("User Created Successfully");
+//     CollectionReference collRef = FirebaseFirestore
+//         .instance
+//         .collection('user_login');
+//     collRef.add({
+//       'name': _name.text,
+//       'email': _email.text,
+//       'password1': _password.text,
+//       'password2': _confirm.text,
+//       'role': _selectedRole.toString(),
+//       for (int i = 0; i < _selectedItems.length; i++) ...{
+//         'preferences$i': _selectedItems[i],
 //       },
-//       dropdownMenuEntries: list.map<DropdownMenuEntry<String>>((String value) {
-//         return DropdownMenuEntry<String>(value: value, label: value);
-//       }).toList(),
+//     });
+//     // Send email verification
+//     await userCredential?.sendEmailVerification();
+//     // Show dialog for entering OTP
+//     showDialog(
+//       context: context,
+//       builder: (context) {
+//         return AlertDialog(
+//           title: Text("Enter OTP"),
+//           content: Column(
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               TextField(
+//                 controller: _otpController,
+//                 decoration: InputDecoration(labelText: "OTP"),
+//                 keyboardType: TextInputType.number,
+//               ),
+//             ],
+//           ),
+//           actions: [
+//             ElevatedButton(
+//               onPressed: () async {
+//                 // Verify OTP
+//                 try {
+//                   await userCredential?.reload();
+//                   if (userCredential?.emailVerified ?? false) {
+//                     // User verified, navigate to login screen
+//                     _navigateToLoginScreen(context);
+//                   } else {
+//                     ScaffoldMessenger.of(context).showSnackBar(
+//                       SnackBar(
+//                         content: Text("Invalid OTP. Please try again."),
+//                       ),
+//                     );
+//                   }
+//                 } catch (e) {
+//                   ScaffoldMessenger.of(context).showSnackBar(
+//                     SnackBar(
+//                       content: Text("Error verifying OTP: $e"),
+//                     ),
+//                   );
+//                 }
+//               },
+//               child: Text("Verify"),
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   } on FirebaseAuthException catch (e) {
+//     // Handle FirebaseAuthException
+//     log('Error occurred: ${e.message}');
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       SnackBar(content: Text('${e.message}')),
+//     );
+//   } catch (e) 
+//   {
+//     log('Error occurred: $e');
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       SnackBar(content: Text('An error occurred: $e')),
 //     );
 //   }
 // }
