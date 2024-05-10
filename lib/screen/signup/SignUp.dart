@@ -552,9 +552,11 @@ Widget build(BuildContext context) {
                             'password1': _password.text,
                             // 'password2': _confirm.text,
                             'role': _selectedRole.toString(),
-                            for (int i = 0; i < _selectedItems.length; i++) ...{
-                              'preferences$i': _selectedItems[i],
-                            },
+                                       "preferences" : _selectedItems,
+
+                            // for (int i = 0; i < _selectedItems.length; i++) ...{
+                            //   'preferences$i': _selectedItems[i],
+                            // },
                           });
                         
                         Navigator.pop(context);
