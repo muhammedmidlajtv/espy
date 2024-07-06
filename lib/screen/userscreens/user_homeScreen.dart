@@ -2,6 +2,8 @@
 //import "dart:developer";
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:espy/main.dart';
+import 'package:espy/screen/crud_service.dart';
+import 'package:espy/screen/feedback.dart';
 import 'package:espy/screen/organizerscreens/organizer.dart';
 import 'package:espy/screen/profile.dart';
 import 'package:espy/screen/userscreens/userEventRegistration.dart';
@@ -15,6 +17,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import "package:espy/screen/notification_service.dart";
+
+final _auth = FirebaseAuth.instance;
 
 // Define temporary variables to store selected values
 String? tempSelectedCategory;
@@ -37,7 +42,7 @@ class NavDrawer extends StatelessWidget {
         children: <Widget>[
           DrawerHeader(
             child: Text(
-              'Side menu',
+              '',
               style: TextStyle(
                   color: Color.fromRGBO(200, 53, 53, 1), fontSize: 25),
             ),
@@ -45,7 +50,7 @@ class NavDrawer extends StatelessWidget {
               color: Colors.green,
               image: DecorationImage(
                 fit: BoxFit.cover,
-                image: AssetImage('assets/images/user.png'),
+                image: AssetImage('assets/images/login_img.png'),
               ),
             ),
           ),
@@ -57,7 +62,7 @@ class NavDrawer extends StatelessWidget {
             leading: Icon(Icons.verified_user),
             title: Text('Profile'),
             onTap: () => {
-              // Navigator.of(context).pop()
+              Navigator.of(context).pop(),
 
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return ProfilePage();
@@ -72,15 +77,41 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.border_color),
             title: Text('Feedback'),
-            onTap: () => {Navigator.of(context).pop()},
+            onTap: () => {   Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return FeedbackApp();
+              }))},
           ),
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Logout'),
             // onTap: () => {Navigator.of(context).pop()},
             onTap: () async {
+              try {
+                String? email = FirebaseAuth.instance.currentUser?.email;
+                if (email != null) {
+                  // Query documents based on email
+                  final QuerySnapshot querySnapshot = await FirebaseFirestore
+                      .instance
+                      .collection("user_tokens")
+                      .where("email", isEqualTo: email)
+                      .get();
+
+                  // Iterate through documents and delete each one
+                  querySnapshot.docs.forEach((doc) async {
+                    await doc.reference.delete();
+                  });
+
+                  print('Documents deleted successfully');
+                } else {
+                  print('User is not logged in');
+                }
+              } catch (e) {
+                print('Error deleting documents: $e');
+              }
+
               await auth.signout();
               await GoogleSignIn().signOut();
+              await CRUDService.deleteUserToken();
               goToLogin(context);
 
               //sharedprefereces
@@ -119,6 +150,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
 
   @override
   void initState() {
+    PushNotifications.getDeviceToken();
     _initializePage();
     super.initState();
   }

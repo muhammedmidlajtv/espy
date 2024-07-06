@@ -204,7 +204,9 @@ class userEventRegistration extends StatelessWidget {
                 SizedBox(
                   child: ElevatedButton(
                     onPressed: () async {
-                      if (await canLaunchUrl(Uri.parse(reglink))) {
+                        launchUrl(Uri.parse(reglink));
+                        
+                     /*  if (await canLaunchUrl(Uri.parse(reglink))) {
                         launchUrl(Uri.parse(reglink));
                       } else {
                         showDialog(
@@ -219,7 +221,7 @@ class userEventRegistration extends StatelessWidget {
                                     ),
                                   ],
                                 ));
-                      }
+                      } */
                     },
                     style: ButtonStyle(
                         backgroundColor:

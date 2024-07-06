@@ -59,48 +59,45 @@ class _ProfilePageState extends State<ProfilePage> {
       final QuerySnapshot querySnapshot =
           await collRef.where("email", isEqualTo: userEmail).get();
 
-      
-
       // Check if any documents match the query
       if (querySnapshot.docs.isNotEmpty) {
         // Get the first document (assuming there's only one document for each user)
         final DocumentSnapshot userDoc = querySnapshot.docs.first;
-        
+
         // Update state with user's name and email
         setState(() {
           userName = (userDoc.data() as Map<String, dynamic>)["name"] ?? "...";
           userEmail =
               (userDoc.data() as Map<String, dynamic>)["email"] ?? "...";
-          print(userEmail);
+          print("username : $userName");
 
-           _isHackathonPressed = false;
- _isquiz = false;
- _workshop = false;
- _ideathon = false;
- _talksession = false;
+          _isHackathonPressed = false;
+          _isquiz = false;
+          _workshop = false;
+          _ideathon = false;
+          _talksession = false;
           final prefList = (querySnapshot.docs.first.data()
-          as Map<String, dynamic>)['preferences'];
-      preferencesList = prefList != null ? List.from(prefList) : [];
-      print(preferencesList);
-      for (var i = 0; i < preferencesList.length; i++) {
-        if (preferencesList[i] == "Hackathon") {
-          _isHackathonPressed = true;
-        }
-        if (preferencesList[i] == "Ideathon") {
-          _ideathon = true;
-        }
-        if (preferencesList[i] == "Workshop") {
-          _workshop = true;
-        }
-        if (preferencesList[i] == "Talk Sessions") {
-          _talksession = true;
-        }
-        if (preferencesList[i] == "Quiz") {
-          _isquiz = true;
-        }
-      }
-
-
+              as Map<String, dynamic>)['preferences'];
+          print("${prefList}");
+          preferencesList = prefList != null ? List.from(prefList) : [];
+          print(preferencesList);
+          for (var i = 0; i < preferencesList.length; i++) {
+            if (preferencesList[i] == "Hackathon") {
+              _isHackathonPressed = true;
+            }
+            if (preferencesList[i] == "Ideathon") {
+              _ideathon = true;
+            }
+            if (preferencesList[i] == "Workshop") {
+              _workshop = true;
+            }
+            if (preferencesList[i] == "Talk Sessions") {
+              _talksession = true;
+            }
+            if (preferencesList[i] == "Quiz") {
+              _isquiz = true;
+            }
+          }
         });
       } else {
         // Handle case where user with the specified email address is not found
@@ -119,10 +116,11 @@ class _ProfilePageState extends State<ProfilePage> {
       // resizeToAvoidBottomInset: false, // Disable resizing to avoid bottom overflow
 
       body: Container(
-         decoration: BoxDecoration(
+        decoration: BoxDecoration(
           // Set background image
           image: DecorationImage(
-            image: AssetImage("assets/images/user_profile_bg.png"), // Change the path to your image
+            image: AssetImage(
+                "assets/images/user_profile_bg.png"), // Change the path to your image
             fit: BoxFit.cover,
           ),
         ),
@@ -259,6 +257,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 80,
                     child: IconButton(
                       onPressed: () async {
+                        // print(_isHackathonPressed.toString());
                         List<String> selectedPreferences = [];
                         if (_isHackathonPressed)
                           selectedPreferences.add("Hackathon");
@@ -267,14 +266,14 @@ class _ProfilePageState extends State<ProfilePage> {
                         if (_ideathon) selectedPreferences.add("Ideathon");
                         if (_talksession)
                           selectedPreferences.add("Talk Sessions");
-        
+
                         // Assuming you have the email address of the current user
                         // String userEmail = "john.doe@example.com"; // Replace with the actual email address
-        
+
                         // Access Firestore collection reference
                         CollectionReference collRef =
                             FirebaseFirestore.instance.collection('user_login');
-        
+
                         // Query for the user document with the specified email address
                         // print("////////////////////////{$current_logged_email}");
                         print(current_logged_email);
@@ -298,7 +297,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 content:
                                     Text('Preferences updated successfully')),
                           );
-        
+
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return user_homeLogin();
@@ -308,7 +307,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           print(
                               "User not found with email: $current_logged_email");
                         }
-        
+
                         // Optionally, you can navigate to another screen or show a confirmation message.
                       },
                       icon: Image.asset("assets/images/tick.png"),

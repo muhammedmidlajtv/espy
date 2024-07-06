@@ -1,26 +1,44 @@
-import "dart:developer";
+import 'dart:async';
+import "dart:developer" as dev;
+import 'dart:math' as math;
 import 'package:espy/screen/login/Login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
+import 'package:email_otp/email_otp.dart';
+import "package:espy/screen/crud_service.dart";
 class AuthService {
   final _auth = FirebaseAuth.instance;
+    EmailOTP myauth = EmailOTP();
 
-  Future<User?> createUserWithEmailAndPassword(
+  static final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  static String verifyId = "";
+
+   Future<User?> createUserWithEmailAndPassword(
       String email, String password) async {
-    // try {
-
-    final cred = await _auth.createUserWithEmailAndPassword(
-        email: email, password: password);
-    return cred.user;
-
-    /* } catch (e) {
-      log("Something went wrong");
-      return ;
+    try {
+      final cred = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+          print(email);
+      return cred.user;
+    } on FirebaseAuthException catch (e) {
+      dev.log("Firebase Auth Exception: ${e.message}");
+      throw e;
+    } catch (e) {
+      dev.log("Unexpected error occurred: $e");
     }
-    return null; */
+    return null;
   }
 
+
+ 
+  
+
+  
+  static Future<bool> isLoggedIn() async {
+    var user = FirebaseAuth.instance.currentUser;
+    return user != null;
+  }
   Future<User?> loginUserWithEmailAndPassword(
       String email, String password) async {
     try {
@@ -29,22 +47,17 @@ class AuthService {
       return cred.user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        log("No user found for that email.");
+        dev.log("No user found for that email.");
       } else if (e.code == 'wrong-password') {
-        log("Wrong password provided for that user.");
+        dev.log("Wrong password provided for that user.");
       } else {
-        log("Something went wrong: ${e.message}");
+        dev.log("Something went wrong: ${e.message}");
       }
     } catch (e) {
-      log("Unexpected error occurred: $e");
+      dev.log("Unexpected error occurred: $e");
     }
     return null;
   }
-  //   } catch (e) {
-  //     log("Something went wrong");
-  //   }
-  //   return null;
-  // }
 
   static Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
@@ -71,10 +84,13 @@ class AuthService {
   Future<void> signout() async {
     try {
       await _auth.signOut();
+      
     } catch (e) {
-      log("Something went wrong");
+      dev.log("Something went wrong");
     }
   }
+ 
+
 
   Future<String?> getCurrentUserEmail() async {
     final User? user = _auth.currentUser;
