@@ -37,6 +37,7 @@ class EventOrganizerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      
       debugShowCheckedModeBanner: false,
       title: 'Event Organizer',
       theme: ThemeData(
@@ -52,6 +53,8 @@ class EventOrganizerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      
+      
       child: FutureBuilder<String?>(
         future: auth.getCurrentUserEmail(),
         builder: (context, snapshot) {
@@ -89,11 +92,12 @@ class EventOrganizerPage extends StatelessWidget {
 
                   decoration: BoxDecoration(
                     color: Color(0xff03052f),
-
+                    
                       /* image: DecorationImage(
       image: AssetImage('assets/images/organiser_dash_bg.png'), // Path to your background image
       fit: BoxFit.cover, // Adjust the image's size to cover the entire container
     ), */
+    
                       ),
                   child: Stack(
                     children: [
@@ -372,7 +376,9 @@ class EventTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Container(
+      
       margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
@@ -391,12 +397,19 @@ class EventTile extends StatelessWidget {
                 name.toUpperCase(),
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontFamily: 'Montserrat',
+                    fontFamily: 'Montserrat-Semibold',
                     fontSize: 25.0,
-                    
                     color: Color(0xff03052f)),
               ),
               
+              Text(
+                type,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.blue, // Customize the color if needed
+                  fontFamily: 'Century-Gothic'
+                ),
+              ),
               Text(
                 place,
                 style: TextStyle(fontSize: 19.0, color: Color(0xff03052f),fontFamily: 'Montserrat-Regular'),
@@ -414,15 +427,9 @@ class EventTile extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
+
             children: [
-              Text(
-                type,
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.blue, // Customize the color if needed
-                  fontFamily: 'Century-Gothic'
-                ),
-              ),
+              SizedBox(height: 40,),
               Container(
                 child: Row(
                   children: [
@@ -501,12 +508,19 @@ class EventTile1 extends StatelessWidget {
                 name.toUpperCase(),
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontFamily: 'Montserrat',
+                    fontFamily: 'Montserrat-Semibold',
                     fontSize: 25.0,
-                    
                     color: Color(0xff03052f)),
               ),
               
+              Text(
+                type,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.blue, // Customize the color if needed
+                  fontFamily: 'Century-Gothic'
+                ),
+              ),
               Text(
                 place,
                 style: TextStyle(fontSize: 19.0, color: Color(0xff03052f),fontFamily: 'Montserrat-Regular'),
@@ -524,15 +538,9 @@ class EventTile1 extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
+
             children: [
-              Text(
-                type,
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontFamily: 'Century-Gothic',
-                  color: Colors.blue, // Customize the color if needed
-                ),
-              ),
+              SizedBox(height: 40,),
               Container(
                 child: Row(
                   children: [

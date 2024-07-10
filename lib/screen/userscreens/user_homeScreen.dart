@@ -30,7 +30,7 @@ List<dynamic> preferencesList = [];
 Iterable<QueryDocumentSnapshot<Object?>> filteredEvents = [];
 String selectedCategory = "";
 String selectedDistrict = "";
-String selectedUniversity = "";
+/* String selectedUniversity = ""; */
 
 class NavDrawer extends StatelessWidget {
   @override
@@ -54,10 +54,7 @@ class NavDrawer extends StatelessWidget {
               ),
             ),
           ),
-          ListTile(
-              leading: Icon(Icons.input),
-              title: Text('Welcome'),
-              onTap: () => {}),
+          
           ListTile(
             leading: Icon(Icons.verified_user),
             title: Text('Profile'),
@@ -68,11 +65,7 @@ class NavDrawer extends StatelessWidget {
               }))
             },
           ),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Settings'),
-            onTap: () => {Navigator.of(context).pop()},
-          ),
+          
           ListTile(
             leading: Icon(Icons.border_color),
             title: Text('Feedback'),
@@ -182,7 +175,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
       // Reset selected values to initial values
       selectedCategory = "";
       selectedDistrict = "";
-      selectedUniversity = "";
+      /* selectedUniversity = ""; */
     });
   }
 
@@ -326,7 +319,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Text("Filters"),
+                                      title: Text("Filters",style: TextStyle(fontFamily: 'Montserrat-Semibold'),),
                                       content: SingleChildScrollView(
                                         child: Column(
                                           children: [
@@ -337,7 +330,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
                                                   .map((String value) {
                                                 return DropdownMenuItem<String>(
                                                   value: value,
-                                                  child: Text(value),
+                                                  child: Text(value,style: TextStyle(fontFamily: 'Montserrat-Regular'),),
                                                 );
                                               }).toList(),
                                               onChanged: (String? value) {
@@ -389,7 +382,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
                                                   districts.map((String value) {
                                                 return DropdownMenuItem<String>(
                                                   value: value,
-                                                  child: Text(value),
+                                                  child: Text(value,style: TextStyle(fontFamily: 'Montserrat-Regular')),
                                                 );
                                               }).toList(),
                                               onChanged: (String? value) {
@@ -402,7 +395,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
                                             ),
 
                                             // University filter
-                                            DropdownButtonFormField<String>(
+                                            /* DropdownButtonFormField<String>(
                                               value: universities.first,
                                               items: universities
                                                   .map((String value) {
@@ -418,7 +411,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
                                                 tempSelectedUniversity = value;
                                                 // });
                                               },
-                                            ),
+                                            ), */
                                           ],
                                         ),
                                       ),
@@ -434,16 +427,16 @@ class _user_homeLoginState extends State<user_homeLogin> {
                                             selectedDistrict =
                                                 tempSelectedDistrict ??
                                                     selectedDistrict;
-                                            selectedUniversity =
+                                            /* selectedUniversity =
                                                 tempSelectedUniversity ??
-                                                    selectedUniversity;
+                                                    selectedUniversity; */
                                             // });
                                             print(
                                                 'Selected Category: $selectedCategory');
                                             print(
                                                 'Selected District: $selectedDistrict');
-                                            print(
-                                                'Selected University: $selectedUniversity');
+                                            /* print(
+                                                'Selected University: $selectedUniversity'); */
                                             // Navigator.of(context).pop(); // Close the dialog
 
                                             applyFilters();
@@ -498,14 +491,14 @@ class _user_homeLoginState extends State<user_homeLogin> {
                             'type'])); // Filter events based on preferencesList
 
                     if (selectedCategory.isNotEmpty &&
-                        selectedDistrict.isNotEmpty &&
-                        selectedUniversity.isNotEmpty) {
+                        selectedDistrict.isNotEmpty /* &&
+                        selectedUniversity.isNotEmpty */) {
                       print("hi");
                       filteredEvents = events.where((event) =>
                           event['name'].toLowerCase().contains(_searchQuery) &&
                           event['type'] == selectedCategory &&
-                          event['district'] == selectedDistrict &&
-                          event['venue'] == selectedUniversity);
+                          event['district'] == selectedDistrict /* &&
+                          event['venue'] == selectedUniversity */);
                     } else {
                       print("hlo");
 
@@ -580,6 +573,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
           _scaffoldKey.currentState!.openDrawer(); // Open the NavDrawer
         },
         child: Icon(Icons.menu),
+        backgroundColor: Colors.blue,
       ),
     );
   }
@@ -696,6 +690,7 @@ class EventTile extends StatelessWidget {
                 child: Text(
                   name.toUpperCase(),
                   style: TextStyle(
+                    fontFamily: 'Century-Gothic',
                     fontWeight: FontWeight.bold,
                     fontSize: 25.0,
                     color: const Color.fromARGB(255, 255, 255, 255),
@@ -723,8 +718,9 @@ class EventTile extends StatelessWidget {
                 date,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
+                  fontFamily: 'Montserrat-Regular',
                   fontSize: 20.0,
-                  color: Color.fromARGB(255, 143, 143, 143),
+                  color:  Color.fromARGB(255, 214, 214, 214),
                 ),
               ),
             ],

@@ -193,12 +193,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   SizedBox(
                     width: 10,
                   ),
-                  ElevatedButton(
+                  /* ElevatedButton(
                     onPressed: () {
                       setState(() {
                         _isquiz = !_isquiz;
                       });
-                      // Your button action here
+                      // Your button action here 
                     },
                     child: Text('Quiz'),
                     style: ElevatedButton.styleFrom(
@@ -206,7 +206,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ? Colors.blue
                           : Colors.grey, // Change colors as desired
                     ),
-                  ),
+                  ), */
                 ],
               ),
               SizedBox(

@@ -163,9 +163,9 @@ class _LoginScreenState extends State<Login> {
                         borderRadius: 55,
                       ),
                       SizedBox(
-                        height: 40,
+                        height: 220,
                       ),
-                      SizedBox(
+                      /* SizedBox(
                           height: 20,
                           width: 400,
                           child: Row(
@@ -188,8 +188,8 @@ class _LoginScreenState extends State<Login> {
                                 ),
                               ),
                             ],
-                          )),
-                      SizedBox(
+                          )), 
+                       SizedBox(
                         height: 40,
                       ),
                       SocialLoginButton(
@@ -201,7 +201,7 @@ class _LoginScreenState extends State<Login> {
                       ),
                       SizedBox(
                         height: 40,
-                      ),
+                      ), */
                       SizedBox(
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
