@@ -45,127 +45,128 @@ class _LoginScreenState extends State<Login> {
       backgroundColor: Colors.grey[850],
       // resizeToAvoidBottomInset: false, // Disable resizing to avoid bottom overflow
 
-      body: 
-      Stack(
+      body: Stack(
         fit: StackFit.expand,
         children: [
-           Positioned.fill(
-        child: Image.asset(
-          "assets/images/sign_in.png", // Replace with your image path
-          fit: BoxFit.fill,
-        ),
-      ),
-      SingleChildScrollView(
-            child: Column(
-          children: [
-            Container(
-              height: 300,
-              // child: DecoratedBox(
-              //   decoration: BoxDecoration(
-              //     // color: Colors.black,
-              //     image: DecorationImage(
-              //         image: AssetImage("assets/images/login_img.png"),
-              //         fit: BoxFit.cover),
-              //   ),
-              //   child: Center(child: Text("")),
-              // ),
+          Positioned.fill(
+            child: Image.asset(
+              "assets/images/sign_in_new.png", // Replace with your image path
+              fit: BoxFit.fill,
             ),
-            Form(
-              key: _formKey,
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      SizedBox(
-                        height: 40,
-                      ),
-                      TextFormField(
-                        style: const TextStyle(color: Colors.white),
-        
-                        decoration: InputDecoration(
-                          fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          // filled: true,
-                          hintStyle: TextStyle(
-                              color: Color.fromARGB(255, 166, 162, 162)),
-                          hintText: "Enter your  Email",
-                          labelText: "Email",
-        
-                          // fillColor: Colors.white70,
+          ),
+          SingleChildScrollView(
+              child: Column(
+            children: [
+              Container(
+                height: 300,
+                // child: DecoratedBox(
+                //   decoration: BoxDecoration(
+                //     // color: Colors.black,
+                //     image: DecorationImage(
+                //         image: AssetImage("assets/images/login_img.png"),
+                //         fit: BoxFit.cover),
+                //   ),
+                //   child: Center(child: Text("")),
+                // ),
+              ),
+              Form(
+                key: _formKey,
+                child: Container(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        SizedBox(
+                          height: 40,
                         ),
-                        controller: _email,
-        
-                        // The validator receives the text that the user has entered.
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter some text';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        style: const TextStyle(color: Colors.white),
-                        obscureText: isObscured,
-        
-                        decoration: InputDecoration(
-                          fillColor: Color.fromARGB(255, 0, 0, 0), filled: true,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15.0),
+                        TextFormField(
+                          style: const TextStyle(color: Colors.white),
+
+                          decoration: InputDecoration(
+                            fillColor: Color.fromARGB(255, 0, 0, 0),
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            // filled: true,
+                            hintStyle: TextStyle(
+                                color: Color.fromARGB(255, 166, 162, 162)),
+                            hintText: "Enter your  Email",
+                            labelText: "Email",
+
+                            // fillColor: Colors.white70,
                           ),
-                          suffixIcon: IconButton(
-                            icon: isObscured
-                                ? Icon(Icons.visibility)
-                                : Icon(Icons.visibility_off),
-                            onPressed: () {
-                              setState(() {
-                                isObscured = !isObscured;
-                              });
-                            },
-                          ),
-                          // filled: true,
-                          hintStyle: TextStyle(
-                              color: Color.fromARGB(255, 166, 162, 162)),
-                          hintText: "Enter your password",
-                          labelText: "Password",
-                          // fillColor: Colors.white70,
+                          controller: _email,
+
+                          // The validator receives the text that the user has entered.
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter some text';
+                            }
+                            return null;
+                          },
                         ),
-                        controller: _password,
-                        // The validator receives the text that the user has entered.
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter some text';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(
-                        height: 40,
-                      ),
-                      SocialLoginButton(
-                        backgroundColor: Color(0xFF3E96D3),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            // If the form is valid, display a snackbar. In the real world,
-                            // you'd often call a server or save the information in a database.
-                            _login(context, _email.text, _password.text);
-                            // _navigateToUserHomeUpScreen(context);
-                          }
-                        },
-                        buttonType: SocialLoginButtonType.generalLogin,
-                        borderRadius: 55,
-                      ),
-                      SizedBox(
-                        height: 220,
-                      ),
-                      /* SizedBox(
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          style: const TextStyle(color: Colors.white),
+                          obscureText: isObscured,
+
+                          decoration: InputDecoration(
+                            fillColor: Color.fromARGB(255, 0, 0, 0),
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: isObscured
+                                  ? Icon(Icons.visibility)
+                                  : Icon(Icons.visibility_off),
+                              onPressed: () {
+                                setState(() {
+                                  isObscured = !isObscured;
+                                });
+                              },
+                            ),
+                            // filled: true,
+                            hintStyle: TextStyle(
+                                color: Color.fromARGB(255, 166, 162, 162)),
+                            hintText: "Enter your password",
+                            labelText: "Password",
+                            // fillColor: Colors.white70,
+                          ),
+                          controller: _password,
+                          // The validator receives the text that the user has entered.
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter some text';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        SocialLoginButton(
+                          backgroundColor: Color(0xFF3E96D3),
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              // If the form is valid, display a snackbar. In the real world,
+                              // you'd often call a server or save the information in a database.
+                              _login(context, _email.text, _password.text);
+                              // _navigateToUserHomeUpScreen(context);
+                            }
+                          },
+                          buttonType: SocialLoginButtonType.generalLogin,
+                          borderRadius: 55,
+                        ),
+                        SizedBox(
+                          height: 220,
+                        ),
+                        /* SizedBox(
                           height: 20,
                           width: 400,
                           child: Row(
@@ -202,40 +203,38 @@ class _LoginScreenState extends State<Login> {
                       SizedBox(
                         height: 40,
                       ), */
-                      SizedBox(
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Not a member ?   ",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              GestureDetector(
-                                child: Text(
-                                  "Register Now ",
-                                  style: TextStyle(color: Colors.blue),
+                        SizedBox(
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Not a member ?   ",
+                                  style: TextStyle(color: Colors.white),
                                 ),
-                                onTap: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return SignUp();
-                                  }));
-                                  /* Navigator.of(context).pushReplacement(
+                                GestureDetector(
+                                  child: Text(
+                                    "Register Now ",
+                                    style: TextStyle(color: Colors.blue),
+                                  ),
+                                  onTap: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return SignUp();
+                                    }));
+                                    /* Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: ((context) => userEventRegistration()))); */
-                                },
-                              )
-                            ]),
-                      )
-                    ],
+                                  },
+                                )
+                              ]),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ))
-
-        ]
-         ,
+            ],
+          ))
+        ],
       ),
     );
   }
@@ -285,8 +284,7 @@ class _LoginScreenState extends State<Login> {
         final current_user =
             (querySnapshot.docs.first.data() as Map<String, dynamic>)['name'];
 
-             current_user_name = current_user.toString();
-
+        current_user_name = current_user.toString();
 
         if (roleField != null) {
           final String role = roleField.toString().toLowerCase();

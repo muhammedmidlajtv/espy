@@ -54,7 +54,6 @@ class NavDrawer extends StatelessWidget {
               ),
             ),
           ),
-          
           ListTile(
             leading: Icon(Icons.verified_user),
             title: Text('Profile'),
@@ -65,7 +64,6 @@ class NavDrawer extends StatelessWidget {
               }))
             },
           ),
-          
           ListTile(
             leading: Icon(Icons.border_color),
             title: Text('Feedback'),
@@ -161,7 +159,9 @@ class _user_homeLoginState extends State<user_homeLogin> {
   }
 
   // Filter options
-  List<String> categories = ['Hackathon', 'Ideathon', 'Idea Pitching'];
+  List<String> categories = [
+    'Hackathon','Ideathon','Workshop','Talk Session'
+  ];
   List<String> districts = ['Kottayam', 'Kollam', 'Ernankulam'];
   List<String> universities = ['RIT', 'CET', 'MACE'];
 
@@ -319,7 +319,11 @@ class _user_homeLoginState extends State<user_homeLogin> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Text("Filters",style: TextStyle(fontFamily: 'Montserrat-Semibold'),),
+                                      title: Text(
+                                        "Filters",
+                                        style: TextStyle(
+                                            fontFamily: 'Montserrat-Semibold'),
+                                      ),
                                       content: SingleChildScrollView(
                                         child: Column(
                                           children: [
@@ -330,7 +334,12 @@ class _user_homeLoginState extends State<user_homeLogin> {
                                                   .map((String value) {
                                                 return DropdownMenuItem<String>(
                                                   value: value,
-                                                  child: Text(value,style: TextStyle(fontFamily: 'Montserrat-Regular'),),
+                                                  child: Text(
+                                                    value,
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat-Regular'),
+                                                  ),
                                                 );
                                               }).toList(),
                                               onChanged: (String? value) {
@@ -382,7 +391,10 @@ class _user_homeLoginState extends State<user_homeLogin> {
                                                   districts.map((String value) {
                                                 return DropdownMenuItem<String>(
                                                   value: value,
-                                                  child: Text(value,style: TextStyle(fontFamily: 'Montserrat-Regular')),
+                                                  child: Text(value,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Montserrat-Regular')),
                                                 );
                                               }).toList(),
                                               onChanged: (String? value) {
@@ -491,14 +503,20 @@ class _user_homeLoginState extends State<user_homeLogin> {
                             'type'])); // Filter events based on preferencesList
 
                     if (selectedCategory.isNotEmpty &&
-                        selectedDistrict.isNotEmpty /* &&
-                        selectedUniversity.isNotEmpty */) {
+                            selectedDistrict
+                                .isNotEmpty /* &&
+                        selectedUniversity.isNotEmpty */
+                        ) {
                       print("hi");
                       filteredEvents = events.where((event) =>
-                          event['name'].toLowerCase().contains(_searchQuery) &&
-                          event['type'] == selectedCategory &&
-                          event['district'] == selectedDistrict /* &&
-                          event['venue'] == selectedUniversity */);
+                              event['name']
+                                  .toLowerCase()
+                                  .contains(_searchQuery) &&
+                              event['type'] == selectedCategory &&
+                              event['district'] ==
+                                  selectedDistrict /* &&
+                          event['venue'] == selectedUniversity */
+                          );
                     } else {
                       print("hlo");
 
@@ -657,79 +675,76 @@ class EventTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  return Container(
-    margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-    decoration: BoxDecoration(
-      color: Color(0xff2f5982),
-      
-      borderRadius: BorderRadius.circular(30.0),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.0),
-            topRight: Radius.circular(30.0),
-          ),
-          child: SizedBox(
-            height: 300,
-            width: double.infinity,
-            child: Image.network(
-              posterlink,
-              fit: BoxFit.cover,
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      decoration: BoxDecoration(
+        color: Color(0xff2f5982),
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30.0),
+              topRight: Radius.circular(30.0),
+            ),
+            child: SizedBox(
+              height: 300,
+              width: double.infinity,
+              child: Image.network(
+                posterlink,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GestureDetector(
-                child: Text(
-                  name.toUpperCase(),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GestureDetector(
+                  child: Text(
+                    name.toUpperCase(),
+                    style: TextStyle(
+                      fontFamily: 'Century-Gothic',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25.0,
+                      color: const Color.fromARGB(255, 255, 255, 255),
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return userEventRegistration(
+                        name: name,
+                        venue: venue,
+                        date: date,
+                        type: type,
+                        description: description,
+                        speaker: speaker,
+                        fee: fee,
+                        reglink: reglink,
+                        posterlink: posterlink,
+                      );
+                    }));
+                  },
+                ),
+                SizedBox(height: 8.0),
+                Text(
+                  date,
                   style: TextStyle(
-                    fontFamily: 'Century-Gothic',
                     fontWeight: FontWeight.bold,
-                    fontSize: 25.0,
-                    color: const Color.fromARGB(255, 255, 255, 255),
-                    
+                    fontFamily: 'Montserrat-Regular',
+                    fontSize: 20.0,
+                    color: Color.fromARGB(255, 214, 214, 214),
                   ),
                 ),
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return userEventRegistration(
-                      name: name,
-                      venue: venue,
-                      date: date,
-                      type: type,
-                      description: description,
-                      speaker: speaker,
-                      fee: fee,
-                      reglink: reglink,
-                      posterlink: posterlink,
-                    );
-                  }));
-                },
-              ),
-              SizedBox(height: 8.0),
-              Text(
-                date,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Montserrat-Regular',
-                  fontSize: 20.0,
-                  color:  Color.fromARGB(255, 214, 214, 214),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
-    ),
-  );
-}
-
-
+        ],
+      ),
+    );
+  }
 }
