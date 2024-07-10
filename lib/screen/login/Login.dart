@@ -51,7 +51,7 @@ class _LoginScreenState extends State<Login> {
         children: [
            Positioned.fill(
         child: Image.asset(
-          "assets/images/signin_bg.png", // Replace with your image path
+          "assets/images/sign_in.png", // Replace with your image path
           fit: BoxFit.fill,
         ),
       ),
