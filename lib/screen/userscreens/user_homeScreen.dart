@@ -63,7 +63,6 @@ class NavDrawer extends StatelessWidget {
             title: Text('Profile'),
             onTap: () => {
               Navigator.of(context).pop(),
-
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return ProfilePage();
               }))
@@ -77,9 +76,11 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.border_color),
             title: Text('Feedback'),
-            onTap: () => {   Navigator.push(context, MaterialPageRoute(builder: (context) {
+            onTap: () => {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return FeedbackApp();
-              }))},
+              }))
+            },
           ),
           ListTile(
             leading: Icon(Icons.exit_to_app),
@@ -282,193 +283,197 @@ class _user_homeLoginState extends State<user_homeLogin> {
       // ),
       body: Stack(
         fit: StackFit.expand,
-
         children: [
           Image.asset(
-          'assets/images/user_dashboard.png',
-          fit: BoxFit.cover,
-        ),
+            'assets/images/user_dashboard.png',
+            fit: BoxFit.cover,
+          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: SizedBox(
-                      height: 50,
-                      width: 360,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(
-                              color: Color.fromARGB(255, 29, 116, 183),
-                              width: 0.0,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: SizedBox(
+                        height: 50,
+                        width: 360,
+                        child: TextField(
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 29, 116, 183),
+                                width: 0.0,
+                              ),
                             ),
-                          ),
-                          hintText: 'Search',
-                          suffixIcon: GestureDetector(
-                            child: Icon(
-                              Icons.filter_list, // or Icons.filter_alt
-                              size: 30, // Adjust size as needed
-                              color: Colors.blue, // Adjust color as needed
-                            ),
+                            hintText: 'Search',
+                            suffixIcon: GestureDetector(
+                              child: Icon(
+                                Icons.filter_list, // or Icons.filter_alt
+                                size: 30, // Adjust size as needed
+                                color: Colors.blue, // Adjust color as needed
+                              ),
                               onTap: () {
                                 showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text("Filters"),
-                                content: SingleChildScrollView(
-                                  child: Column(
-                                    children: [
-                                      // Category filter
-                                      DropdownButtonFormField<String>(
-                                        value: categories.first,
-                                        items: categories.map((String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
-                                        }).toList(),
-                                        onChanged: (String? value) {
-                                          // Handle category filter change
-                                          // setState(() {
-                                          // Update selected category
-                                          // selectedCategory = value ?? '';
-                                          tempSelectedCategory = value;
-          
-                                          // });
-                                        },
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text("Filters"),
+                                      content: SingleChildScrollView(
+                                        child: Column(
+                                          children: [
+                                            // Category filter
+                                            DropdownButtonFormField<String>(
+                                              value: categories.first,
+                                              items: categories
+                                                  .map((String value) {
+                                                return DropdownMenuItem<String>(
+                                                  value: value,
+                                                  child: Text(value),
+                                                );
+                                              }).toList(),
+                                              onChanged: (String? value) {
+                                                // Handle category filter change
+                                                // setState(() {
+                                                // Update selected category
+                                                // selectedCategory = value ?? '';
+                                                tempSelectedCategory = value;
+
+                                                // });
+                                              },
+                                            ),
+
+                                            // Price range filter
+                                            //     Column(
+                                            //       mainAxisAlignment: MainAxisAlignment.start,
+                                            //       children: [
+                                            //         // Text("Price Range:"),
+                                            //         // SizedBox(width: 10),
+                                            //          RangeSlider(
+                                            //         values: RangeValues(start, end),
+                                            //         labels: RangeLabels(start.toString(), end.toString()),
+                                            //         onChanged: (value) {
+                                            //           setState(() {
+                                            //             start = value.start;
+                                            //             end = value.end;
+                                            //           });
+                                            //         },
+                                            //         min: 10.0,
+                                            //         max: 80.0,
+                                            //       ),
+                                            // //       Text(
+                                            // // "Start: " +
+                                            // //     start.toStringAsFixed(2) +
+                                            // //     "\nEnd: " +
+                                            // //     end.toStringAsFixed(2),
+                                            // // style: const TextStyle(
+                                            // //   fontSize: 32.0,
+                                            // // ),
+                                            // //  )
+
+                                            //       ],
+                                            //     ),
+
+                                            // District filter
+                                            DropdownButtonFormField<String>(
+                                              value: districts.first,
+                                              items:
+                                                  districts.map((String value) {
+                                                return DropdownMenuItem<String>(
+                                                  value: value,
+                                                  child: Text(value),
+                                                );
+                                              }).toList(),
+                                              onChanged: (String? value) {
+                                                // Handle district filter change
+                                                // setState(() {
+                                                // Update selected category
+                                                tempSelectedDistrict = value;
+                                                // });
+                                              },
+                                            ),
+
+                                            // University filter
+                                            DropdownButtonFormField<String>(
+                                              value: universities.first,
+                                              items: universities
+                                                  .map((String value) {
+                                                return DropdownMenuItem<String>(
+                                                  value: value,
+                                                  child: Text(value),
+                                                );
+                                              }).toList(),
+                                              onChanged: (String? value) {
+                                                // Handle university filter change
+                                                // setState(() {
+                                                // Update selected category
+                                                tempSelectedUniversity = value;
+                                                // });
+                                              },
+                                            ),
+                                          ],
+                                        ),
                                       ),
-          
-                                      // Price range filter
-                                      //     Column(
-                                      //       mainAxisAlignment: MainAxisAlignment.start,
-                                      //       children: [
-                                      //         // Text("Price Range:"),
-                                      //         // SizedBox(width: 10),
-                                      //          RangeSlider(
-                                      //         values: RangeValues(start, end),
-                                      //         labels: RangeLabels(start.toString(), end.toString()),
-                                      //         onChanged: (value) {
-                                      //           setState(() {
-                                      //             start = value.start;
-                                      //             end = value.end;
-                                      //           });
-                                      //         },
-                                      //         min: 10.0,
-                                      //         max: 80.0,
-                                      //       ),
-                                      // //       Text(
-                                      // // "Start: " +
-                                      // //     start.toStringAsFixed(2) +
-                                      // //     "\nEnd: " +
-                                      // //     end.toStringAsFixed(2),
-                                      // // style: const TextStyle(
-                                      // //   fontSize: 32.0,
-                                      // // ),
-                                      // //  )
-          
-                                      //       ],
-                                      //     ),
-          
-                                      // District filter
-                                      DropdownButtonFormField<String>(
-                                        value: districts.first,
-                                        items: districts.map((String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
-                                        }).toList(),
-                                        onChanged: (String? value) {
-                                          // Handle district filter change
-                                          // setState(() {
-                                          // Update selected category
-                                          tempSelectedDistrict = value;
-                                          // });
-                                        },
-                                      ),
-          
-                                      // University filter
-                                      DropdownButtonFormField<String>(
-                                        value: universities.first,
-                                        items: universities.map((String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
-                                        }).toList(),
-                                        onChanged: (String? value) {
-                                          // Handle university filter change
-                                          // setState(() {
-                                          // Update selected category
-                                          tempSelectedUniversity = value;
-                                          // });
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      // Apply filters
-                                      // print(categories);
-                                      //  setState(() {
-                                      selectedCategory = tempSelectedCategory ??
-                                          selectedCategory;
-                                      selectedDistrict = tempSelectedDistrict ??
-                                          selectedDistrict;
-                                      selectedUniversity =
-                                          tempSelectedUniversity ??
-                                              selectedUniversity;
-                                      // });
-                                      print(
-                                          'Selected Category: $selectedCategory');
-                                      print(
-                                          'Selected District: $selectedDistrict');
-                                      print(
-                                          'Selected University: $selectedUniversity');
-                                      // Navigator.of(context).pop(); // Close the dialog
-          
-                                      applyFilters();
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text("Apply"),
-                                  ),
-                                  TextButton(
-                                      onPressed: () {
-                                        resetFilters();
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text("clear"))
-                                ],
-                              );
-                            },
-                          );
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            // Apply filters
+                                            // print(categories);
+                                            //  setState(() {
+                                            selectedCategory =
+                                                tempSelectedCategory ??
+                                                    selectedCategory;
+                                            selectedDistrict =
+                                                tempSelectedDistrict ??
+                                                    selectedDistrict;
+                                            selectedUniversity =
+                                                tempSelectedUniversity ??
+                                                    selectedUniversity;
+                                            // });
+                                            print(
+                                                'Selected Category: $selectedCategory');
+                                            print(
+                                                'Selected District: $selectedDistrict');
+                                            print(
+                                                'Selected University: $selectedUniversity');
+                                            // Navigator.of(context).pop(); // Close the dialog
+
+                                            applyFilters();
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text("Apply"),
+                                        ),
+                                        TextButton(
+                                            onPressed: () {
+                                              resetFilters();
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text("clear"))
+                                      ],
+                                    );
+                                  },
+                                );
                               },
                             ),
-                         
+                          ),
+                          onChanged: (value) {
+                            // Update search query when text changes
+                            setState(() {
+                              _searchQuery = value.toLowerCase();
+                            });
+                          },
                         ),
-                        onChanged: (value) {
-                          // Update search query when text changes
-                          setState(() {
-                            _searchQuery = value.toLowerCase();
-                          });
-                        },
                       ),
-                    ),
-              )],
+                    )
+                  ],
                 ),
               ),
               SizedBox(
@@ -476,8 +481,9 @@ class _user_homeLoginState extends State<user_homeLogin> {
               ),
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
-                  stream:
-                      FirebaseFirestore.instance.collection('events').snapshots(),
+                  stream: FirebaseFirestore.instance
+                      .collection('events')
+                      .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
@@ -490,7 +496,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
                     final events = snapshot.data!.docs.where((doc) =>
                         preferencesList.contains(doc[
                             'type'])); // Filter events based on preferencesList
-          
+
                     if (selectedCategory.isNotEmpty &&
                         selectedDistrict.isNotEmpty &&
                         selectedUniversity.isNotEmpty) {
@@ -502,11 +508,11 @@ class _user_homeLoginState extends State<user_homeLogin> {
                           event['venue'] == selectedUniversity);
                     } else {
                       print("hlo");
-          
+
                       filteredEvents = events.where((event) =>
                           event['name'].toLowerCase().contains(_searchQuery));
                     }
-          
+
                     // final filteredEvents = events.where((event) =>
                     //     // event['name'].toLowerCase().contains(_searchQuery));
                     //     // event['name'].toLowerCase().contains(_searchQuery) &&
@@ -518,7 +524,7 @@ class _user_homeLoginState extends State<user_homeLogin> {
                     //     event['district'] == selectedDistrict &&
                     //     event['venue'] == selectedUniversity);
                     print(selectedCategory);
-          
+
                     print("fetched it ");
                     return ListView.builder(
                       itemCount: filteredEvents.length,
@@ -526,13 +532,13 @@ class _user_homeLoginState extends State<user_homeLogin> {
                         DateTime dateTime = DateTime.parse(
                             events.elementAt(index)['date'].toString());
                         // Check if the event date is after today
-          
+
                         String formattedDate =
                             DateFormat('dd-MM-yyyy').format(dateTime);
-          
+
                         final name = filteredEvents.elementAt(
                             index)['name']; // Access event name from document
-          
+
                         final venue = filteredEvents.elementAt(
                             index)['venue']; // Access event name from document
                         final date = formattedDate;
@@ -544,11 +550,11 @@ class _user_homeLoginState extends State<user_homeLogin> {
                             'speaker_name']; // Access event name from document
                         final fee = filteredEvents.elementAt(
                             index)['fee']; // Access event name from document
-                        final reglink = filteredEvents.elementAt(
-                            index)['reg_link']; // Access event name from document
+                        final reglink = filteredEvents.elementAt(index)[
+                            'reg_link']; // Access event name from document
                         final posterlink = filteredEvents.elementAt(
                             index)['poster']; // Access event name from document
-          
+
                         return EventTile(
                           name: name,
                           venue: venue,
@@ -657,41 +663,43 @@ class EventTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      padding: EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Colors.white24,
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
+  return Container(
+    margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+    decoration: BoxDecoration(
+      color: Color(0xff2f5982),
+      
+      borderRadius: BorderRadius.circular(30.0),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30.0),
+            topRight: Radius.circular(30.0),
+          ),
+          child: SizedBox(
+            height: 300,
+            width: double.infinity,
+            child: Image.network(
+              posterlink,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: SizedBox(
-                  height: 300,
-                  width: 300,
-                  child: Image.network(
-                    fit: BoxFit.fill,
-                    posterlink,
-                    height: 200,
-                    width: 200,
-                  ),
-                ),
-              ),
-              
               GestureDetector(
                 child: Text(
                   name.toUpperCase(),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 25.0,
-                    color: Colors.blue,
+                    color: const Color.fromARGB(255, 255, 255, 255),
+                    
                   ),
                 ),
                 onTap: () {
@@ -708,22 +716,24 @@ class EventTile extends StatelessWidget {
                       posterlink: posterlink,
                     );
                   }));
-
-                  ;
                 },
               ),
+              SizedBox(height: 8.0),
               Text(
                 date,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 25.0,
-                  color: const Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 20.0,
+                  color: Color.fromARGB(255, 143, 143, 143),
                 ),
               ),
             ],
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
+
+
 }
