@@ -160,7 +160,10 @@ class _user_homeLoginState extends State<user_homeLogin> {
 
   // Filter options
   List<String> categories = [
-    'Hackathon','Ideathon','Workshop','Talk Session'
+    'Hackathon',
+    'Ideathon',
+    'Workshop',
+    'Talk Session'
   ];
   List<String> districts = ['Kottayam', 'Kollam', 'Ernankulam'];
   List<String> universities = ['RIT', 'CET', 'MACE'];
@@ -498,9 +501,21 @@ class _user_homeLoginState extends State<user_homeLogin> {
                     if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     }
-                    final events = snapshot.data!.docs.where((doc) =>
+                    /* final events = snapshot.data!.docs.where((doc) =>
                         preferencesList.contains(doc[
-                            'type'])); // Filter events based on preferencesList
+                            'type']));  */ // Filter events based on preferencesList
+                    final events = snapshot.data!.docs.where((doc) {
+                      // Parse the event date
+                      DateTime eventDate =
+                          DateTime.parse(doc['date'].toString());
+
+                      // Get today's date
+                      DateTime today = DateTime.now();
+
+                      // Check if the event type is in preferencesList and the event date is today or later
+                      return preferencesList.contains(doc['type']) &&
+                          eventDate.isAfter(today.subtract(Duration(days: 1)));
+                    });
 
                     if (selectedCategory.isNotEmpty &&
                             selectedDistrict

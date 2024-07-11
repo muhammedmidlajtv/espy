@@ -535,7 +535,7 @@ class EventTile1 extends StatelessWidget {
               ),
             ],
           ),
-          Column(
+          /* Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
 
@@ -571,7 +571,7 @@ class EventTile1 extends StatelessWidget {
                 ),
               ),
             ],
-          ),
+          ), */
         ],
       ),
     );
