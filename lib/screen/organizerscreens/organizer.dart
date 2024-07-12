@@ -37,7 +37,6 @@ class EventOrganizerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      
       debugShowCheckedModeBanner: false,
       title: 'Event Organizer',
       theme: ThemeData(
@@ -53,8 +52,6 @@ class EventOrganizerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      
-      
       child: FutureBuilder<String?>(
         future: auth.getCurrentUserEmail(),
         builder: (context, snapshot) {
@@ -89,16 +86,14 @@ class EventOrganizerPage extends StatelessWidget {
                   ],
                 ),
                 body: Container(
-
                   decoration: BoxDecoration(
                     color: Color(0xff03052f),
-                    
-                      /* image: DecorationImage(
+
+                    /* image: DecorationImage(
       image: AssetImage('assets/images/organiser_dash_bg.png'), // Path to your background image
       fit: BoxFit.cover, // Adjust the image's size to cover the entire container
     ), */
-    
-                      ),
+                  ),
                   child: Stack(
                     children: [
                       Positioned.fill(
@@ -130,9 +125,9 @@ class EventOrganizerPage extends StatelessWidget {
                                             Text(
                                               'UPCOMING EVENTS',
                                               style: TextStyle(
-                                                color: Color.fromARGB(181, 88, 235, 51),
+                                                color: Color.fromARGB(
+                                                    181, 88, 235, 51),
                                                 fontWeight: FontWeight.bold,
-                                                
                                                 fontSize: 20.0,
                                               ),
                                             ),
@@ -376,9 +371,7 @@ class EventTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return Container(
-      
       margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
@@ -401,35 +394,43 @@ class EventTile extends StatelessWidget {
                     fontSize: 25.0,
                     color: Color(0xff03052f)),
               ),
-              
               Text(
                 type,
                 style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.blue, // Customize the color if needed
-                  fontFamily: 'Century-Gothic'
-                ),
+                    fontSize: 20.0,
+                    color: Colors.blue, // Customize the color if needed
+                    fontFamily: 'Century-Gothic'),
               ),
               Text(
                 place,
-                style: TextStyle(fontSize: 19.0, color: Color(0xff03052f),fontFamily: 'Montserrat-Regular'),
+                style: TextStyle(
+                    fontSize: 19.0,
+                    color: Color(0xff03052f),
+                    fontFamily: 'Montserrat-Regular'),
               ),
               Text(
                 time,
-                style: TextStyle(fontSize: 19.0, color: Color(0xff03052f),fontFamily: 'Montserrat-Regular'),
+                style: TextStyle(
+                    fontSize: 19.0,
+                    color: Color(0xff03052f),
+                    fontFamily: 'Montserrat-Regular'),
               ),
               Text(
                 date.toString(),
-                style: TextStyle(fontSize: 19.0, color: Color(0xff03052f),fontFamily: 'Montserrat-Regular'),
+                style: TextStyle(
+                    fontSize: 19.0,
+                    color: Color(0xff03052f),
+                    fontFamily: 'Montserrat-Regular'),
               ),
             ],
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-
             children: [
-              SizedBox(height: 40,),
+              SizedBox(
+                height: 40,
+              ),
               Container(
                 child: Row(
                   children: [
@@ -512,26 +513,33 @@ class EventTile1 extends StatelessWidget {
                     fontSize: 25.0,
                     color: Color(0xff03052f)),
               ),
-              
               Text(
                 type,
                 style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.blue, // Customize the color if needed
-                  fontFamily: 'Century-Gothic'
-                ),
+                    fontSize: 20.0,
+                    color: Colors.blue, // Customize the color if needed
+                    fontFamily: 'Century-Gothic'),
               ),
               Text(
                 place,
-                style: TextStyle(fontSize: 19.0, color: Color(0xff03052f),fontFamily: 'Montserrat-Regular'),
+                style: TextStyle(
+                    fontSize: 19.0,
+                    color: Color(0xff03052f),
+                    fontFamily: 'Montserrat-Regular'),
               ),
               Text(
                 time,
-                style: TextStyle(fontSize: 19.0, color: Color(0xff03052f),fontFamily: 'Montserrat-Regular'),
+                style: TextStyle(
+                    fontSize: 19.0,
+                    color: Color(0xff03052f),
+                    fontFamily: 'Montserrat-Regular'),
               ),
               Text(
                 date.toString(),
-                style: TextStyle(fontSize: 19.0, color: Color(0xff03052f),fontFamily: 'Montserrat-Regular'),
+                style: TextStyle(
+                    fontSize: 19.0,
+                    color: Color(0xff03052f),
+                    fontFamily: 'Montserrat-Regular'),
               ),
             ],
           ),

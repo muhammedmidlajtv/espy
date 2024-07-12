@@ -292,7 +292,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 });
                 sendNotification(eventNameController.text, selectedDate.toString(),eventType.toString());
                 
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
                   return EventOrganizerApp();
                 }));
               } else {
