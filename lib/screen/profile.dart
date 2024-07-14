@@ -91,7 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
             if (preferencesList[i] == "Workshop") {
               _workshop = true;
             }
-            if (preferencesList[i] == "Talk Sessions") {
+            if (preferencesList[i] == "Talk Session") {
               _talksession = true;
             }
             if (preferencesList[i] == "Quiz") {
@@ -193,12 +193,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   SizedBox(
                     width: 10,
                   ),
-                  ElevatedButton(
+                  /* ElevatedButton(
                     onPressed: () {
                       setState(() {
                         _isquiz = !_isquiz;
                       });
-                      // Your button action here
+                      // Your button action here 
                     },
                     child: Text('Quiz'),
                     style: ElevatedButton.styleFrom(
@@ -206,7 +206,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ? Colors.blue
                           : Colors.grey, // Change colors as desired
                     ),
-                  ),
+                  ), */
                 ],
               ),
               SizedBox(
@@ -239,7 +239,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       });
                       // Your button action here
                     },
-                    child: Text('Talk sessions'),
+                    child: Text('Talk Session'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _talksession
                           ? Colors.blue
@@ -265,7 +265,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         if (_workshop) selectedPreferences.add("Workshop");
                         if (_ideathon) selectedPreferences.add("Ideathon");
                         if (_talksession)
-                          selectedPreferences.add("Talk Sessions");
+                          selectedPreferences.add("Talk Session");
 
                         // Assuming you have the email address of the current user
                         // String userEmail = "john.doe@example.com"; // Replace with the actual email address

@@ -98,6 +98,7 @@ flutter:
     - assets/images/user.png
     - assets/images/organizer.png
     - assets/images/events.png
+    - assets/images/epsy_logo.png
 
     - assets/images/location_img.png
     - assets/images/calender_icon.png
@@ -109,7 +110,39 @@ flutter:
     - assets/images/organiser_dash_bg.png
     - assets/images/user_dashboard.png
     - assets/images/signin_bg.png
+    - assets/images/sign_in.png
     - assets/images/organiser_dash_2.png
+    - assets/images/whiteglobe.jpg
+    - assets/images/gradient.jpg
+    - assets/images/tag.png
+    - assets/images/sign_in_new.png
+    
+
+  
+    
+
+  fonts:
+    - family: PT-Serif
+      fonts:
+        - asset: fonts\PT-Serif-Font-1\PTF55F.ttf
+
+    - family: Century-Gothic
+      fonts:
+        - asset: fonts/century-gothic-font/CenturyGothic.ttf
+
+    - family: Old-English
+      fonts:
+        - asset: fonts\canterbury\Canterbury.ttf
+
+    - family: Montserrat-Semibold
+      fonts:
+        - asset: fonts\Montserrat\static\Montserrat-SemiBold.ttf
+    
+    - family: Montserrat-Regular
+      fonts:
+        - asset: fonts\Montserrat\static\Montserrat-Regular.ttf
+
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
